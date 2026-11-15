@@ -1,8 +1,8 @@
 # Perso healthcare app — implementation workflow
 
-Version: 0.2 — step 1 baseline and contract checkpoint
+Version: 0.3 — step 2 identity implementation
 Prepared: 2026-11-15, Asia/Tehran
-Status: STEP 1 ONLY. Feature-branch setup, verified baseline, contract/field/ownership mapping and documentation publication are authorized. Application implementation remains at step 2 and later.
+Status: STEP 2 IMPLEMENTED; final verification and publication in progress. Individual password accounts, sessions, roles, customization and minimal account UI are included. Step 3 source assignments and subsequent healthcare/provider work remain pending.
 Feature branch in all three repositories: `codex/perso-healthcare-rbac`
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -145,8 +145,8 @@ Each checkpoint is a vertical slice where practical: contract, migration/backend
 | Step | Deliverable | Repositories | Acceptance evidence | Status |
 | --- | --- | --- | --- | --- |
 | 0 | This workflow and proposed decisions | Standalone planning document | Requirements, roles, phases, and push rules are reviewable; no implementation | Complete |
-| 1 | Branch setup, fresh baseline, contract/field/ownership map | All three | Read applicable `AGENTS.md`; record actual base SHAs and pins; baseline checks and existing failures distinguished; map prototype controls and endpoints; commit workflow before feature work | Complete; parent documentation publication prepared |
-| 2 | User identity, sessions, exact roles, personal settings, minimal account UI | Backend + frontend; parent pins | Login/logout, profile/preferences persistence, role enforcement, admin/buyer management, forbidden actions, session revocation, safe legacy-user migration | Not started |
+| 1 | Branch setup, fresh baseline, contract/field/ownership map | All three | Read applicable `AGENTS.md`; record actual base SHAs and pins; baseline checks and existing failures distinguished; map prototype controls and endpoints; commit workflow before feature work | Complete; parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae confirmed |
+| 2 | User identity, sessions, exact roles, personal settings, minimal account UI | Backend + frontend; parent pins | Login/logout, profile/preferences persistence, role enforcement, admin/buyer management, forbidden actions, session revocation, safe legacy-user migration | Complete; backend/frontend published; final parent ref prepared |
 | 3 | Buyer authorization and shared-ingestion data model | Backend + frontend assignments UI | Two buyers receive only authorized sources/offers/matches/stats/conversations; background jobs respect ownership; replay creates no duplicate shared listings; unauthorized totals do not leak | Not started |
 | 4 | Healthcare catalog, attributes, extraction, matching, and compatible price analytics | Backend + frontend catalog/interests | Catalog CRUD, Persian/English aliases, per-item price association, units/specs/expiry, filter persistence, healthcare defaults; existing data retained | Not started |
 | 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Not started |
@@ -201,10 +201,11 @@ Every user-facing step summary should state what changed, relevant tests and lim
 
 ## 10. Progress and push ledger
 
-Current checkpoint: step 1 — baseline checks and contract mapping complete; both submodule feature refs confirmed; final parent documentation publication prepared.
-Feature branches: `codex/perso-healthcare-rbac`; backend/frontend remote refs are confirmed at unchanged baseline SHAs. Parent candidate contains documentation only and will be confirmed after publication.
-Application changes: none. Only parent documentation is changed; backend/frontend contents and parent pins remain at the reviewed baseline.
-Next step: step 2, accounts/sessions/roles/preferences/minimal account UI.
+Current checkpoint: step 2 — implementation and ten full-stack browser checks complete; full backend race run passed; backend/frontend published; final parent ref prepared.
+Confirmed starting branch heads: parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; backend 33aac438d760d0d293e907cf8892775bbaeca222; frontend 9cb867d5cffbd529aaff12ea6485a28da693bc21.
+Feature branch: `codex/perso-healthcare-rbac` in all three repositories.
+Next step: step 3, shared ingestion/source assignments and buyer-specific data visibility. It is not included in step 2.
+Step 2 implementation, checks and limitations: [STEP_2_IDENTITY.md](STEP_2_IDENTITY.md).
 
 Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). Field/control/ownership map: [CONTRACT_MAP.md](CONTRACT_MAP.md).
 
@@ -216,7 +217,13 @@ Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). F
 
 | STEP1-F | 2026-11-15, Asia/Tehran | persof / codex/perso-healthcare-rbac | 9cb867d5cffbd529aaff12ea6485a28da693bc21 | Publish new branch at verified unchanged frontend base | Local install/typecheck/build and generated API check passed; exact-baseline CI passed | Confirmed remote ref at candidate SHA; no frontend content change |
 
-| STEP1-P | 2026-11-15, Asia/Tehran | persop / codex/perso-healthcare-rbac | Parent documentation tree derived from e17d5eb512b05570084edfd60b443e3a1a5d8a8a; resulting commit reported after publication | Publish workflow, complete contract map, baseline evidence and historical-status links | Python 7 tests, canonical/embedded contract, generated types, frontend typecheck/build, 131-field/11-screen/link coverage and whitespace checks passed; baseline limitations retained | Prepared before parent ref publication; remote outcome is not yet claimed |
+| STEP1-P | 2026-11-15, Asia/Tehran | persop / codex/perso-healthcare-rbac | Parent documentation tree derived from e17d5eb512b05570084edfd60b443e3a1a5d8a8a; resulting commit reported after publication | Publish workflow, complete contract map, baseline evidence and historical-status links | Python 7 tests, canonical/embedded contract, generated types, frontend typecheck/build, 131-field/11-screen/link coverage and whitespace checks passed; baseline limitations retained | Confirmed parent ref at a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; documentation-only step 1 |
+
+| STEP2-B | 2026-11-15, Asia/Tehran | persob / codex/perso-healthcare-rbac | 14ebe3cde6fcb4e6cb2713a8481b07a997ff29a3 | Publish identity migration, sessions/CSRF, exact roles, account APIs, bootstrap, tests and CI fixtures | Full unit/race suite, vet/build, DB acceptance, identity concurrency/migration tests passed; canonical contract matches | Confirmed backend ref 14ebe3cde6fcb4e6cb2713a8481b07a997ff29a3; parent pin update waits for compatible frontend |
+
+| STEP2-F | 2026-11-15, Asia/Tehran | persof / codex/perso-healthcare-rbac | d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242 | Publish personal login, persisted customization, account administration, generated API types and browser tests | Typecheck/build passed; ten full-stack tests passed; final numeric-format display cleanup typechecked/built | Confirmed frontend ref d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242; backend publication verified |
+
+| STEP2-P | 2026-11-15, Asia/Tehran | persop / codex/perso-healthcare-rbac | Documentation/configuration tree based on a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; pins backend 14ebe3cde6fcb4e6cb2713a8481b07a997ff29a3 and frontend d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242 | Publish compatible step 2 pins, workflow/evidence, private bootstrap configuration, session-aware monitoring/rehearsal and integration CI | Full backend unit/race, vet/build, DB acceptance, frontend typecheck/build, ten full-stack browser tests, seven Python tests, contract/YAML/link/whitespace checks passed locally; Docker/PG16 reference remains CI | Prepared before parent ref update; both submodule refs already confirmed |
 
 For every future entry, include observed errors, CI evidence, outstanding limitations, and the next step. Keep previous entries as history; do not replace failures with an unexplained success label.
 
@@ -238,3 +245,7 @@ For every future entry, include observed errors, CI evidence, outstanding limita
 - 0.2: Step 1 authorized. Added fresh baseline evidence, CI failure classification, complete healthcare field/control/API map and explicit buyer/source ownership decisions. Prepared new feature refs; no account, healthcare or provider implementation yet.
 
 Step 1 publication note: backend/frontend feature branches contain their unchanged baseline commits. Only five parent Markdown files are added/updated; all app sources, OpenAPI/generated types, migrations, runtime manifests, dependencies and gitlinks remain unchanged. Documentation preparation commits were made locally before each ref publication. The final remote parent checkpoint consolidates this documentation tree against the recorded main base; its actual commit ID and ref verification are reported after publication.
+
+- 0.3: Step 2 authorized and implemented. Added identity migration, cookie sessions/CSRF/rate limits, exact roles and transactional admin controls, profile/preferences/password APIs and UI, generated contracts, bootstrap/deployment/monitoring updates, and database/browser tests. Buyer marketplace routes are denied pending step 3. Every publication receives a separate pre-push ledger entry below.
+
+Step 2 pre-publication checkpoint: backend and frontend refs are confirmed. Parent pins reference exactly those immutable commits; the local application trees match the verified code. Local native services used PostgreSQL 17/Redis 8; Docker image rehearsal and the PostgreSQL 16/Redis 7 reference are checked by the newly triggered CI, not claimed as local passes. The old runtime-image scan finding remains a separate release limitation.

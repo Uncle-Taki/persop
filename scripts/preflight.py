@@ -7,7 +7,7 @@ import uuid
 from pathlib import Path
 
 SECRET_KEYS = ('API_TOKEN', 'POSTGRES_PASSWORD', 'MONGO_ROOT_PASSWORD', 'MONGO_APP_PASSWORD',
-               'REDIS_PASSWORD', 'TELEGRAM_GATEWAY_TOKEN', 'TELEGRAM_SESSION_STORAGE_KEY')
+               'REDIS_PASSWORD', 'TELEGRAM_GATEWAY_TOKEN', 'TELEGRAM_SESSION_STORAGE_KEY', 'BOOTSTRAP_ADMIN_PASSWORD')
 
 
 def read_environment(path):
@@ -26,6 +26,10 @@ def validate(values, offline=False, public=False):
     for key in SECRET_KEYS:
         if not re.fullmatch(r'[A-Za-z0-9_-]{32,}', values.get(key, '')):
             errors.append(f'{key}: use an independently generated secret of at least 32 characters')
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.-]{2,63}', values.get('BOOTSTRAP_ADMIN_USERNAME', '')):
+        errors.append('BOOTSTRAP_ADMIN_USERNAME: set a valid initial administrator username')
+    if values.get('AUTH_COOKIE_SECURE') != 'true':
+        errors.append('AUTH_COOKIE_SECURE: production browser sessions require HTTPS cookies')
     if len({values.get(key) for key in SECRET_KEYS}) != len(SECRET_KEYS):
         errors.append('Secrets must be different from one another')
     try:

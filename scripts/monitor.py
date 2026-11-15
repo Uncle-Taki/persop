@@ -35,11 +35,11 @@ def alerts_for(metrics, limits):
 def collect(deployment, url, backup_manifest, max_backup_hours):
     metrics = {}
     headers = {'Authorization': 'Bearer ' + deployment.values['API_TOKEN']}
-    with urllib.request.urlopen(urllib.request.Request(url.rstrip('/') + '/api/v1/telegram/status', headers=headers), timeout=10) as response:
+    with urllib.request.urlopen(urllib.request.Request(url.rstrip('/') + '/api/v1/operations/status', headers=headers), timeout=10) as response:
         status = json.load(response)['data']
     metrics['gateway_connected'] = status.get('connected', False) and not status.get('authorization_required', True)
-    # An authenticated DB-backed API read checks the same route the operator uses.
-    with urllib.request.urlopen(urllib.request.Request(url.rstrip('/') + '/api/v1/products?limit=1', headers=headers), timeout=10) as response:
+    # Readiness checks database/queue connectivity. Machine credentials never read user or marketplace data.
+    with urllib.request.urlopen(urllib.request.Request(url.rstrip('/') + '/ready', headers=headers), timeout=10) as response:
         metrics['api_ready'] = response.status == 200
     stream = deployment.values.get('REDIS_STREAM_KEY', 'perso:telegram:messages')
     groups = redis(deployment, 'XINFO', 'GROUPS', stream)

@@ -60,6 +60,6 @@ These results supersede older claims that the exact parent baseline still awaits
 - [x] Record fresh local checks separately from existing CI evidence and pre-existing failures.
 - [x] Map all 11 prototype screens, controls, endpoint gaps, ownership decisions and all 131 properties across seven exported prototype interfaces in [CONTRACT_MAP.md](CONTRACT_MAP.md).
 - [x] Add the canonical [WORKFLOW.md](WORKFLOW.md) before feature implementation and link historical status documents to the new plan/evidence.
-- [ ] Publish/verify remote feature refs and the documentation checkpoint; see the workflow push ledger and final commit/branch links. This row is a pre-publication snapshot; observed outcomes enter the next checkpoint rather than claiming a future push already succeeded.
+- [x] Publish/verify remote feature refs and the documentation checkpoint; see the workflow push ledger and final commit/branch links. Parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae and both baseline submodule feature refs were subsequently verified; step 2 publication is separate.
 
 The next application step is step 2: accounts, sessions, exact roles, personal settings and a minimal role-aware account UI. No step 2 work is included here.
