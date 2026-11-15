@@ -2,7 +2,7 @@
 
 Version: 0.3 — step 2 identity implementation
 Prepared: 2026-11-15, Asia/Tehran
-Status: STEP 2 IMPLEMENTED; final verification and publication in progress. Individual password accounts, sessions, roles, customization and minimal account UI are included. Step 3 source assignments and subsequent healthcare/provider work remain pending.
+Status: STEP 2 IMPLEMENTED AND PUBLISHED; final integrated verification recorded below. Individual password accounts, sessions, roles, customization and minimal account UI are included. Step 3 source assignments and subsequent healthcare/provider work remain pending.
 Feature branch in all three repositories: `codex/perso-healthcare-rbac`
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -146,7 +146,7 @@ Each checkpoint is a vertical slice where practical: contract, migration/backend
 | --- | --- | --- | --- | --- |
 | 0 | This workflow and proposed decisions | Standalone planning document | Requirements, roles, phases, and push rules are reviewable; no implementation | Complete |
 | 1 | Branch setup, fresh baseline, contract/field/ownership map | All three | Read applicable `AGENTS.md`; record actual base SHAs and pins; baseline checks and existing failures distinguished; map prototype controls and endpoints; commit workflow before feature work | Complete; parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae confirmed |
-| 2 | User identity, sessions, exact roles, personal settings, minimal account UI | Backend + frontend; parent pins | Login/logout, profile/preferences persistence, role enforcement, admin/buyer management, forbidden actions, session revocation, safe legacy-user migration | Complete; backend/frontend published; final parent ref prepared |
+| 2 | User identity, sessions, exact roles, personal settings, minimal account UI | Backend + frontend; parent pins | Login/logout, profile/preferences persistence, role enforcement, admin/buyer management, forbidden actions, session revocation, safe legacy-user migration | Complete; all three repositories published; verification below |
 | 3 | Buyer authorization and shared-ingestion data model | Backend + frontend assignments UI | Two buyers receive only authorized sources/offers/matches/stats/conversations; background jobs respect ownership; replay creates no duplicate shared listings; unauthorized totals do not leak | Not started |
 | 4 | Healthcare catalog, attributes, extraction, matching, and compatible price analytics | Backend + frontend catalog/interests | Catalog CRUD, Persian/English aliases, per-item price association, units/specs/expiry, filter persistence, healthcare defaults; existing data retained | Not started |
 | 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Not started |
@@ -201,7 +201,7 @@ Every user-facing step summary should state what changed, relevant tests and lim
 
 ## 10. Progress and push ledger
 
-Current checkpoint: step 2 — implementation and ten full-stack browser checks complete; full backend race run passed; all three published; CI follow-up fixes in progress.
+Current checkpoint: step 2 — accounts, roles and customization implemented and published in all three repositories. Backend/frontend CI and the final container rehearsal passed; final pinned-stack integration result is recorded below. Runtime-image scan findings remain open.
 Confirmed starting branch heads: parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; backend 33aac438d760d0d293e907cf8892775bbaeca222; frontend 9cb867d5cffbd529aaff12ea6485a28da693bc21.
 Feature branch: `codex/perso-healthcare-rbac` in all three repositories.
 Next step: step 3, shared ingestion/source assignments and buyer-specific data visibility. It is not included in step 2.
@@ -248,7 +248,7 @@ Step 1 publication note: backend/frontend feature branches contain their unchang
 
 - 0.3: Step 2 authorized and implemented. Added identity migration, cookie sessions/CSRF/rate limits, exact roles and transactional admin controls, profile/preferences/password APIs and UI, generated contracts, bootstrap/deployment/monitoring updates, and database/browser tests. Buyer marketplace routes are denied pending step 3. Every publication receives a separate pre-push ledger entry below.
 
-Step 2 pre-publication checkpoint: backend and frontend refs are confirmed. Parent pins reference exactly those immutable commits; the local application trees match the verified code. Local native services used PostgreSQL 17/Redis 8; Docker image rehearsal and the PostgreSQL 16/Redis 7 reference are checked by the newly triggered CI, not claimed as local passes. The old runtime-image scan finding remains a separate release limitation.
+Historical step 2 pre-publication checkpoint: backend and frontend refs were confirmed. Parent pins reference exactly those immutable commits; the local application trees match the verified code. Local native services used PostgreSQL 17/Redis 8; Docker image rehearsal and the PostgreSQL 16/Redis 7 reference are checked by the newly triggered CI, not claimed as local passes. The old runtime-image scan finding remains a separate release limitation.
 
 ## 13. Step 2 CI follow-up
 
@@ -266,4 +266,17 @@ Deployment follow-up: source inspection found Nginx forwarded $host (which strip
 
 | STEP2-F2 | 2026-11-15 UTC | persof / codex/perso-healthcare-rbac | 8a96ea06de70c3367ceb441adc096e14f29e7bc9 | Preserve browser Origin/Host port and proxy /ready; unchanged application bundle previously typechecked/built and full-stack tested; integrated container test now exercises browser Origin | Confirmed remote frontend ref 8a96ea06de70c3367ceb441adc096e14f29e7bc9 |
 
-| STEP2-P3 | 2026-11-15 UTC | persop / codex/perso-healthcare-rbac | Tree based on 11a7793d5c132234eb4a7f9f69e2408429f2d7f0; backend 299a942f66dec0ac17e4ef5a8dd8a12ce46356d8, frontend 8a96ea06de70c3367ceb441adc096e14f29e7bc9 | Publish origin-preserving frontend pin, real JSON readiness checks and Origin-bearing container login; nine Python checks and whitespace passed; dependency CI 43761805491 passed before this follow-up | Prepared before parent ref update |
+| STEP2-P3 | 2026-11-15 UTC | persop / codex/perso-healthcare-rbac | Tree based on 11a7793d5c132234eb4a7f9f69e2408429f2d7f0; backend 299a942f66dec0ac17e4ef5a8dd8a12ce46356d8, frontend 8a96ea06de70c3367ceb441adc096e14f29e7bc9 | Publish origin-preserving frontend pin, real JSON readiness checks and Origin-bearing container login; nine Python checks and whitespace passed; dependency CI 43761805491 passed before this follow-up | Confirmed remote parent ref 6b15263aa52ae6c48638a58d48c6d1305a8adda6 |
+
+## 14. Step 2 verified handoff
+
+Published application checkpoint: parent [6b15263aa52ae6c48638a58d48c6d1305a8adda6](https://github.com/Uncle-Taki/persop/commit/6b15263aa52ae6c48638a58d48c6d1305a8adda6), backend [299a942f66dec0ac17e4ef5a8dd8a12ce46356d8](https://github.com/Uncle-Taki/persob/commit/299a942f66dec0ac17e4ef5a8dd8a12ce46356d8), frontend [8a96ea06de70c3367ceb441adc096e14f29e7bc9](https://github.com/Uncle-Taki/persof/commit/8a96ea06de70c3367ceb441adc096e14f29e7bc9). Exact remote heads and parent pins were confirmed. Working trees were clean before this evidence-only documentation checkpoint.
+
+- Backend [43761724143](https://github.com/Uncle-Taki/persob/actions/runs/43761724143): passed unit/race, vet/build, contract sync and database acceptance.
+- Frontend [43761945909](https://github.com/Uncle-Taki/persof/actions/runs/43761945909): passed standalone frontend checks. The full server-backed browser suite is verified by parent integration and the ten-test local run, not the standalone fixture-skipped run.
+- Parent [43762024265](https://github.com/Uncle-Taki/persop/actions/runs/43762024265): passed full backend race/vet/build, database acceptance, canonical/generated contracts, frontend typecheck/build, all ten server-backed Playwright checks and Compose validation.
+- Parent [43762024188](https://github.com/Uncle-Taki/persop/actions/runs/43762024188): dependency checks passed; actual Docker fresh install, Origin-bearing login through Nginx, monitoring-token rotation, password/session revocation, volume restart, isolated PostgreSQL/Mongo/session restore and separate demo ingestion/backup rehearsal passed. Both runtime-image scanners still failed; release workflow overall remains red for BASE-02. Scanners were not disabled or downgraded.
+
+The initial failed config-isolation and readiness checks are retained above with their fixes. No new production behavior is included in this final documentation checkpoint. Step 3 (buyer source grants/data isolation) is next; healthcare/provider/prototype work remains scheduled for later steps.
+
+| STEP2-P4 | 2026-11-15 UTC | persop / codex/perso-healthcare-rbac | Documentation-only child of 6b15263aa52ae6c48638a58d48c6d1305a8adda6; identical runtime files and submodule pins | Record final observed verification, published heads, remaining image-scan limitation and step 3 handoff; Markdown whitespace checked | Prepared before final parent documentation ref update |

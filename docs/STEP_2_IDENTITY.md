@@ -46,7 +46,7 @@ Earlier browser attempts did not execute app checks because the browser download
 - Step 3 must replace administrator/single-owner marketplace assumptions with explicit source grants and buyer-specific matching/aggregation/inquiry visibility. This checkpoint deliberately denies buyer shared-marketplace reads.
 - The live catalog remains electronics until step 4 and the healthcare prototype remains separate until step 6. No HTTP mock LLM implementation is claimed here.
 - Account administration currently lists a bounded 200 accounts. Email delivery, public signup, social login and MFA are not part of this slice. Login is limited per username and socket peer; a shared reverse proxy concentrates that peer limit as documented.
-- The container install/rotation/restore rehearsal was updated for sessions but requires Docker-enabled CI execution. Existing runtime-image scan findings from BASE-02 remain release work; this identity change does not claim to resolve them.
+- Docker CI passed the fresh-install, Origin-bearing login, monitoring-token rotation, password/session revocation, persistence, isolated restore and separate demo-ingestion/backup rehearsal. Both runtime-image scanners still fail (BASE-02), so the release workflow remains red despite those passing functional checks.
 - No main branch was intentionally changed, no production service was deployed, and no real Telegram seller messages were sent.
 
 The [workflow ledger](WORKFLOW.md) records candidate/published revisions and is updated before every individual publication. Its final parent commit is reported after the remote confirms it; a document cannot embed its own final commit SHA.
@@ -55,8 +55,12 @@ The [workflow ledger](WORKFLOW.md) records candidate/published revisions and is 
 
 - Backend: [299a942f66dec0ac17e4ef5a8dd8a12ce46356d8](https://github.com/Uncle-Taki/persob/commit/299a942f66dec0ac17e4ef5a8dd8a12ce46356d8), remote branch confirmed.
 - Frontend: [8a96ea06de70c3367ceb441adc096e14f29e7bc9](https://github.com/Uncle-Taki/persof/commit/8a96ea06de70c3367ceb441adc096e14f29e7bc9), remote branch confirmed.
-- Parent commit: reported after the final documentation/configuration tree and these exact pins are published.
+- Parent application checkpoint: [6b15263aa52ae6c48638a58d48c6d1305a8adda6](https://github.com/Uncle-Taki/persop/commit/6b15263aa52ae6c48638a58d48c6d1305a8adda6), remote branch confirmed. The final evidence-only documentation commit follows it with identical runtime files and submodule pins.
 
 CI follow-up: backend and frontend initial feature runs passed. The first parent integration run exposed ambient deployment settings leaking into config tests; the backend follow-up clears all newly added variables and explicitly tests insecure production cookies. The first container rehearsal exposed a readiness-only wait before checking token rotation; the parent follow-up requires the new monitoring credential to reach the operation route before proceeding. These failures and their exact runs remain recorded in the workflow ledger. Dependency checks passed; runtime-image scanner findings remain open.
 
 Deployment review also corrected Nginx to retain the browser Host port and proxy /ready. The container login check now supplies Origin as a browser does; readiness consumers require ready=true in backend JSON. This covers non-default demo ports and prevents a frontend HTML response from appearing healthy.
+
+## Final observed CI
+
+[Final pinned-stack integration](https://github.com/Uncle-Taki/persop/actions/runs/43762024265) passed, including full backend race/vet/build, database acceptance, contracts, frontend typecheck/build, ten live browser checks and Compose validation. [Release rehearsal/security](https://github.com/Uncle-Taki/persop/actions/runs/43762024188) passed dependency checks and the actual complete container rehearsal; only the two existing runtime-image scanner steps failed. Final [backend](https://github.com/Uncle-Taki/persob/actions/runs/43761724143) and [frontend](https://github.com/Uncle-Taki/persof/actions/runs/43761945909) standalone CI passed. The workflow ledger retains earlier failures and fixes.
