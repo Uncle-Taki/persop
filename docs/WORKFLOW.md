@@ -1,8 +1,8 @@
 # Perso healthcare app — implementation workflow
 
-Version: 0.3 — step 2 identity implementation
-Prepared: 2026-11-15, Asia/Tehran
-Status: STEP 2 IMPLEMENTED AND PUBLISHED; final integrated verification recorded below. Individual password accounts, sessions, roles, customization and minimal account UI are included. Step 3 source assignments and subsequent healthcare/provider work remain pending.
+Version: 0.4 — step 3 split into 3A and 3B
+Updated: 2026-11-16, Asia/Tehran
+Status: STEP 2 IMPLEMENTED AND PUBLISHED; final integrated verification recorded below. Individual password accounts, sessions, roles, customization and minimal account UI are included. Steps 3A (shared ingestion/source assignments) and 3B (buyer access/data isolation) are planned below; implementation has not started.
 Feature branch in all three repositories: `codex/perso-healthcare-rbac`
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -147,16 +147,41 @@ Each checkpoint is a vertical slice where practical: contract, migration/backend
 | 0 | This workflow and proposed decisions | Standalone planning document | Requirements, roles, phases, and push rules are reviewable; no implementation | Complete |
 | 1 | Branch setup, fresh baseline, contract/field/ownership map | All three | Read applicable `AGENTS.md`; record actual base SHAs and pins; baseline checks and existing failures distinguished; map prototype controls and endpoints; commit workflow before feature work | Complete; parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae confirmed |
 | 2 | User identity, sessions, exact roles, personal settings, minimal account UI | Backend + frontend; parent pins | Login/logout, profile/preferences persistence, role enforcement, admin/buyer management, forbidden actions, session revocation, safe legacy-user migration | Complete; all three repositories published; verification below |
-| 3 | Buyer authorization and shared-ingestion data model | Backend + frontend assignments UI | Two buyers receive only authorized sources/offers/matches/stats/conversations; background jobs respect ownership; replay creates no duplicate shared listings; unauthorized totals do not leak | Not started |
+| 3A | Shared ingestion, ownership migration and source assignments | Backend + frontend admin assignment UI; parent pins | Fresh/populated migration preserves history; replay stores one shared source/message/listing; grant changes are atomic and admin-only; buyer marketplace routes remain blocked | Not started |
+| 3B | Buyer authorization, scoped matching and marketplace UI access | Backend + frontend buyer integration; parent pins | Two-buyer endpoint/job/browser tests prove source/offer/match/statistics/conversation isolation, correct scoped totals and immediate revocation before buyer access is enabled | Not started; depends on 3A |
 | 4 | Healthcare catalog, attributes, extraction, matching, and compatible price analytics | Backend + frontend catalog/interests | Catalog CRUD, Persian/English aliases, per-item price association, units/specs/expiry, filter persistence, healthcare defaults; existing data retained | Not started |
 | 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Not started |
 | 6 | Healthcare prototype promoted into the main server-backed UI | Frontend + backend contract adjustments | Main entry shows healthcare UI; all selected prototype screens use APIs; responsive RTL/LTR; roles, loading/error/empty states and preferences work; no hidden sample fallback | Not started |
 | 7 | Buyer-scoped, supervised conversations through the same provider/queue path | Backend + frontend + demo fixtures | Match → draft/request → admin approval → simulated seller consent → missing-field intake → persisted offer update; opt-out, permission revocation, dedupe and failed delivery visible | Not started |
 | 8 | Full-stack synchronization and release-ready handoff | All three | Exact pinned stack passes applicable checks; isolated demo boots; docs/config/backup paths updated for users and provider; branch changes summarized; deployment remains a separate action | Not started |
 
-Dependencies: finish identity before buyer scoping; finish scoping before exposing data to multiple buyers; establish healthcare contracts before completing the mock fixture schema; integrate existing prototype pages progressively rather than maintaining a second disconnected live implementation. Maintain a working integrated checkpoint after each push.
+Dependencies: finish step 2 before 3A; finish 3A before 3B; finish 3B before exposing shared marketplace data to buyers; establish healthcare contracts before completing the mock fixture schema; integrate existing prototype pages progressively rather than maintaining a second disconnected live implementation. Maintain a working integrated checkpoint after each push.
 
 At step 6, cover the prototype's offers, product details, price comparison, interests/add product, Telegram sources/add source/source details, conversations/details, and settings. Product creation belongs to administrative permissions; a buyer's add-product flow selects from the catalog. Add account/user-management screens according to role. Prototype metrics or badges lacking a real implementation must be removed or clearly marked unavailable.
+
+### Step 3A — shared ingestion and source assignments
+
+Goal: make source ingestion a shared workspace resource and let administrators assign sources to buyers, while preserving the step 2 buyer marketplace restrictions.
+
+1. Add ordered migrations for workspace/source ownership, explicit source grants, normalized listing-to-source references and buyer-match/request relationships where needed. Preserve legacy operator data and histories. Map legacy access only to its documented owner; ambiguous source/ownership records remain restricted until explicitly resolved. Never copy private records or grant every source to newly created buyers.
+2. Refactor ingestion and persistence so each source/message revision and extracted listing is stored once, independently of how many buyers have interests. Establish stable replay/edit keys and database constraints; preserve one gateway/Telegram session. Keep buyer-specific relationships separate from shared listings and seller sessions.
+3. Implement admin/super-admin GET/PUT source-assignment APIs and a minimal admin assignment UI. Validate target buyers, replace grants atomically, handle linked peers explicitly, and audit grant changes. Regenerate the canonical/embedded OpenAPI and frontend types with the implemented endpoints.
+4. Keep buyer shared-marketplace reads and inquiry actions blocked at this checkpoint. Personal account/preferences/interests continue to work. Preserve compatible administrator behavior while updating the parent pins.
+
+Acceptance: fresh-install and populated-upgrade/idempotency checks; legacy-history preservation; duplicate replay/edit checks with multiple buyer interests; admin-only grant CRUD, validation, linked-peer behavior and atomic replacement tests; browser assignment/save/reload checks; regression proof that buyers still cannot read shared marketplace routes. Record the exact compatible commits and checks before the 3A pushes.
+
+### Step 3B — buyer access and data isolation
+
+Goal: enable the buyer marketplace against the shared model only after authorization is enforced consistently through APIs, jobs and the client.
+
+1. Apply one explicit active-user/source-grant policy before details, filtering, sorting, pagination, totals and aggregation. Cover sources/linked peers, offers, matches, product price statistics, analytics, raw-message/provenance access and legacy aliases. Scope any existing inquiry/conversation reads to the owning buyer and authorized listing; shared seller transcripts remain administrative. Client-supplied IDs cannot choose another effective buyer.
+2. Create/update personal matches only for eligible buyers and their interests. Ensure source revocation/reassignment, account deactivation and stale queued/cached work cannot restore access or create an eligible new match/inquiry. Re-check eligibility at the point background work is applied; do not duplicate shared listings per buyer.
+3. Replace the step 2 buyer placeholder with permitted source/offer/match/statistics views using real scoped endpoints. Handle no assignments, empty data, access denial and revocation. Keep ingestion, assignment and approval controls administrative. Synchronize session capabilities, API clients, generated types and parent pins.
+4. Verify two buyers with separate and overlapping grants, including direct-ID attempts, forged buyer IDs, legacy routes, unauthorized counts/price denominators and revocation during queued work. Enable each buyer route only with its matching authorization tests in place; retain denial for an unimplemented route.
+
+Acceptance: endpoint and worker tests prove isolation for buyer A/B, administrator visibility and immediate revocation; replay still produces one shared listing; server-backed browser tests prove each buyer sees only permitted facts and cannot expose another buyer's requests/filters/transcript. Run the pinned-stack checks and record results before the 3B pushes.
+
+Completion boundary: 3A and 3B together replace the original step 3; neither changes the healthcare/provider schedule. Healthcare extraction and richer interest filters remain step 4, the HTTP mock remains step 5, prototype promotion remains step 6, and new supervised inquiry/approval/consent/send flows remain step 7. This planning change starts no implementation, deployment or seller communication. Each part is implemented, verified, documented and pushed as a separate checkpoint when requested.
 
 ## 8. Verification strategy
 
@@ -204,7 +229,7 @@ Every user-facing step summary should state what changed, relevant tests and lim
 Current checkpoint: step 2 — accounts, roles and customization implemented and published in all three repositories. Backend/frontend CI and the final container rehearsal passed; final pinned-stack integration result is recorded below. Runtime-image scan findings remain open.
 Confirmed starting branch heads: parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; backend 33aac438d760d0d293e907cf8892775bbaeca222; frontend 9cb867d5cffbd529aaff12ea6485a28da693bc21.
 Feature branch: `codex/perso-healthcare-rbac` in all three repositories.
-Next step: step 3, shared ingestion/source assignments and buyer-specific data visibility. It is not included in step 2.
+Next step: 3A, shared ingestion/ownership migration and admin source assignments. Step 3B then enables buyer access with complete data isolation. Both are unimplemented; steps 4–8 retain their numbering.
 Step 2 implementation, checks and limitations: [STEP_2_IDENTITY.md](STEP_2_IDENTITY.md).
 
 Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). Field/control/ownership map: [CONTRACT_MAP.md](CONTRACT_MAP.md).
@@ -279,4 +304,12 @@ Published application checkpoint: parent [6b15263aa52ae6c48638a58d48c6d1305a8add
 
 The initial failed config-isolation and readiness checks are retained above with their fixes. No new production behavior is included in this final documentation checkpoint. Step 3 (buyer source grants/data isolation) is next; healthcare/provider/prototype work remains scheduled for later steps.
 
-| STEP2-P4 | 2026-11-15 UTC | persop / codex/perso-healthcare-rbac | Documentation-only child of 6b15263aa52ae6c48638a58d48c6d1305a8adda6; identical runtime files and submodule pins | Record final observed verification, published heads, remaining image-scan limitation and step 3 handoff; Markdown whitespace checked | Prepared before final parent documentation ref update |
+| STEP2-P4 | 2026-11-15 UTC | persop / codex/perso-healthcare-rbac | Documentation-only child of 6b15263aa52ae6c48638a58d48c6d1305a8adda6; identical runtime files and submodule pins | Record final observed verification, published heads, remaining image-scan limitation and step 3 handoff; Markdown whitespace checked | Confirmed remote parent ref 9511ea9df798fa41c0fbe953f86b59eec530fc39 |
+
+## 15. Step 3 planning revision
+
+- 0.4 (2026-11-16, Asia/Tehran): user requested two parts for phase 3. Replaced its single roadmap row with 3A/3B, defined deliverables, acceptance gates and the safe intermediate state. No runtime files, migrations, dependencies or submodule pins change. The existing image-scan limitation remains as recorded above.
+
+| Entry | Timestamp | Repository/branch | Candidate | Purpose and validation | Push status |
+| --- | --- | --- | --- | --- | --- |
+| PLAN-3-SPLIT | 2026-11-16, Asia/Tehran | persop / codex/perso-healthcare-rbac | Documentation-only child of 9511ea9df798fa41c0fbe953f86b59eec530fc39; unchanged backend/frontend pins | Split step 3 into independently reviewable 3A/3B; check scope coverage, sequencing, document references and whitespace; no application tests needed for this planning-only change | Prepared before parent documentation ref update |

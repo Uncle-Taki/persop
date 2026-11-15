@@ -42,7 +42,7 @@ All routes in the next table are relative to `/api/v1`. Existing routes need new
 | Identity | GET `/session`, fixed bearer operator | POST `/auth/login`, POST `/auth/logout`, GET `/session` expanded user/permissions; session cookie + CSRF policy; no public signup | Backend identity + frontend auth; 2 |
 | Personal account | No profile/preferences API | GET/PATCH `/me`, GET/PATCH `/me/preferences`, POST `/me/password` | 2 |
 | Users | Internal users table/repo only | GET/POST `/users`, GET/PATCH `/users/{id}`, POST `/users/{id}/reset-password`; role/state restrictions; no credential/secret in read DTOs | 2 |
-| Source grants | Single operator source ownership | GET/PUT `/sources/{id}/assignments`; replace grants atomically; invalidate access immediately; buyer list only assigned | 3 |
+| Source grants | Single operator source ownership | GET/PUT `/sources/{id}/assignments`; replace grants atomically; invalidate access immediately; buyer list only assigned | 3A admin grants/shared model; 3B buyer enforcement |
 | Catalog | GET products/details/statistics only | Admin POST/PATCH products, aliases/localized fields and domain; retire/archive flag rather than deleting historical products | 4 |
 | Interests | GET/POST/DELETE | PATCH owned constraints; buyer_id from session; GET matches filtered by active grants/constraints | 3/4 |
 | Offers/statistics | Existing offers/details/statistics and analytics | Add source_id, healthcare spec/unit/search filters, uniform ScoredOffer wrapper, nullable unknowns, permission-filtered denominators | 3/4/6 |
@@ -52,6 +52,8 @@ All routes in the next table are relative to `/api/v1`. Existing routes need new
 Proposed DTOs: Session/User/Profile/Preferences, UserCreate/UserUpdate/PasswordReset; SourceAssignment; HealthcareProduct/Attributes/Aliases; HealthcareOffer/ScoredOffer/PriceStatistics; Interest/InterestConstraints; BuyerInquiry/InquiryProgress; Conversation/AdminTranscript; ProviderMetadata without credentials. Required/nullable fields, validation, paging and errors enter OpenAPI alongside the implementing slice; step 1 does not falsely advertise planned endpoints as working.
 
 ## Ownership and migration decisions
+
+Step 3 is split in [the workflow](WORKFLOW.md#step-3a--shared-ingestion-and-source-assignments): 3A establishes shared ingestion, ownership migration and administrative source assignments while buyer marketplace routes stay blocked; 3B applies scoped authorization/matching and enables buyer views after isolation tests pass. Other step-3 references in this map refer to this combined scope.
 
 - One installation/workspace, one shared catalog/source ingestion and one Telegram session. Add explicit workspace identity where required by shared entities; buyer access comes from source grants, not an arbitrary offers.owner_id rewrite.
 - Raw source revisions remain singular; offers get a normalized source FK. Buyer-specific matches link user+interest+offer. Interests/preferences/inquiries are user-owned; shared seller sessions and outbox remain workspace-controlled.
