@@ -97,3 +97,13 @@ python3 scripts/backup.py restore --project perso-restore --env-file .env.restor
 ```
 
 Restore rejects the source project, running application services, nonempty databases/session volume, mismatched encryption keys, corrupt archives and unsafe session paths. A partial failed restore must be discarded before retrying. The restored gateway stays stopped. Validate counts, migration ledger and API reads before deciding whether to use the restored environment. Never run both copies of a real Telegram session.
+
+## Operator health snapshot
+
+Run the read-only health check on the deployment host and let your existing scheduler/monitoring system alert on a nonzero exit status:
+
+```sh
+python3 scripts/monitor.py --project perso --env-file .env --url https://your-hostname.example --backup-manifest backups/release-001/manifest.json
+```
+
+The JSON reports queue pending count/age, dead letters, worker heartbeats, Redis data-disk use, outbox failures/age, gateway authorization, authenticated API availability and backup age. Default thresholds are initial operating defaults, not measured service-level guarantees; adjust them for the pilot. Exit status 1 means an alert and 2 means inspection failed. Without a backup manifest, backup health remains an alert. Snapshot output contains aggregate health only, not message text or credentials. Arrange daily review and periodic checks through your own scheduler; no external alert recipients or schedules are created automatically.

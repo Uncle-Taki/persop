@@ -103,3 +103,9 @@ The pilot is ready for a deployment decision only when all applicable P0 jobs ha
 - The rehearsal uses synthetic session content; it never authorizes or contacts a real Telegram account. Backup now quiesces running gateway, worker and API services for the snapshot and resumes them afterward.
 - Added pinned Trivy image scans, reachable Go vulnerability scanning, frontend audit and narrowly selected evidence artifacts. Private environment files and session/backup archives are excluded from uploads.
 - Local eight-test full-stack browser rerun now passes with the patched backend; local unit, vet, build and database acceptance also pass. Container execution remains pending on the Docker-enabled CI runner.
+
+### 2026-11-15: Read-only operational monitoring (P1-01)
+
+- Added aggregate JSON monitoring for API/gateway readiness, worker heartbeats, pending queue age/count, dead letters, Redis disk use, outbox failures/age and backup age.
+- Alert evaluation tests cover unhealthy queue/backup snapshots and healthy operation. Monitoring returns nonzero on collection failures and never includes secret values or message bodies in its result.
+- Remaining operator work: choose thresholds/recipients, connect the command to the deployment scheduler and exercise the installed alert route. No external messages or schedules were created.
