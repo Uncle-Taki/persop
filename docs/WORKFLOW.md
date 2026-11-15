@@ -201,7 +201,7 @@ Every user-facing step summary should state what changed, relevant tests and lim
 
 ## 10. Progress and push ledger
 
-Current checkpoint: step 2 — implementation and ten full-stack browser checks complete; full backend race run passed; backend/frontend published; final parent ref prepared.
+Current checkpoint: step 2 — implementation and ten full-stack browser checks complete; full backend race run passed; all three published; CI follow-up fixes in progress.
 Confirmed starting branch heads: parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; backend 33aac438d760d0d293e907cf8892775bbaeca222; frontend 9cb867d5cffbd529aaff12ea6485a28da693bc21.
 Feature branch: `codex/perso-healthcare-rbac` in all three repositories.
 Next step: step 3, shared ingestion/source assignments and buyer-specific data visibility. It is not included in step 2.
@@ -223,7 +223,7 @@ Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). F
 
 | STEP2-F | 2026-11-15, Asia/Tehran | persof / codex/perso-healthcare-rbac | d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242 | Publish personal login, persisted customization, account administration, generated API types and browser tests | Typecheck/build passed; ten full-stack tests passed; final numeric-format display cleanup typechecked/built | Confirmed frontend ref d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242; backend publication verified |
 
-| STEP2-P | 2026-11-15, Asia/Tehran | persop / codex/perso-healthcare-rbac | Documentation/configuration tree based on a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; pins backend 14ebe3cde6fcb4e6cb2713a8481b07a997ff29a3 and frontend d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242 | Publish compatible step 2 pins, workflow/evidence, private bootstrap configuration, session-aware monitoring/rehearsal and integration CI | Full backend unit/race, vet/build, DB acceptance, frontend typecheck/build, ten full-stack browser tests, seven Python tests, contract/YAML/link/whitespace checks passed locally; Docker/PG16 reference remains CI | Prepared before parent ref update; both submodule refs already confirmed |
+| STEP2-P | 2026-11-15, Asia/Tehran | persop / codex/perso-healthcare-rbac | Documentation/configuration tree based on a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; pins backend 14ebe3cde6fcb4e6cb2713a8481b07a997ff29a3 and frontend d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242 | Publish compatible step 2 pins, workflow/evidence, private bootstrap configuration, session-aware monitoring/rehearsal and integration CI | Full backend unit/race, vet/build, DB acceptance, frontend typecheck/build, ten full-stack browser tests, seven Python tests, contract/YAML/link/whitespace checks passed locally; Docker/PG16 reference remains CI | Confirmed parent ref e5a39e5b88371b6b2a77069114ae37e28565652b; both submodule refs confirmed |
 
 For every future entry, include observed errors, CI evidence, outstanding limitations, and the next step. Keep previous entries as history; do not replace failures with an unexplained success label.
 
@@ -249,3 +249,15 @@ Step 1 publication note: backend/frontend feature branches contain their unchang
 - 0.3: Step 2 authorized and implemented. Added identity migration, cookie sessions/CSRF/rate limits, exact roles and transactional admin controls, profile/preferences/password APIs and UI, generated contracts, bootstrap/deployment/monitoring updates, and database/browser tests. Buyer marketplace routes are denied pending step 3. Every publication receives a separate pre-push ledger entry below.
 
 Step 2 pre-publication checkpoint: backend and frontend refs are confirmed. Parent pins reference exactly those immutable commits; the local application trees match the verified code. Local native services used PostgreSQL 17/Redis 8; Docker image rehearsal and the PostgreSQL 16/Redis 7 reference are checked by the newly triggered CI, not claimed as local passes. The old runtime-image scan finding remains a separate release limitation.
+
+## 13. Step 2 CI follow-up
+
+Initial backend [CI 43760712590](https://github.com/Uncle-Taki/persob/actions/runs/43760712590) and frontend [CI 43760745154](https://github.com/Uncle-Taki/persof/actions/runs/43760745154) passed. Parent e5a39e5b88371b6b2a77069114ae37e28565652b is confirmed remotely. Parent [integration 43760892610](https://github.com/Uncle-Taki/persop/actions/runs/43760892610) found the configuration test cleanup omitted the new cookie/bootstrap environment variables; the production demo-auth test inherited AUTH_COOKIE_SECURE=false. The fix isolates those variables and adds explicit insecure-production-cookie rejection coverage; production enforcement remains unchanged. Focused race tests pass with the same ambient setting.
+
+Parent [release 43760892619](https://github.com/Uncle-Taki/persop/actions/runs/43760892619) passed dependency checks. Its container rehearsal failed during monitoring credential rotation after checking only /ready. The correction waits for the newly configured monitoring credential to be accepted, with a regression test proving an earlier readiness response cannot finish the wait. Eight Python checks pass locally. Native real-router probes confirmed missing/incorrect credentials return 401 and the configured monitoring credential reaches the aggregate route. Docker confirmation awaits the next CI run. Existing backend/frontend image scan failures remain BASE-02, independently of this correction.
+
+| Entry | Timestamp | Repository/branch | Candidate | Purpose and validation | Push status |
+| --- | --- | --- | --- | --- | --- |
+| STEP2-B2 | 2026-11-15 UTC | persob / codex/perso-healthcare-rbac | 299a942f66dec0ac17e4ef5a8dd8a12ce46356d8 | Isolate config tests and cover production cookie enforcement; focused config race tests pass under inherited development cookie setting | Confirmed remote ref 299a942f66dec0ac17e4ef5a8dd8a12ce46356d8; parent pin now prepared |
+
+| STEP2-P2 | 2026-11-15 UTC | persop / codex/perso-healthcare-rbac | Tree based on e5a39e5b88371b6b2a77069114ae37e28565652b; backend 299a942f66dec0ac17e4ef5a8dd8a12ce46356d8, frontend d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242 | Publish CI config-isolation pin, credential-aware rotation wait and regression; eight Python tests, focused config race test and whitespace checks passed | Prepared before parent ref update |

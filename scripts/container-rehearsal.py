@@ -39,7 +39,7 @@ def wait_api(port, token):
     deadline = time.monotonic() + 120
     while time.monotonic() < deadline:
         try:
-            if request(port, '/ready')[0] == 200:
+            if request(port, '/ready')[0] == 200 and request(port, '/api/v1/operations/status', token)[0] in (200, 503):
                 return
         except (OSError, TimeoutError):
             pass
@@ -86,7 +86,8 @@ def main():
         write_environment(source_env, source.values)
         source.run('up', '-d', '--no-deps', '--force-recreate', 'backend-api', stdout=subprocess.PIPE)
         wait_api(31880, source.values['API_TOKEN'])
-        assert request(31880, '/api/v1/operations/status', token)[0] == 401
+        old_status = request(31880, '/api/v1/operations/status', token)[0]
+        assert old_status == 401, f'Old monitoring credential returned status {old_status}'
         assert request(31880, '/api/v1/operations/status', source.values['API_TOKEN'])[0] in (200, 503)
         assert request(31880, '/api/v1/session', source.values['API_TOKEN'])[0] == 401
         assert request(31880, '/api/v1/session', account_session)[0] == 200
