@@ -64,3 +64,20 @@ The prioritized verification, pilot preparation and later product backlog is tra
 ## Publishing changes
 
 Commit/test backend and frontend branches first, then update the parent submodule pointers. CI checks the pinned combination. The dated audit under `audit/2026-11-14` is historical evidence; it does not describe the current build's validation status.
+
+## Pilot configuration and HTTPS
+
+New production environment files receive a random workspace UUID and independent private credentials. Existing files are never overwritten. Check configuration before first login:
+
+```sh
+python3 scripts/preflight.py --env-file .env
+```
+
+Use `--offline` only to check generated credentials before entering real Telegram values. For a public deployment, set `PERSO_DOMAIN=your-hostname.example` in `.env`, point its DNS to the host and open ports 80/443. Then run:
+
+```sh
+python3 scripts/preflight.py --public
+docker compose -f compose.yaml -f compose.https.yaml up -d --build
+```
+
+The optional Caddy edge obtains and renews HTTPS certificates. Verify the real certificate and authenticated UI before use; configuration validation does not prove public reachability. Keep the `.env` file mode 0600. To rotate API access, generate a new independent `API_TOKEN`, replace only that value and recreate `backend-api`; verify the old token fails and the new one works. Do not replace the session encryption key during ordinary API-token rotation.

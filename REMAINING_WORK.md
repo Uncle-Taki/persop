@@ -84,3 +84,9 @@ These items are outside the delivered single-operator electronics release; they 
 For each completed job, append: job ID, full parent/submodule SHAs, environment/tool versions, test or run URL, observed result, remaining limitation, reviewer and verification date. Update [IMPLEMENTATION.md](IMPLEMENTATION.md) when a pending result becomes verified; retain earlier evidence as historical context.
 
 The pilot is ready for a deployment decision only when all applicable P0 jobs have evidence, failures are resolved and the operator has reviewed the limitations. Publishing this document does not change deployment configuration or enable outreach.
+
+### 2026-11-15: Pilot configuration tooling (P0-11)
+
+- Added production configuration preflight, random per-installation workspace identity, independent secret validation and optional Caddy HTTPS deployment.
+- Verification: two configuration tests pass, covering private file permissions, unique identity, no-overwrite behavior, rejection of demo/reused credentials and secret-free error output.
+- Remaining operator evidence: real hostname/certificate, token rotation against a running deployment, account login and identification of the responsible operator. No public endpoint or account was configured automatically.
