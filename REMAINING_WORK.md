@@ -96,3 +96,10 @@ The pilot is ready for a deployment decision only when all applicable P0 jobs ha
 - Added a repeatable backup/restore command with private output, archive checksums, gateway session quiescing, distinct empty-target checks and session-key verification.
 - Verification: archive integrity, path traversal and source-project refusal tests pass. Configuration tests remain green.
 - Remaining evidence: execute the full container rehearsal, compare restored database/session content and record recovery time. The implementation alone does not close the staging gate.
+
+### 2026-11-15: Release rehearsal and security workflow (P0-05/P0-06/P0-07/P1-07)
+
+- Added a CI container rehearsal for fresh production installation without demo seeds, same-origin authentication, API-token rotation, volume persistence, PostgreSQL/MongoDB/session restore into a second empty project, and separate demo ingestion.
+- The rehearsal uses synthetic session content; it never authorizes or contacts a real Telegram account. Backup now quiesces running gateway, worker and API services for the snapshot and resumes them afterward.
+- Added pinned Trivy image scans, reachable Go vulnerability scanning, frontend audit and narrowly selected evidence artifacts. Private environment files and session/backup archives are excluded from uploads.
+- Local eight-test full-stack browser rerun now passes with the patched backend; local unit, vet, build and database acceptance also pass. Container execution remains pending on the Docker-enabled CI runner.

@@ -84,7 +84,7 @@ The optional Caddy edge obtains and renews HTTPS certificates. Verify the real c
 
 ## Backup and isolated restore
 
-The backup command stops and resumes a running gateway around the session snapshot. It writes private archives and a checksum manifest into a **new** directory. Encrypt the archives before copying them to off-host storage.
+The backup command quiesces and resumes running gateway, worker and API services around the snapshot. It writes private archives and a checksum manifest into a **new** directory. Encrypt the archives before copying them to off-host storage.
 
 ```sh
 python3 scripts/backup.py backup --project perso --env-file .env --directory backups/release-001

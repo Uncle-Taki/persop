@@ -45,9 +45,9 @@ def session_key_digest(deployment):
 
 def backup(deployment, directory):
     directory.mkdir(mode=0o700, parents=False, exist_ok=False)
-    resume = deployment.running('telegram-gateway')
-    if resume:
-        deployment.run('stop', 'telegram-gateway', stdout=subprocess.PIPE)
+    resume = [service for service in ('telegram-gateway', 'message-worker', 'backend-api') if deployment.running(service)]
+    for service in resume:
+        deployment.run('stop', service, stdout=subprocess.PIPE)
     try:
         commands = (
             ('exec', '-T', 'postgres', 'pg_dump', '-U', 'perso', '-d', 'perso_db', '-Fc'),
@@ -68,7 +68,7 @@ def backup(deployment, directory):
             json.dump(manifest, output, indent=2)
     finally:
         if resume:
-            deployment.run('up', '-d', '--no-deps', 'telegram-gateway', stdout=subprocess.PIPE)
+            deployment.run('up', '-d', '--no-deps', *reversed(resume), stdout=subprocess.PIPE)
     print('Backup completed. Encrypt and copy these archives to your private backup destination.')
 
 
