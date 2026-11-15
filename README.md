@@ -81,3 +81,19 @@ docker compose -f compose.yaml -f compose.https.yaml up -d --build
 ```
 
 The optional Caddy edge obtains and renews HTTPS certificates. Verify the real certificate and authenticated UI before use; configuration validation does not prove public reachability. Keep the `.env` file mode 0600. To rotate API access, generate a new independent `API_TOKEN`, replace only that value and recreate `backend-api`; verify the old token fails and the new one works. Do not replace the session encryption key during ordinary API-token rotation.
+
+## Backup and isolated restore
+
+The backup command stops and resumes a running gateway around the session snapshot. It writes private archives and a checksum manifest into a **new** directory. Encrypt the archives before copying them to off-host storage.
+
+```sh
+python3 scripts/backup.py backup --project perso --env-file .env --directory backups/release-001
+```
+
+Create the `backups` parent directory with mode 0700 first. For a restore rehearsal, prepare a different Compose project and private environment file, keeping the original `TELEGRAM_SESSION_STORAGE_KEY`. Start only its PostgreSQL, MongoDB and Redis services. Then run:
+
+```sh
+python3 scripts/backup.py restore --project perso-restore --env-file .env.restore --directory backups/release-001
+```
+
+Restore rejects the source project, running application services, nonempty databases/session volume, mismatched encryption keys, corrupt archives and unsafe session paths. A partial failed restore must be discarded before retrying. The restored gateway stays stopped. Validate counts, migration ledger and API reads before deciding whether to use the restored environment. Never run both copies of a real Telegram session.

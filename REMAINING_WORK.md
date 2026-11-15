@@ -90,3 +90,9 @@ The pilot is ready for a deployment decision only when all applicable P0 jobs ha
 - Added production configuration preflight, random per-installation workspace identity, independent secret validation and optional Caddy HTTPS deployment.
 - Verification: two configuration tests pass, covering private file permissions, unique identity, no-overwrite behavior, rejection of demo/reused credentials and secret-free error output.
 - Remaining operator evidence: real hostname/certificate, token rotation against a running deployment, account login and identification of the responsible operator. No public endpoint or account was configured automatically.
+
+### 2026-11-15: Backup/restore implementation (P0-07)
+
+- Added a repeatable backup/restore command with private output, archive checksums, gateway session quiescing, distinct empty-target checks and session-key verification.
+- Verification: archive integrity, path traversal and source-project refusal tests pass. Configuration tests remain green.
+- Remaining evidence: execute the full container rehearsal, compare restored database/session content and record recovery time. The implementation alone does not close the staging gate.
