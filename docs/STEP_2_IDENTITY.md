@@ -36,7 +36,7 @@ Local environment: Go 1.26.11, Node 24.22.1, Python 3.12.14, PostgreSQL 17.11, R
 | Generated frontend types | Regenerated from canonical OpenAPI; typecheck passed |
 | Frontend production build | Passed |
 | Full-stack Playwright | 10 passed (17.0s): account create/customize/reload/authorization/logout, last-super-admin UI, existing live workspace, error/no-fixture-fallback, mobile RTL/LTR, automated WCAG AA |
-| Python configuration/backup/monitor/rehearsal checks | 8 passed (including new credential-aware readiness regression) |
+| Python configuration/backup/monitor/rehearsal checks | 9 passed (including credential-aware readiness and false-positive HTML regressions) |
 | Modified configuration/workflow YAML parse and whitespace | Passed |
 
 Earlier browser attempts did not execute app checks because the browser download was truncated and the full Chromium binary required unavailable Unix sockets. Debian headless shell ran successfully. One subsequent account test used an exact label locator for a nested select; switching to its actual combobox accessibility role resolved the test and the full ten-test run passed. Earlier compile attempts overlapped source changes; completed checks, not those incomplete attempts, are the evidence to use. A first full race rerun reused the browser-seeded database: existing negative repository tests dropped their isolated tables and then resolved the public application tables through search_path, so their expected missing-table errors did not occur. The final race run uses a separate empty disposable database, matching CI sequencing; no assertions were removed or suppressed.
@@ -54,7 +54,9 @@ The [workflow ledger](WORKFLOW.md) records candidate/published revisions and is 
 ## Published submodule candidates
 
 - Backend: [299a942f66dec0ac17e4ef5a8dd8a12ce46356d8](https://github.com/Uncle-Taki/persob/commit/299a942f66dec0ac17e4ef5a8dd8a12ce46356d8), remote branch confirmed.
-- Frontend: [d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242](https://github.com/Uncle-Taki/persof/commit/d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242), remote branch confirmed.
+- Frontend: [8a96ea06de70c3367ceb441adc096e14f29e7bc9](https://github.com/Uncle-Taki/persof/commit/8a96ea06de70c3367ceb441adc096e14f29e7bc9), remote branch confirmed.
 - Parent commit: reported after the final documentation/configuration tree and these exact pins are published.
 
 CI follow-up: backend and frontend initial feature runs passed. The first parent integration run exposed ambient deployment settings leaking into config tests; the backend follow-up clears all newly added variables and explicitly tests insecure production cookies. The first container rehearsal exposed a readiness-only wait before checking token rotation; the parent follow-up requires the new monitoring credential to reach the operation route before proceeding. These failures and their exact runs remain recorded in the workflow ledger. Dependency checks passed; runtime-image scanner findings remain open.
+
+Deployment review also corrected Nginx to retain the browser Host port and proxy /ready. The container login check now supplies Origin as a browser does; readiness consumers require ready=true in backend JSON. This covers non-default demo ports and prevents a frontend HTML response from appearing healthy.

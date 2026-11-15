@@ -39,9 +39,10 @@ def wait_api(port, token):
     deadline = time.monotonic() + 120
     while time.monotonic() < deadline:
         try:
-            if request(port, '/ready')[0] == 200 and request(port, '/api/v1/operations/status', token)[0] in (200, 503):
+            ready_status, ready_body = request(port, '/ready')
+            if ready_status == 200 and json.loads(ready_body)['data'].get('ready') is True and request(port, '/api/v1/operations/status', token)[0] in (200, 503):
                 return
-        except (OSError, TimeoutError):
+        except (OSError, TimeoutError, ValueError, KeyError, TypeError):
             pass
         time.sleep(2)
     raise RuntimeError('API did not recover before the deadline')
@@ -49,7 +50,7 @@ def wait_api(port, token):
 
 def login(port, values, password=None):
     payload = json.dumps({'username': values['BOOTSTRAP_ADMIN_USERNAME'], 'password': password or values['BOOTSTRAP_ADMIN_PASSWORD']}).encode()
-    req = urllib.request.Request(f'http://127.0.0.1:{port}/api/v1/auth/login', data=payload, headers={'Content-Type':'application/json'})
+    req = urllib.request.Request(f'http://127.0.0.1:{port}/api/v1/auth/login', data=payload, headers={'Content-Type':'application/json', 'Origin': f'http://127.0.0.1:{port}'})
     with urllib.request.urlopen(req, timeout=10) as response:
         body = json.load(response)['data']
         return {'Cookie': response.headers['Set-Cookie'].split(';')[0], 'X-CSRF-Token': body['csrf_token']}

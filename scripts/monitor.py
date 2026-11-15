@@ -40,7 +40,7 @@ def collect(deployment, url, backup_manifest, max_backup_hours):
     metrics['gateway_connected'] = status.get('connected', False) and not status.get('authorization_required', True)
     # Readiness checks database/queue connectivity. Machine credentials never read user or marketplace data.
     with urllib.request.urlopen(urllib.request.Request(url.rstrip('/') + '/ready', headers=headers), timeout=10) as response:
-        metrics['api_ready'] = response.status == 200
+        metrics['api_ready'] = response.status == 200 and json.load(response)['data'].get('ready') is True
     stream = deployment.values.get('REDIS_STREAM_KEY', 'perso:telegram:messages')
     groups = redis(deployment, 'XINFO', 'GROUPS', stream)
     metrics['pending_count'] = sum(pairs(group)['pending'] for group in groups)
