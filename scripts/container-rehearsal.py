@@ -23,10 +23,13 @@ def write_environment(path, values):
         output.write(''.join(f'{key}={value}\n' for key, value in values.items()))
 
 
-def request(port, path, token=None):
-    headers = {'Authorization': 'Bearer ' + token} if token else {}
+def request(port, path, token=None, body=None):
+    headers = dict(token) if isinstance(token, dict) else ({'Authorization': 'Bearer ' + token} if token else {})
+    data = json.dumps(body).encode() if body is not None else None
+    if data is not None:
+        headers['Content-Type'] = 'application/json'
     try:
-        with urllib.request.urlopen(urllib.request.Request(f'http://127.0.0.1:{port}{path}', headers=headers), timeout=10) as response:
+        with urllib.request.urlopen(urllib.request.Request(f'http://127.0.0.1:{port}{path}', headers=headers, data=data), timeout=10) as response:
             return response.status, response.read()
     except urllib.error.HTTPError as error:
         return error.code, error.read()
@@ -36,12 +39,21 @@ def wait_api(port, token):
     deadline = time.monotonic() + 120
     while time.monotonic() < deadline:
         try:
-            if request(port, '/api/v1/session', token)[0] == 200:
+            ready_status, ready_body = request(port, '/ready')
+            if ready_status == 200 and json.loads(ready_body)['data'].get('ready') is True and request(port, '/api/v1/operations/status', token)[0] in (200, 503):
                 return
-        except (OSError, TimeoutError):
+        except (OSError, TimeoutError, ValueError, KeyError, TypeError):
             pass
         time.sleep(2)
     raise RuntimeError('API did not recover before the deadline')
+
+
+def login(port, values, password=None):
+    payload = json.dumps({'username': values['BOOTSTRAP_ADMIN_USERNAME'], 'password': password or values['BOOTSTRAP_ADMIN_PASSWORD']}).encode()
+    req = urllib.request.Request(f'http://127.0.0.1:{port}/api/v1/auth/login', data=payload, headers={'Content-Type':'application/json', 'Origin': f'http://127.0.0.1:{port}'})
+    with urllib.request.urlopen(req, timeout=10) as response:
+        body = json.load(response)['data']
+        return {'Cookie': response.headers['Set-Cookie'].split(';')[0], 'X-CSRF-Token': body['csrf_token']}
 
 
 def main():
@@ -60,6 +72,8 @@ def main():
         source.run('up', '-d', '--wait', 'postgres', 'mongodb', 'redis', 'backend-api', 'frontend', stdout=subprocess.PIPE)
         token = source.values['API_TOKEN']
         wait_api(31880, token)
+        account_session = login(31880, source.values)
+        assert request(31880, '/api/v1/session', account_session)[0] == 200
         assert source.sql('SELECT count(*) FROM products') == b'0'
         assert source.sql('SELECT count(*) FROM telegram_sources') == b'0'
         assert request(31880, '/api/v1/products')[0] == 401
@@ -73,8 +87,17 @@ def main():
         write_environment(source_env, source.values)
         source.run('up', '-d', '--no-deps', '--force-recreate', 'backend-api', stdout=subprocess.PIPE)
         wait_api(31880, source.values['API_TOKEN'])
-        assert request(31880, '/api/v1/session', token)[0] == 401
-        summary['checks']['api_token_rotation'] = 'passed'
+        old_status = request(31880, '/api/v1/operations/status', token)[0]
+        assert old_status == 401, f'Old monitoring credential returned status {old_status}'
+        assert request(31880, '/api/v1/operations/status', source.values['API_TOKEN'])[0] in (200, 503)
+        assert request(31880, '/api/v1/session', source.values['API_TOKEN'])[0] == 401
+        assert request(31880, '/api/v1/session', account_session)[0] == 200
+        rotated_password = os.urandom(24).hex()
+        assert request(31880, '/api/v1/me/password', account_session, {'current_password': source.values['BOOTSTRAP_ADMIN_PASSWORD'], 'password': rotated_password})[0] == 200
+        assert request(31880, '/api/v1/session', account_session)[0] == 401
+        account_session = login(31880, source.values, rotated_password)
+        summary['checks']['password_change_revokes_sessions'] = 'passed'
+        summary['checks']['monitoring_token_rotation_without_user_access'] = 'passed'
         source.run('restart', 'postgres', 'mongodb', 'redis', stdout=subprocess.PIPE)
         wait_api(31880, source.values['API_TOKEN'])
         assert source.sql('SELECT count(*) FROM products') == b'1'
@@ -92,6 +115,8 @@ def main():
         restore(target, backup_dir)
         target.run('up', '-d', '--wait', 'backend-api', 'frontend', stdout=subprocess.PIPE)
         wait_api(31881, target.values['API_TOKEN'])
+        restored_session = login(31881, source.values, rotated_password)
+        assert request(31881, '/api/v1/session', restored_session)[0] == 200
         assert target.sql('SELECT count(*) FROM products') == b'1'
         assert target.sql('SELECT count(*) FROM schema_migrations') == source.sql('SELECT count(*) FROM schema_migrations')
         assert target.mongo("db.getSiblingDB('perso_raw').restore_probe.countDocuments({marker:'perso-restore-probe'})") == b'1'
@@ -109,6 +134,8 @@ def main():
         demo.run('config', '-q', stdout=subprocess.PIPE)
         demo.run('up', '-d', '--build', '--wait', stdout=subprocess.PIPE)
         wait_api(31882, demo.values['API_TOKEN'])
+        demo_session = login(31882, demo.values)
+        assert request(31882, '/api/v1/session', demo_session)[0] == 200
         assert int(demo.sql('SELECT count(*) FROM products')) >= 5
         deadline = time.monotonic() + 90
         while int(demo.sql('SELECT count(*) FROM offers')) == 0 and time.monotonic() < deadline:

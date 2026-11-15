@@ -10,6 +10,9 @@ from pathlib import Path
 def create_environment(path: Path, demo: bool = False) -> None:
     values = {
         'ENVIRONMENT': 'development' if demo else 'production',
+        'BOOTSTRAP_ADMIN_USERNAME': 'owner',
+        'BOOTSTRAP_ADMIN_PASSWORD': secrets.token_hex(24),
+        'AUTH_COOKIE_SECURE': 'false' if demo else 'true',
         'OPERATOR_USER_ID': '11111111-1111-1111-1111-111111111111' if demo else str(uuid.uuid4()),
         **{name: secrets.token_hex(32) for name in (
             'API_TOKEN', 'POSTGRES_PASSWORD', 'MONGO_ROOT_PASSWORD', 'MONGO_APP_PASSWORD',
@@ -33,7 +36,7 @@ def main() -> None:
         create_environment(args.output, args.demo)
     except FileExistsError:
         raise SystemExit('Environment file already exists; preserved without changes.')
-    print('Created private environment file. Enter API_TOKEN in the browser. Never commit this file.')
+    print('Created private environment file. Sign in with BOOTSTRAP_ADMIN_USERNAME and BOOTSTRAP_ADMIN_PASSWORD. API_TOKEN is monitoring-only. Never commit this file.')
 
 
 if __name__ == '__main__':

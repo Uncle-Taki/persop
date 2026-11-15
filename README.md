@@ -1,6 +1,6 @@
 # Perso
 
-A Persian-first Telegram marketplace monitor. The live app uses the electronics catalog; the healthcare sample UI is an isolated preview at `?mode=demo`. This release supports **one operator workspace and one Telegram account**. It does not implement independent customer accounts.
+A Persian-first Telegram marketplace monitor. The live app uses the electronics catalog; the healthcare sample UI is an isolated preview at `?mode=demo`. Step 2 adds password accounts with **super_admin, admin and buyer** roles in one workspace with one Telegram account. Buyer access to shared marketplace data remains blocked until step 3 source assignments; accounts, settings and personal interests are available now.
 
 The parent pins compatible revisions of [persob](https://github.com/Uncle-Taki/persob) (Go) and [persof](https://github.com/Uncle-Taki/persof) (React). Clone with:
 
@@ -18,7 +18,7 @@ python3 scripts/setup-env.py --demo
 make demo
 ```
 
-Open http://localhost:3000. Enter the `API_TOKEN` from your private `.env`. The header says **Mock connection**; prices come only from synthetic messages. Never use the demo initialization override with valuable or production volumes. The preview at `?mode=demo` uses independent browser fixtures and never acts as an API failure fallback.
+Open http://localhost:3000. Sign in using `BOOTSTRAP_ADMIN_USERNAME` and `BOOTSTRAP_ADMIN_PASSWORD` from your private `.env`. The header says **Mock connection**; prices come only from synthetic messages. Never use the demo initialization override with valuable or production volumes. The preview at `?mode=demo` uses independent browser fixtures and never acts as an API failure fallback.
 
 ## Real account
 
@@ -33,7 +33,7 @@ docker compose up -d telegram-gateway message-worker
 
 Enter the sign-in code and optional 2FA password in the terminal. Stop the gateway before repeating login; the session has an exclusive file lock. The gateway owns the only connected session; API and worker processes do not create sessions. Add an authorized Telegram source in the live app. Initial history is bounded by `TELEGRAM_BACKFILL_LIMIT` (100 by default, maximum 1000). Recovery scans preserve their separate history cursor when a gap exceeds that bound; check gateway logs and raise the bound intentionally.
 
-The frontend binds to loopback. Put an HTTPS reverse proxy in front of it for remote use; do not expose the gateway or databases. `API_TOKEN` is an initial single-operator bearer credential, not a multi-user identity provider. Rotate it in `.env` and recreate the API container to revoke browser access.
+The frontend binds to loopback. Put an HTTPS reverse proxy in front of it for remote use; do not expose the gateway or databases. Browser access uses individual password accounts and revocable sessions. `API_TOKEN` is restricted to aggregate monitoring; it cannot authenticate a user. See [account installation and upgrade](persob/docs/identity.md).
 
 ## Workflow
 
@@ -80,7 +80,7 @@ python3 scripts/preflight.py --public
 docker compose -f compose.yaml -f compose.https.yaml up -d --build
 ```
 
-The optional Caddy edge obtains and renews HTTPS certificates. Verify the real certificate and authenticated UI before use; configuration validation does not prove public reachability. Keep the `.env` file mode 0600. To rotate API access, generate a new independent `API_TOKEN`, replace only that value and recreate `backend-api`; verify the old token fails and the new one works. Do not replace the session encryption key during ordinary API-token rotation.
+The optional Caddy edge obtains and renews HTTPS certificates. Verify the real certificate and authenticated UI before use; configuration validation does not prove public reachability. Keep the `.env` file mode 0600. To rotate monitoring access, replace only `API_TOKEN` and recreate `backend-api`; verify the old machine credential fails on `/api/v1/operations/status`. Change/reset an account password or deactivate it to revoke browser sessions. Do not replace the Telegram session encryption key during either operation.
 
 ## Backup and isolated restore
 

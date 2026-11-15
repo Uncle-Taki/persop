@@ -7,6 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ENVIRONMENT: development
+      BOOTSTRAP_ADMIN_USERNAME: owner
+      BOOTSTRAP_ADMIN_PASSWORD: perso-e2e-password-test-only-123
+      AUTH_COOKIE_SECURE: "false"
+      PERSO_IDENTITY_TEST_DSN: postgres://postgres@127.0.0.1:55439/perso_audit?sslmode=disable
       API_TOKEN: perso-local-test-token-at-least-32-characters
       OPERATOR_USER_ID: 11111111-1111-1111-1111-111111111111
       POSTGRES_HOST: 127.0.0.1
@@ -27,7 +31,8 @@ jobs:
       OUTREACH_ENABLED: "false"
       RETENTION_DAYS: "0"
       PERSO_E2E_LIVE: "1"
-      PERSO_E2E_TOKEN: perso-local-test-token-at-least-32-characters
+      PERSO_E2E_USERNAME: owner
+      PERSO_E2E_PASSWORD: perso-e2e-password-test-only-123
     steps:
       - uses: actions/checkout@v4
         with:
@@ -55,6 +60,8 @@ jobs:
         run: |
           artifacts/perso migrate
           docker compose -f compose.test.yaml exec -T postgres psql -U postgres -d perso_audit < persob/scripts/seed.sql
+          artifacts/perso bootstrap-admin
+          docker compose -f compose.test.yaml exec -T postgres psql -U postgres -d perso_audit -c "UPDATE users SET preferences=preferences || '{\"language\":\"en\"}'::jsonb WHERE username='owner'"
           artifacts/perso all > artifacts/backend.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
