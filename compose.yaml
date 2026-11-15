@@ -1,0 +1,153 @@
+name: perso
+x-app-environment: &app-environment
+  ENVIRONMENT: ${ENVIRONMENT:-production}
+  LOG_LEVEL: ${LOG_LEVEL:-info}
+  API_TOKEN: ${API_TOKEN:?Run python3 scripts/setup-env.py first}
+  OPERATOR_USER_ID: ${OPERATOR_USER_ID:-11111111-1111-1111-1111-111111111111}
+  DEMO_AUTH_ENABLED: "false"
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: perso
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+  POSTGRES_DB: perso_db
+  POSTGRES_SSLMODE: disable
+  MONGODB_URI: mongodb://perso_app:${MONGO_APP_PASSWORD:?Set MONGO_APP_PASSWORD}@mongodb:27017/perso_raw?authSource=perso_raw
+  MONGODB_DATABASE: perso_raw
+  REDIS_ADDR: redis:6379
+  REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD}
+  TELEGRAM_GATEWAY_URL: http://telegram-gateway:8090
+  TELEGRAM_GATEWAY_TOKEN: ${TELEGRAM_GATEWAY_TOKEN:?Set TELEGRAM_GATEWAY_TOKEN}
+  LLM_ENABLED: ${LLM_ENABLED:-false}
+  GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+  GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+  RETENTION_DAYS: ${RETENTION_DAYS:-0}
+  OUTREACH_ENABLED: ${OUTREACH_ENABLED:-false}
+  OUTBOUND_INTERVAL_SECONDS: ${OUTBOUND_INTERVAL_SECONDS:-5}
+  OUTBOUND_TIMEZONE: ${OUTBOUND_TIMEZONE:-Asia/Tehran}
+  OUTREACH_QUIET_HOURS: ${OUTREACH_QUIET_HOURS:-}
+  CONVERSATION_MAX_QUESTIONS: ${CONVERSATION_MAX_QUESTIONS:-7}
+  CONVERSATION_FIELDS: ${CONVERSATION_FIELDS:-price,condition,branded,manufacturer,warranty_until,seller_city,seller_tehran_area}
+
+x-backend: &backend
+  build:
+    context: ./persob
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  environment: *app-environment
+  depends_on:
+    migrate:
+      condition: service_completed_successfully
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: perso
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: perso_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U perso -d perso_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  mongodb:
+    image: mongo:7.0
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: perso_root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Set MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: perso_raw
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?Set MONGO_APP_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/01-app.js:ro
+    healthcheck:
+      test: [CMD, mongosh, --quiet, --eval, "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD}
+    command: [sh, -c, 'exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"']
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [CMD-SHELL, 'REDISCLI_AUTH="$$REDIS_PASSWORD" redis-cli ping']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  migrate:
+    build: ./persob
+    restart: "no"
+    command: [migrate]
+    environment: *app-environment
+    depends_on:
+      postgres:
+        condition: service_healthy
+  backend-api:
+    <<: *backend
+    command: [api]
+    environment:
+      <<: *app-environment
+      HOST: 0.0.0.0
+      PORT: "8080"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1:8080/ready]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  telegram-gateway:
+    <<: *backend
+    command: [gateway]
+    environment:
+      <<: *app-environment
+      TELEGRAM_GATEWAY_ADDR: 0.0.0.0:8090
+      TELEGRAM_APP_ID: ${TELEGRAM_APP_ID:-0}
+      TELEGRAM_APP_HASH: ${TELEGRAM_APP_HASH:-}
+      TELEGRAM_PHONE_NUMBER: ${TELEGRAM_PHONE_NUMBER:-}
+      TELEGRAM_SESSION_DIR: /data/sessions
+      TELEGRAM_SESSION_STORAGE_KEY: ${TELEGRAM_SESSION_STORAGE_KEY:?Set TELEGRAM_SESSION_STORAGE_KEY}
+      TELEGRAM_MOCK_MODE: ${TELEGRAM_MOCK_MODE:-false}
+      TELEGRAM_BACKFILL_LIMIT: ${TELEGRAM_BACKFILL_LIMIT:-100}
+    volumes:
+      - telegram_sessions:/data/sessions
+    depends_on:
+      backend-api:
+        condition: service_healthy
+  message-worker:
+    <<: *backend
+    command: [worker]
+    environment:
+      <<: *app-environment
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-4}
+      REDIS_CONSUMER_GROUP: perso:message_workers
+      REDIS_STREAM_KEY: perso:telegram:messages
+    depends_on:
+      backend-api:
+        condition: service_healthy
+  frontend:
+    build: ./persof
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      backend-api:
+        condition: service_healthy
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+  telegram_sessions:

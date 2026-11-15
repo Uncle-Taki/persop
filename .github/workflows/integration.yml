@@ -1,0 +1,79 @@
+name: Pinned stack integration
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: development
+      API_TOKEN: perso-local-test-token-at-least-32-characters
+      OPERATOR_USER_ID: 11111111-1111-1111-1111-111111111111
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: "55439"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: unused-local-fixture
+      POSTGRES_DB: perso_audit
+      POSTGRES_SSLMODE: disable
+      MONGODB_URI: mongodb://127.0.0.1:57039
+      MONGODB_DATABASE: perso_ui
+      REDIS_ADDR: 127.0.0.1:56389
+      TELEGRAM_MOCK_MODE: "true"
+      TELEGRAM_GATEWAY_URL: http://127.0.0.1:8090
+      TELEGRAM_GATEWAY_ADDR: 127.0.0.1:8090
+      TELEGRAM_GATEWAY_TOKEN: perso-test-gateway-token-at-least-32-characters
+      TELEGRAM_SESSION_DIR: /tmp/perso-test-sessions
+      LLM_ENABLED: "false"
+      OUTREACH_ENABLED: "false"
+      RETENTION_DAYS: "0"
+      PERSO_E2E_LIVE: "1"
+      PERSO_E2E_TOKEN: perso-local-test-token-at-least-32-characters
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: persob/go.mod
+          cache-dependency-path: persob/go.sum
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: persof/package-lock.json
+      - run: docker compose -f compose.test.yaml up -d --wait
+      - run: cd persob && go test -race ./... && go vet ./... && go build -o ../artifacts/perso ./cmd/perso
+      - run: cd persob && go test -tags=audit -count=1 -race -v ./internal/audit ./internal/telegram
+        env:
+          PERSO_AUDIT_DATABASE_URL: postgres://postgres@127.0.0.1:55439/perso_audit?sslmode=disable
+          PERSO_AUDIT_REDIS_ADDR: 127.0.0.1:56389
+          PERSO_AUDIT_MONGO_URI: mongodb://127.0.0.1:57039
+      - run: python3 scripts/check-contract.py
+      - run: cd persof && npm ci && npm run generate:api && git diff --exit-code -- src/api/schema.ts && npm run typecheck && npm run build
+      - run: cd persof && npx playwright install --with-deps chromium
+      - name: Server-backed browser checks
+        run: |
+          artifacts/perso migrate
+          docker compose -f compose.test.yaml exec -T postgres psql -U postgres -d perso_audit < persob/scripts/seed.sql
+          artifacts/perso all > artifacts/backend.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:8080/ready >/dev/null; then break; fi
+            sleep 1
+          done
+          cd persof && npm test
+      - name: Validate deployment manifests
+        run: |
+          python3 scripts/setup-env.py --demo
+          docker compose --env-file .env -f compose.yaml config -q
+          docker compose --env-file .env -f compose.yaml -f compose.demo.yaml config -q
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-results
+          path: |
+            artifacts/backend.log
+            persof/test-results/
+      - if: always()
+        run: docker compose -f compose.test.yaml down

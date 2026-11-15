@@ -1,0 +1,12 @@
+# Explicit sample-only initialization. Never combine with an existing production volume.
+services:
+  postgres:
+    volumes:
+      - ./persob/internal/storage/postgres/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
+      - ./persob/internal/storage/postgres/migrations/002_telegram_sources_and_marketplace.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./persob/scripts/seed.sql:/docker-entrypoint-initdb.d/02-demo.sql:ro
+      - ./docker/demo-source.sql:/docker-entrypoint-initdb.d/03-demo-source.sql:ro
+  telegram-gateway:
+    environment:
+      TELEGRAM_MOCK_MODE: "true"
+      ENVIRONMENT: development
