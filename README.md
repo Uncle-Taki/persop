@@ -59,6 +59,8 @@ Run the backend on port 8080 and `npm run dev` in `persof`; Vite proxies `/api` 
 
 Normal shutdown (`make down`) preserves volumes. Production configuration contains no demo seeds. Database changes are serialized and recorded with checksums in `schema_migrations`; keep previously applied migration files immutable. The parent deployment runs a dedicated migration step, and application startup also verifies migrations for direct CLI use.
 
+The prioritized verification, pilot preparation and later product backlog is tracked in [REMAINING_WORK.md](REMAINING_WORK.md).
+
 ## Publishing changes
 
 Commit/test backend and frontend branches first, then update the parent submodule pointers. CI checks the pinned combination. The dated audit under `audit/2026-11-14` is historical evidence; it does not describe the current build's validation status.

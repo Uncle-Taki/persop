@@ -30,3 +30,5 @@ Run the full pinned-stack CI, including unit/race/vet/build, database acceptance
 Real Telegram authentication, history recovery, delivery and external LLM behavior require operator-owned credentials and staging verification. No real seller messages have been sent. Review configuration and explicitly enable outreach only when these checks are complete.
 
 See [backend operations](persob/docs/operations.md) for operational procedures and [integration CI](.github/workflows/integration.yml) for the repeatable verification commands.
+
+See [REMAINING_WORK.md](REMAINING_WORK.md) for the prioritized follow-up jobs, completion evidence and later product scope.
