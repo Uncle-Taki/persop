@@ -1,0 +1,16 @@
+# Optional public HTTPS edge. Set PERSO_DOMAIN and point its DNS to this host.
+services:
+  edge:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      PERSO_DOMAIN: ${PERSO_DOMAIN:?Set PERSO_DOMAIN for HTTPS}
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [frontend]
+volumes:
+  caddy_data:
+  caddy_config:

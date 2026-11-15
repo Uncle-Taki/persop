@@ -1,0 +1,90 @@
+name: Release rehearsal and security
+on: [push, pull_request]
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    env:
+      GOMAXPROCS: "2"
+      GOGC: "30"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: persob/go.mod
+          cache-dependency-path: persob/go.sum
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: persof/package-lock.json
+      - run: mkdir -p artifacts
+      - run: python3 -m unittest discover -s scripts -p 'test_*.py'
+      - name: Reachable Go vulnerabilities
+        run: |
+          cd persob
+          set -o pipefail
+          go run golang.org/x/vuln/cmd/govulncheck@v1.1.4 ./... | tee ../artifacts/govulncheck.txt
+      - name: Frontend dependency audit
+        if: always()
+        run: |
+          cd persof
+          npm ci
+          npm audit --json > ../artifacts/npm-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-security
+          path: |
+            artifacts/govulncheck.txt
+            artifacts/npm-audit.json
+  containers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Fresh install, demo, persistence, credential rotation and full isolated restore
+        run: python3 scripts/container-rehearsal.py
+      - name: Build scan targets
+        if: always()
+        run: |
+          docker build -t perso-backend:scan persob
+          docker build -t perso-frontend:scan persof
+      - name: Scan backend runtime image
+        if: always()
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
+        with:
+          image-ref: perso-backend:scan
+          format: json
+          output: artifacts/backend-image-scan.json
+          severity: HIGH,CRITICAL
+          ignore-unfixed: false
+          exit-code: "1"
+      - name: Scan frontend runtime image
+        if: always()
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
+        with:
+          image-ref: perso-frontend:scan
+          format: json
+          output: artifacts/frontend-image-scan.json
+          severity: HIGH,CRITICAL
+          ignore-unfixed: false
+          exit-code: "1"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: container-release-evidence
+          # Never upload the private environment files or backup/session archives.
+          path: |
+            artifacts/container-rehearsal.json
+            artifacts/container-diagnostics.txt
+            artifacts/backend-image-scan.json
+            artifacts/frontend-image-scan.json

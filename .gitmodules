@@ -1,6 +1,6 @@
 [submodule "persob"]
 	path = persob
-	url = git@github.com:Uncle-Taki/persob.git
+	url = https://github.com/Uncle-Taki/persob.git
 [submodule "persof"]
 	path = persof
-	url = git@github.com:Uncle-Taki/persof.git
+	url = https://github.com/Uncle-Taki/persof.git
