@@ -9,7 +9,7 @@ This document records unfinished verification, operational preparation and later
 
 The implementation is published and reviewable. It includes the server-backed Persian-first UI, reliable message/offer processing, one Telegram gateway, approval and consent checks, a durable outbox, migrations and integration CI. See [IMPLEMENTATION.md](IMPLEMENTATION.md) for completed scope and earlier verification results.
 
-The parent [integration run for the baseline](https://github.com/Uncle-Taki/persop/actions/runs/43729451626) was **in progress when this document was prepared**. Its final result has not been verified. Earlier local frontend typecheck/build and API contract checks passed, but final backend, database, browser and container verification remain open. The last local browser run passed seven of eight tests; the navigation-name fix needs a rerun. The local race build exceeded available compiler resources.
+The initial parent integration and backend unit jobs failed because the newly added consent test used an invalid package qualifier. That compile error is fixed in backend `90c655d`; the full local Go 1.26.11 unit suite passes. The initial backend database acceptance job passed with race instrumentation on PostgreSQL 16, MongoDB 7 and Redis 7, and the standalone frontend workflow passed. The parent integration rerun must still verify the final pinned combination and all eight server-backed browser tests. The local race build previously exceeded compiler resources.
 
 Priorities: **P0** blocks a production pilot; **P1** blocks broader unattended use; **P2** is later product scope. Suggested owners identify responsibility, not assigned people. Work in disposable or staging environments unless explicitly stated otherwise.
 
@@ -72,6 +72,14 @@ These items are outside the delivered single-operator electronics release; they 
 - [ ] **Sell-side workflows:** confirm requirements before enabling the deferred sell mode in interests and watch sources.
 
 ## Close-out record
+
+### 2026-11-15: CI blocker corrected (P0-01/P0-02)
+
+- Backend commit: `90c655d0cb3264bc7935ee4cd903c856e8cab4b8` fixes the consent test's invalid package qualifier.
+- Local validation: full `go test -p=1 ./...` passed with Go 1.26.11.
+- Earlier database/race evidence: [backend acceptance job](https://github.com/Uncle-Taki/persob/actions/runs/43729401449/job/132858296933) passed at backend `5c468df2ed1763e5e61d28a37b6fc4fea7e7a01d`. The correction only changes test compilation; final pinned-stack evidence remains required.
+- [Standalone frontend workflow](https://github.com/Uncle-Taki/persof/actions/runs/43729408755) passed at `bd4c811075dbd73a2fbf9b286d6af4a6812b58a2`; its server-backed group is intentionally skipped without the parent fixture.
+- Review: Codex implementation and log inspection. No real account or seller interaction occurred.
 
 For each completed job, append: job ID, full parent/submodule SHAs, environment/tool versions, test or run URL, observed result, remaining limitation, reviewer and verification date. Update [IMPLEMENTATION.md](IMPLEMENTATION.md) when a pending result becomes verified; retain earlier evidence as historical context.
 
