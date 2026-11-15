@@ -1,5 +1,7 @@
 # Implementation checkpoint
 
+> Current healthcare/RBAC work is tracked in [docs/WORKFLOW.md](docs/WORKFLOW.md), with the [contract map](docs/CONTRACT_MAP.md) and [verified step 1 baseline](docs/STEP_1_BASELINE.md). The electronics/single-operator scope and older pending-test statements below describe the historical checkpoint. Exact-baseline parent integration now passed eight browser tests and the container rehearsal; standalone backend fixture and runtime-image scan failures remain documented. Healthcare, roles, and mock HTTP LLM are planned and are not implemented by this documentation change.
+
 Branch: `codex/perso-improvements-wip` in the parent and both submodules.
 This reviewable checkpoint is published on the branch above in all three repositories. It has not been deployed. The GitHub connection created new commit IDs for the same submodule file trees; the parent pins those published commits.
 

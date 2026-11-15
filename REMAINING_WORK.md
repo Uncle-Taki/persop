@@ -1,5 +1,7 @@
 # Remaining work
 
+> Current healthcare/RBAC work is tracked in [docs/WORKFLOW.md](docs/WORKFLOW.md), with the [contract map](docs/CONTRACT_MAP.md) and [verified step 1 baseline](docs/STEP_1_BASELINE.md). The electronics/single-operator scope and older pending-test statements below describe the historical checkpoint. Exact-baseline parent integration now passed eight browser tests and the container rehearsal; standalone backend fixture and runtime-image scan failures remain documented. Healthcare, roles, and mock HTTP LLM are planned and are not implemented by this documentation change.
+
 Status snapshot: **2026-11-15**, after publishing `codex/perso-improvements-wip`.
 
 Reviewed baseline: parent `20dd036`, backend `5c468df`, frontend `bd4c811`.
