@@ -1,0 +1,97 @@
+{
+  "acceptance-before.log": {
+    "PASS": [
+      "TestStatisticsKnownPrices (0.32s)"
+    ],
+    "FAIL": [
+      "TestFreshDatabaseMigrations (0.13s)",
+      "TestMultiProductMessageRetainsBothOffers (0.28s)",
+      "TestReplayedOfferDoesNotDuplicatePriceHistory (0.22s)",
+      "TestComparisonNormalizesCurrency (0.26s)",
+      "TestBestOfferRankingBeforePagination (0.50s)",
+      "TestSourceStatusMutationChecksOwner (0.26s)",
+      "TestDuplicateConversationInitialization (0.29s)",
+      "TestConsumerGroupDoesNotSkipExistingBacklog (0.01s)",
+      "TestFailedStreamWorkIsRetried (4.08s)",
+      "TestMongoEditsUpdateCurrentTextWithoutDuplicates (0.08s)",
+      "TestMedicalProductFrontendCannotEnterDeterministicBackend (0.00s)"
+    ],
+    "SKIP": []
+  },
+  "acceptance-after.log": {
+    "PASS": [
+      "TestFreshDatabaseMigrations (0.16s)",
+      "TestStatisticsKnownPrices (0.18s)",
+      "TestSourceStatusMutationChecksOwner (0.14s)",
+      "TestConsumerGroupDoesNotSkipExistingBacklog (0.00s)",
+      "TestMongoEditsUpdateCurrentTextWithoutDuplicates (0.06s)",
+      "TestBackendFixturePipelineBySourceType (9.32s)",
+      "TestConcurrentFreshDatabaseMigrations (0.20s)",
+      "TestNormalizedSourceIngestionAndPause (0.24s)",
+      "TestForumAdapterPreservesTopicID (0.00s)",
+      "TestBroadcastChannelAdapterDoesNotFabricateSenderMetadata (0.00s)",
+      "TestLinkedDiscussionAdapterAssociatesPostID (0.00s)",
+      "TestResolverUnavailableClientFailsClosed (0.00s)",
+      "TestResolverNumericPeerCannotFallBackToMock (0.00s)",
+      "TestMockExpectedTypeDoesNotControlDetection (0.00s)",
+      "TestNormalizeAddress (0.00s)",
+      "TestResolveSourceClassification (0.00s)",
+      "TestEncryptedSessionStorage (0.00s)",
+      "TestMockTelegramClient (0.00s)"
+    ],
+    "FAIL": [
+      "TestMultiProductMessageRetainsBothOffers (0.19s)",
+      "TestReplayedOfferDoesNotDuplicatePriceHistory (0.20s)",
+      "TestComparisonNormalizesCurrency (0.21s)",
+      "TestExpiredOfferIsExcludedFromStatistics (0.17s)",
+      "TestBestOfferRankingBeforePagination (0.18s)",
+      "TestDuplicateConversationInitialization (0.15s)",
+      "TestFailedStreamWorkIsRetried (4.03s)",
+      "TestMedicalProductFrontendCannotEnterDeterministicBackend (0.00s)",
+      "TestPendingWorkRecoveredAfterConsumerRestart (4.02s)"
+    ],
+    "SKIP": []
+  },
+  "unit-after.log": {
+    "PASS": [
+      "TestPriceComparisonsStructures (0.00s)",
+      "TestScoreOffer (0.00s)",
+      "TestHealthEndpoints (0.00s)",
+      "TestResolveSourceEndpoint (0.00s)",
+      "TestAPIRejectsAnonymousAndSpoofedIdentityByDefault (0.00s)",
+      "TestSourceCreationRejectsUnverifiedMetadata (0.00s)",
+      "TestUnsafeModesFailClosed (0.00s)",
+      "TestStateMachineTransitions (0.00s)",
+      "TestClassifyMessage (0.00s)",
+      "TestExtractFromMessage (0.00s)",
+      "TestExtractMultipleProducts (0.00s)",
+      "TestEnglishAndMixedBuyerRequestsAreNotSellerAds (0.00s)",
+      "TestGeminiCredentialsAndRetryCancellation (0.00s)",
+      "TestRefusalOverridesAffirmativeConsent (0.00s)",
+      "TestEvidenceMustExistInOriginalMessage (0.00s)",
+      "TestInvalidLLMAttributesAreRejected (0.00s)",
+      "TestPromptInjectionDefense (0.00s)",
+      "TestMergeDeterministicAndLLM (0.00s)",
+      "TestMockProvider (0.00s)",
+      "TestMatcher (0.00s)",
+      "TestEnglishRialUnitIsPreserved (0.00s)",
+      "TestNormalize (0.00s)",
+      "TestPersianAndArabicDigitsToEnglish (0.00s)",
+      "TestCleanSearchKey (0.00s)",
+      "TestParsePrices (0.00s)",
+      "TestForumAdapterPreservesTopicID (0.00s)",
+      "TestBroadcastChannelAdapterDoesNotFabricateSenderMetadata (0.00s)",
+      "TestLinkedDiscussionAdapterAssociatesPostID (0.00s)",
+      "TestResolverUnavailableClientFailsClosed (0.00s)",
+      "TestResolverNumericPeerCannotFallBackToMock (0.00s)",
+      "TestMockExpectedTypeDoesNotControlDetection (0.00s)",
+      "TestNormalizeAddress (0.00s)",
+      "TestResolveSourceClassification (0.00s)",
+      "TestEncryptedSessionStorage (0.00s)",
+      "TestMockTelegramClient (0.00s)",
+      "TestPipelineExtractionAndMatching (0.00s)"
+    ],
+    "FAIL": [],
+    "SKIP": []
+  }
+}

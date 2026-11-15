@@ -1,0 +1,10 @@
+--- FAIL: TestEnglishAndMixedBuyerRequestsAreNotSellerAds (0.00s)
+    language_audit_test.go:12: buyer request classified seller: "WTB iPhone 15 Pro budget 98,000,000 Toman"
+    language_audit_test.go:12: buyer request classified seller: "Wanted آیفون ۱۵ پرو قیمت ۹۸ میلیون تومان"
+FAIL
+FAIL	github.com/perso/perso-mind/internal/extraction	0.009s
+--- FAIL: TestEnglishRialUnitIsPreserved (0.00s)
+    currency_audit_test.go:11: English Rial price mislabeled: [{Amount:980000000 Currency:IRR_TOMAN Raw:980,000,000  Negotiable:false Confidence:0.75 EvidenceSpan:980,000,000 }]
+FAIL
+FAIL	github.com/perso/perso-mind/internal/nlp	0.007s
+FAIL

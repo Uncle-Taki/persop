@@ -1,0 +1,31 @@
+{
+  "before": "YAML ScannerError at unquoted description containing Phase 1 colon; type_mismatch also used invalid bool schema type",
+  "fixed_lines": [
+    {
+      "file": "perso-mind/internal/api/openapi.yaml",
+      "line": 54
+    },
+    {
+      "file": "perso-mind/internal/api/openapi.yaml",
+      "line": 101
+    },
+    {
+      "file": "perso-mind/docs/openapi.yaml",
+      "line": 54
+    },
+    {
+      "file": "perso-mind/docs/openapi.yaml",
+      "line": 101
+    }
+  ],
+  "perso-mind/internal/api/openapi.yaml": {
+    "valid_yaml": true,
+    "path_count": 28
+  },
+  "perso-mind/docs/openapi.yaml": {
+    "valid_yaml": true,
+    "path_count": 28
+  },
+  "copies_identical": true,
+  "full_openapi_validator": "not executed"
+}

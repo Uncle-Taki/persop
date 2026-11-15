@@ -1,0 +1,162 @@
+=== RUN   TestFreshDatabaseMigrations
+2026/11/14 03:16:19 INFO running postgres migrations...
+2026/11/14 03:16:19 INFO postgres migrations completed successfully
+--- PASS: TestFreshDatabaseMigrations (0.16s)
+=== RUN   TestMultiProductMessageRetainsBothOffers
+2026/11/14 03:16:19 INFO running postgres migrations...
+2026/11/14 03:16:19 INFO postgres migrations completed successfully
+    release_test.go:126: two products sharing a Telegram message produced 1 offer(s), want 2
+--- FAIL: TestMultiProductMessageRetainsBothOffers (0.19s)
+=== RUN   TestReplayedOfferDoesNotDuplicatePriceHistory
+2026/11/14 03:16:19 INFO running postgres migrations...
+2026/11/14 03:16:19 INFO postgres migrations completed successfully
+    release_test.go:138: replayed identical offer created 2 historical observations, want 1
+--- FAIL: TestReplayedOfferDoesNotDuplicatePriceHistory (0.20s)
+=== RUN   TestComparisonNormalizesCurrency
+2026/11/14 03:16:19 INFO running postgres migrations...
+2026/11/14 03:16:20 INFO postgres migrations completed successfully
+    release_test.go:152: equivalent 100 Toman and 1000 Rial prices must average 100 Toman: [{Condition:new AvgPrice:550 MinPrice:100 MaxPrice:1000 Count:2}]
+--- FAIL: TestComparisonNormalizesCurrency (0.21s)
+=== RUN   TestStatisticsKnownPrices
+2026/11/14 03:16:20 INFO running postgres migrations...
+2026/11/14 03:16:20 INFO postgres migrations completed successfully
+--- PASS: TestStatisticsKnownPrices (0.18s)
+=== RUN   TestExpiredOfferIsExcludedFromStatistics
+2026/11/14 03:16:20 INFO running postgres migrations...
+2026/11/14 03:16:20 INFO postgres migrations completed successfully
+    release_test.go:204: expired offer polluted buying statistics: &{ProductID:3772ca54-76de-4c48-a9e7-b95470bd1d54 ProductName:iPhone Currency:IRR_TOMAN MinPrice:50 MaxPrice:100 AvgPrice:75 MedianPrice:75 PriceRange:50 SampleCount:2 PriceTrend:insufficient_data Distribution:[{RangeStart:50 RangeEnd:60 Count:1} {RangeStart:60 RangeEnd:70 Count:0} {RangeStart:70 RangeEnd:80 Count:0} {RangeStart:80 RangeEnd:90 Count:0} {RangeStart:90 RangeEnd:100 Count:1}] Methodology:IQR-filtered confirmed seller advertisements in Iranian Toman (IRR_TOMAN) LastCalculated:2026-11-14 03:16:20.39057242 +0330 +0330 m=+1.033922835}
+--- FAIL: TestExpiredOfferIsExcludedFromStatistics (0.17s)
+=== RUN   TestBestOfferRankingBeforePagination
+2026/11/14 03:16:20 INFO running postgres migrations...
+2026/11/14 03:16:20 INFO postgres migrations completed successfully
+    release_test.go:224: globally best offer excluded by pre-ranking pagination: {"success":true,"data":[{"offer":{"id":"db545751-a5d6-44bb-8cd9-eb67182d2010","product_id":"c01184b1-defb-4ed4-b609-925e58936789","source_message_id":"-1001_newest","seller_id":123,"brand":"Apple","model":"iPhone","condition":"new","quantity":1,"price_amount":150,"price_currency":"IRR_TOMAN","price_confidence":0.9,"branded":false,"seller_city":"تهران","listing_status":"active","extraction_confidence":0.9,"created_at":"2026-11-14T03:16:20.546376+03:30","updated_at":"2026-11-14T03:16:20.546376+03:30","product":{"id":"c01184b1-defb-4ed4-b609-925e58936789","name":"iPhone","normalized_name":"","brand":"","model":"","category":"Smartphone","created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z"}},"score_breakdown":{"price_competitiveness":0.15,"product_condition":1,"offer_freshness":1,"extraction_confidence":0.9,"variant_match":0.9,"location_match":0.85,"final_score":66.8,"explanation":"امتیاز کل: 66.8 از ۱۰۰ | قیمت: 15% (وزن ۳۵٪)، وضعیت کالا: new (وزن ۲۰٪)، تازگی: 0.0 ساعت پیش (وزن ۱۵٪)، اعتماد استخراج: 90%"}}],"meta":{"total":2,"limit":1,"offset":0}}
+--- FAIL: TestBestOfferRankingBeforePagination (0.18s)
+=== RUN   TestSourceStatusMutationChecksOwner
+2026/11/14 03:16:20 INFO running postgres migrations...
+2026/11/14 03:16:20 INFO postgres migrations completed successfully
+--- PASS: TestSourceStatusMutationChecksOwner (0.14s)
+=== RUN   TestDuplicateConversationInitialization
+2026/11/14 03:16:20 INFO running postgres migrations...
+2026/11/14 03:16:20 INFO postgres migrations completed successfully
+2026/11/14 03:16:20 INFO initialized seller conversation conversation_id=03fd76c5-9e41-47d7-bad4-bc0468b422df seller_id=123 state=AWAITING_APPROVAL missing_fields=[seller_city]
+2026/11/14 03:16:20 INFO initialized seller conversation conversation_id=4c63083b-3b98-40fc-9dbe-46f70a603d31 seller_id=123 state=AWAITING_APPROVAL missing_fields=[seller_city]
+    release_test.go:261: same offer initialized 2 conversation(s), want 1
+--- FAIL: TestDuplicateConversationInitialization (0.15s)
+=== RUN   TestConsumerGroupDoesNotSkipExistingBacklog
+2026/11/14 03:16:20 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:16:20 INFO created redis consumer group stream=audit:080d852d-ade9-42ef-806d-6dab19d15783 group=audit
+--- PASS: TestConsumerGroupDoesNotSkipExistingBacklog (0.00s)
+=== RUN   TestFailedStreamWorkIsRetried
+2026/11/14 03:16:20 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:16:20 INFO created redis consumer group stream=audit:24d654c5-953d-4ac3-b9ef-745c9e643942 group=audit
+2026/11/14 03:16:20 INFO starting redis stream consumer stream=audit:24d654c5-953d-4ac3-b9ef-745c9e643942 group=audit consumer=fixture
+2026/11/14 03:16:20 WARN handler error for stream message msg_id=1794613580933-0 error="transient fixture failure"
+2026/11/14 03:16:20 ERROR failed to process stream message id=1794613580933-0 error="transient fixture failure"
+2026/11/14 03:16:24 INFO consumer stopping due to context cancellation
+    release_test.go:323: transient failure invoked handler 1 time(s); pending work was never recovered
+--- FAIL: TestFailedStreamWorkIsRetried (4.03s)
+=== RUN   TestMongoEditsUpdateCurrentTextWithoutDuplicates
+2026/11/14 03:16:24 INFO connected to mongodb successfully database=audit_0eb01b1d09684cdd853d6ffab7b4a5fe
+--- PASS: TestMongoEditsUpdateCurrentTextWithoutDuplicates (0.06s)
+=== RUN   TestMedicalProductFrontendCannotEnterDeterministicBackend
+    release_test.go:367: frontend medical product has no backend deterministic extraction support
+--- FAIL: TestMedicalProductFrontendCannotEnterDeterministicBackend (0.00s)
+=== RUN   TestBackendFixturePipelineBySourceType
+=== RUN   TestBackendFixturePipelineBySourceType/basic_group
+2026/11/14 03:16:25 INFO running postgres migrations...
+2026/11/14 03:16:25 INFO postgres migrations completed successfully
+2026/11/14 03:16:25 INFO connected to mongodb successfully database=audit_1ba94929e67a440d98316d6022656ce8
+2026/11/14 03:16:25 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:16:25 INFO created redis consumer group stream=audit:7aa2126f-3be6-4b74-b928-b7e2673cc41e group=fixture
+2026/11/14 03:16:25 INFO starting redis stream consumer stream=audit:7aa2126f-3be6-4b74-b928-b7e2673cc41e group=fixture consumer=audit
+2026/11/14 03:16:25 INFO processing message from stream stream_msg_id=1794613585178-0 chat_id=-100123 msg_id=7
+2026/11/14 03:16:25 INFO matched seller product to catalog product_name="iPhone 15 Pro" match_level=normalized_name confidence=0.98
+2026/11/14 03:16:25 INFO persisted seller offer to postgresql offer_id=160fe28e-9d6f-40f0-8c9a-92ab9afb808e source_id=-100123_7 product="iPhone 15 Pro"
+2026/11/14 03:16:27 INFO consumer stopping due to context cancellation
+=== RUN   TestBackendFixturePipelineBySourceType/supergroup
+2026/11/14 03:16:27 INFO running postgres migrations...
+2026/11/14 03:16:27 INFO postgres migrations completed successfully
+2026/11/14 03:16:27 INFO connected to mongodb successfully database=audit_dfc7551e3efe4ed7a482b1cf47bfbb00
+2026/11/14 03:16:27 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:16:27 INFO created redis consumer group stream=audit:d77ec99e-8872-40db-9723-f994e170eef4 group=fixture
+2026/11/14 03:16:27 INFO starting redis stream consumer stream=audit:d77ec99e-8872-40db-9723-f994e170eef4 group=fixture consumer=audit
+2026/11/14 03:16:27 INFO processing message from stream stream_msg_id=1794613587531-0 chat_id=-100123 msg_id=7
+2026/11/14 03:16:27 INFO matched seller product to catalog product_name="iPhone 15 Pro" match_level=normalized_name confidence=0.98
+2026/11/14 03:16:27 INFO persisted seller offer to postgresql offer_id=f690bdbe-e1e9-4d0f-b527-9f5f352c80a7 source_id=-100123_7 product="iPhone 15 Pro"
+2026/11/14 03:16:29 INFO consumer stopping due to context cancellation
+=== RUN   TestBackendFixturePipelineBySourceType/forum
+2026/11/14 03:16:29 INFO running postgres migrations...
+2026/11/14 03:16:29 INFO postgres migrations completed successfully
+2026/11/14 03:16:29 INFO connected to mongodb successfully database=audit_864a040c559f4256874ebc2a7a81f872
+2026/11/14 03:16:29 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:16:29 INFO created redis consumer group stream=audit:0dc2f925-0e33-4ac3-859f-6100f3c4f95a group=fixture
+2026/11/14 03:16:29 INFO starting redis stream consumer stream=audit:0dc2f925-0e33-4ac3-859f-6100f3c4f95a group=fixture consumer=audit
+2026/11/14 03:16:29 INFO processing message from stream stream_msg_id=1794613589828-0 chat_id=-100123 msg_id=7
+2026/11/14 03:16:29 INFO matched seller product to catalog product_name="iPhone 15 Pro" match_level=normalized_name confidence=0.98
+2026/11/14 03:16:29 INFO persisted seller offer to postgresql offer_id=5a72f7a7-da7d-4035-8e23-dca2e0fbf14e source_id=-100123_7 product="iPhone 15 Pro"
+2026/11/14 03:16:31 INFO consumer stopping due to context cancellation
+=== RUN   TestBackendFixturePipelineBySourceType/broadcast_channel
+2026/11/14 03:16:31 INFO running postgres migrations...
+2026/11/14 03:16:32 INFO postgres migrations completed successfully
+2026/11/14 03:16:32 INFO connected to mongodb successfully database=audit_885811260f954212b30232f2134fe482
+2026/11/14 03:16:32 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:16:32 INFO created redis consumer group stream=audit:31f57e4f-8583-438c-9999-a2970ae01dea group=fixture
+2026/11/14 03:16:32 INFO starting redis stream consumer stream=audit:31f57e4f-8583-438c-9999-a2970ae01dea group=fixture consumer=audit
+2026/11/14 03:16:32 INFO processing message from stream stream_msg_id=1794613592130-0 chat_id=-100123 msg_id=7
+2026/11/14 03:16:32 INFO matched seller product to catalog product_name="iPhone 15 Pro" match_level=normalized_name confidence=0.98
+2026/11/14 03:16:32 INFO persisted seller offer to postgresql offer_id=060d0d66-6048-4146-abee-6f19db511f57 source_id=-100123_7 product="iPhone 15 Pro"
+2026/11/14 03:16:34 INFO consumer stopping due to context cancellation
+--- PASS: TestBackendFixturePipelineBySourceType (9.32s)
+    --- PASS: TestBackendFixturePipelineBySourceType/basic_group (2.33s)
+    --- PASS: TestBackendFixturePipelineBySourceType/supergroup (2.30s)
+    --- PASS: TestBackendFixturePipelineBySourceType/forum (2.32s)
+    --- PASS: TestBackendFixturePipelineBySourceType/broadcast_channel (2.37s)
+=== RUN   TestPendingWorkRecoveredAfterConsumerRestart
+2026/11/14 03:16:34 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:16:34 INFO created redis consumer group stream=audit:f8b116f7-a27c-43e0-8c29-e2d2cafc04f6 group=fixture
+2026/11/14 03:16:34 INFO starting redis stream consumer stream=audit:f8b116f7-a27c-43e0-8c29-e2d2cafc04f6 group=fixture consumer=replacement
+2026/11/14 03:16:38 INFO consumer stopping due to context cancellation
+    release_test.go:522: replacement worker never reclaimed pending work; calls=0
+--- FAIL: TestPendingWorkRecoveredAfterConsumerRestart (4.02s)
+=== RUN   TestConcurrentFreshDatabaseMigrations
+2026/11/14 03:16:38 INFO running postgres migrations...
+2026/11/14 03:16:38 INFO running postgres migrations...
+2026/11/14 03:16:38 INFO running postgres migrations...
+2026/11/14 03:16:38 INFO postgres migrations completed successfully
+2026/11/14 03:16:38 INFO postgres migrations completed successfully
+2026/11/14 03:16:38 INFO postgres migrations completed successfully
+--- PASS: TestConcurrentFreshDatabaseMigrations (0.20s)
+FAIL
+FAIL	github.com/perso/perso-mind/internal/audit	19.219s
+=== RUN   TestNormalizedSourceIngestionAndPause
+2026/11/14 03:16:19 INFO running postgres migrations...
+2026/11/14 03:16:19 INFO postgres migrations completed successfully
+2026/11/14 03:16:19 INFO connected to mongodb successfully database=audit_e315ec103e2b4603996c178ef4c9f516
+2026/11/14 03:16:20 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:16:20 INFO ingested telegram message successfully chat_id=-1000000000123 msg_id=8 stream_id=1794613580023-0
+--- PASS: TestNormalizedSourceIngestionAndPause (0.24s)
+=== RUN   TestForumAdapterPreservesTopicID
+--- PASS: TestForumAdapterPreservesTopicID (0.00s)
+=== RUN   TestBroadcastChannelAdapterDoesNotFabricateSenderMetadata
+--- PASS: TestBroadcastChannelAdapterDoesNotFabricateSenderMetadata (0.00s)
+=== RUN   TestLinkedDiscussionAdapterAssociatesPostID
+--- PASS: TestLinkedDiscussionAdapterAssociatesPostID (0.00s)
+=== RUN   TestResolverUnavailableClientFailsClosed
+--- PASS: TestResolverUnavailableClientFailsClosed (0.00s)
+=== RUN   TestResolverNumericPeerCannotFallBackToMock
+--- PASS: TestResolverNumericPeerCannotFallBackToMock (0.00s)
+=== RUN   TestMockExpectedTypeDoesNotControlDetection
+--- PASS: TestMockExpectedTypeDoesNotControlDetection (0.00s)
+=== RUN   TestNormalizeAddress
+--- PASS: TestNormalizeAddress (0.00s)
+=== RUN   TestResolveSourceClassification
+--- PASS: TestResolveSourceClassification (0.00s)
+=== RUN   TestEncryptedSessionStorage
+--- PASS: TestEncryptedSessionStorage (0.00s)
+=== RUN   TestMockTelegramClient
+2026/11/14 03:16:20 INFO mock telegram client started
+2026/11/14 03:16:20 INFO mock telegram message sent peer_id=12345 text=سلام
+--- PASS: TestMockTelegramClient (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/telegram	0.256s
+FAIL

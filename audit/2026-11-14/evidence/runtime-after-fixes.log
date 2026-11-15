@@ -1,0 +1,14 @@
+Fresh-volume Docker Compose runtime check (development/mock audit configuration)
+
+Clean project: perso-release-clean-20261114
+Startup: backend-api, telegram-collector, message-worker, frontend, PostgreSQL,
+MongoDB and Redis all started; database/API health checks healthy.
+PostgreSQL counts after clean init: products=5, users=1, sources=1.
+GET /ready: HTTP 200; MongoDB, PostgreSQL, Redis all reported up.
+GET /api/v1/offers through Nginx: HTTP 200; one offer returned after the mock
+collector injected a synthetic marketplace message and the worker persisted it.
+POST /api/v1/sources/resolve: HTTP 503, {"success":false,"error":"Telegram resolver is unavailable"}.
+
+This runtime uses TELEGRAM_MOCK_MODE=true, LLM_ENABLED=false and development demo
+auth. It verifies mock plumbing only; no live Telegram or Gemini call was made.
+Containers/network were stopped after verification without deleting named volumes.

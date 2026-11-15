@@ -1,0 +1,64 @@
+=== RUN   TestFreshDatabaseMigrations
+2026/11/14 03:04:33 INFO running postgres migrations...
+    release_test.go:71: clean migration failed: execute enhancement schema migration: ERROR: insert or update on table "telegram_sources" violates foreign key constraint "telegram_sources_owner_id_fkey" (SQLSTATE 23503)
+--- FAIL: TestFreshDatabaseMigrations (0.13s)
+=== RUN   TestMultiProductMessageRetainsBothOffers
+2026/11/14 03:04:34 INFO running postgres migrations...
+2026/11/14 03:04:34 INFO postgres migrations completed successfully
+    release_test.go:77: two products sharing a Telegram message produced 1 offer(s), want 2
+--- FAIL: TestMultiProductMessageRetainsBothOffers (0.28s)
+=== RUN   TestReplayedOfferDoesNotDuplicatePriceHistory
+2026/11/14 03:04:34 INFO running postgres migrations...
+2026/11/14 03:04:34 INFO postgres migrations completed successfully
+    release_test.go:84: replayed identical offer created 2 historical observations, want 1
+--- FAIL: TestReplayedOfferDoesNotDuplicatePriceHistory (0.22s)
+=== RUN   TestComparisonNormalizesCurrency
+2026/11/14 03:04:34 INFO running postgres migrations...
+2026/11/14 03:04:34 INFO postgres migrations completed successfully
+    release_test.go:91: equivalent 100 Toman and 1000 Rial prices must average 100 Toman: [{Condition:new AvgPrice:550 MinPrice:100 MaxPrice:1000 Count:2}]
+--- FAIL: TestComparisonNormalizesCurrency (0.26s)
+=== RUN   TestStatisticsKnownPrices
+2026/11/14 03:04:34 INFO running postgres migrations...
+2026/11/14 03:04:34 INFO postgres migrations completed successfully
+--- PASS: TestStatisticsKnownPrices (0.32s)
+=== RUN   TestBestOfferRankingBeforePagination
+2026/11/14 03:04:35 INFO running postgres migrations...
+2026/11/14 03:04:35 INFO postgres migrations completed successfully
+    release_test.go:108: globally best offer excluded by pre-ranking pagination: {"success":true,"data":[{"offer":{"id":"640f4215-a0df-4817-9405-a8007b086362","product_id":"7aa1eda8-5d7b-437c-9cd2-e835666792d2","source_message_id":"-1001_newest","seller_id":123,"brand":"Apple","model":"iPhone","condition":"new","quantity":1,"price_amount":150,"price_currency":"IRR_TOMAN","price_confidence":0.9,"branded":false,"seller_city":"تهران","listing_status":"active","extraction_confidence":0.9,"created_at":"2026-11-14T03:04:35.367796+03:30","updated_at":"2026-11-14T03:04:35.367796+03:30","product":{"id":"7aa1eda8-5d7b-437c-9cd2-e835666792d2","name":"iPhone","normalized_name":"","brand":"","model":"","category":"Smartphone","created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z"}},"score_breakdown":{"price_competitiveness":0.15,"product_condition":1,"offer_freshness":1,"extraction_confidence":0.9,"variant_match":0.9,"location_match":0.85,"final_score":66.8,"explanation":"امتیاز کل: 66.8 از ۱۰۰ | قیمت: 15% (وزن ۳۵٪)، وضعیت کالا: new (وزن ۲۰٪)، تازگی: 0.0 ساعت پیش (وزن ۱۵٪)، اعتماد استخراج: 90%"}}],"meta":{"total":2,"limit":1,"offset":0}}
+--- FAIL: TestBestOfferRankingBeforePagination (0.50s)
+=== RUN   TestSourceStatusMutationChecksOwner
+2026/11/14 03:04:35 INFO running postgres migrations...
+2026/11/14 03:04:35 INFO postgres migrations completed successfully
+    release_test.go:117: cross-owner status mutation allowed: status=200 body={"success":true,"data":{"message":"Source status updated successfully"}}
+--- FAIL: TestSourceStatusMutationChecksOwner (0.26s)
+=== RUN   TestDuplicateConversationInitialization
+2026/11/14 03:04:35 INFO running postgres migrations...
+2026/11/14 03:04:36 INFO postgres migrations completed successfully
+2026/11/14 03:04:36 INFO initialized seller conversation conversation_id=43d21ae2-28d4-47bb-af02-7673b793b2a5 seller_id=123 state=AWAITING_APPROVAL missing_fields=[seller_city]
+2026/11/14 03:04:36 INFO initialized seller conversation conversation_id=5515f0c5-84e7-43fe-875f-4b5b0925ba3a seller_id=123 state=AWAITING_APPROVAL missing_fields=[seller_city]
+    release_test.go:125: same offer initialized 2 conversation(s), want 1
+--- FAIL: TestDuplicateConversationInitialization (0.29s)
+=== RUN   TestConsumerGroupDoesNotSkipExistingBacklog
+2026/11/14 03:04:36 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:04:36 INFO created redis consumer group stream=audit:3c6e1508-6ef2-4105-8ef2-198fee9fbda1 group=audit
+    release_test.go:137: existing backlog skipped by new consumer group: redis: nil
+--- FAIL: TestConsumerGroupDoesNotSkipExistingBacklog (0.01s)
+=== RUN   TestFailedStreamWorkIsRetried
+2026/11/14 03:04:36 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:04:36 INFO created redis consumer group stream=audit:20acdd5e-ff59-444d-9d9c-bbb47f46da07 group=audit
+2026/11/14 03:04:36 INFO starting redis stream consumer stream=audit:20acdd5e-ff59-444d-9d9c-bbb47f46da07 group=audit consumer=fixture
+2026/11/14 03:04:36 WARN handler error for stream message msg_id=1794612876155-0 error="transient fixture failure"
+2026/11/14 03:04:36 ERROR failed to process stream message id=1794612876155-0 error="transient fixture failure"
+2026/11/14 03:04:40 INFO consumer stopping due to context cancellation
+    release_test.go:145: transient failure invoked handler 1 time(s); pending work was never recovered
+--- FAIL: TestFailedStreamWorkIsRetried (4.08s)
+=== RUN   TestMongoEditsUpdateCurrentTextWithoutDuplicates
+2026/11/14 03:04:40 INFO connected to mongodb successfully database=audit_56818575818f405fb27c8a5930a8d3a8
+    release_test.go:155: worker rereads stale text after edit: got="original price 100" want="edited price 200"
+--- FAIL: TestMongoEditsUpdateCurrentTextWithoutDuplicates (0.08s)
+=== RUN   TestMedicalProductFrontendCannotEnterDeterministicBackend
+    release_test.go:160: frontend medical product has no backend deterministic extraction support
+--- FAIL: TestMedicalProductFrontendCannotEnterDeterministicBackend (0.00s)
+FAIL
+FAIL	github.com/perso/perso-mind/internal/audit	6.429s
+FAIL

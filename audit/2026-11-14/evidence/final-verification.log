@@ -1,0 +1,25 @@
+Final Go verification after group sender-attribution fix
+Workspace: /home/mehdi/Project/leela/Perso/perso-mind
+
+rtk proxy env GOCACHE=/tmp/perso-audit-go-cache go test ./...
+RESULT: PASS (all packages; internal/telegram includes anonymous/missing sender regression)
+
+rtk proxy env GOCACHE=/tmp/perso-audit-go-cache go test -race ./...
+RESULT: PASS (all packages)
+
+rtk proxy env GOCACHE=/tmp/perso-audit-go-cache go vet ./...
+RESULT: PASS (exit 0; no diagnostics)
+
+rtk proxy env GOCACHE=/tmp/perso-audit-go-cache go build ./...
+RESULT: PASS (exit 0). Go emitted a read-only module stat-cache warning from the
+default home cache; the build completed successfully with the existing module cache.
+
+rtk proxy docker compose -p perso-release-clean-20261114 \
+  -f audit/2026-11-14/compose.full-stack.yml build
+RESULT: PASS (backend-api, telegram-collector, message-worker images built after
+the sender-attribution fix; no services started by this final build command).
+
+Final exact-tree follow-up: preserve a known PeerUser ID when its optional
+entity-cache record is absent. The normal Go suite, race suite, vet, build, and
+the three-image Docker Compose build were rerun after this source change; all
+passed. No services were started by the final image build.

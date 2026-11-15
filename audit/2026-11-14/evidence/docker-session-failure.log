@@ -1,0 +1,25 @@
+Attaching to perso-release-audit-20261114-message-worker, perso-release-audit-20261114-backend-api
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:11.561743481Z","level":"INFO","msg":"connected to mongodb successfully","database":"perso_raw"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:11.565494958Z","level":"INFO","msg":"connected to redis successfully","addr":"redis:6379"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:11.567711715Z","level":"INFO","msg":"using mock llm provider (llm disabled by default for privacy compliance)"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:11.567778692Z","level":"ERROR","msg":"fatal collector init error","error":"init session storage: create session directory: mkdir ./sessions: permission denied"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:37.458521627Z","level":"INFO","msg":"starting Perso Marketplace Platform","command":"worker","env":"development"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:37.468326158Z","level":"INFO","msg":"connected to postgres database successfully"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:37.46835477Z","level":"INFO","msg":"running postgres migrations..."}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:37.485471343Z","level":"INFO","msg":"postgres migrations completed successfully"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:37.491441393Z","level":"INFO","msg":"connected to mongodb successfully","database":"perso_raw"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:37.496118249Z","level":"INFO","msg":"connected to redis successfully","addr":"redis:6379"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:37.499036716Z","level":"INFO","msg":"using mock llm provider (llm disabled by default for privacy compliance)"}
+perso-release-audit-20261114-message-worker | {"time":"2026-11-13T23:47:37.499145138Z","level":"ERROR","msg":"fatal collector init error","error":"init session storage: create session directory: mkdir ./sessions: permission denied"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:12.419923292Z","level":"INFO","msg":"connected to mongodb successfully","database":"perso_raw"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:12.424762492Z","level":"INFO","msg":"connected to redis successfully","addr":"redis:6379"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:12.427155027Z","level":"INFO","msg":"using mock llm provider (llm disabled by default for privacy compliance)"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:12.427226372Z","level":"ERROR","msg":"fatal collector init error","error":"init session storage: create session directory: mkdir ./sessions: permission denied"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:38.351411907Z","level":"INFO","msg":"starting Perso Marketplace Platform","command":"api","env":"development"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:38.365017472Z","level":"INFO","msg":"connected to postgres database successfully"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:38.365110524Z","level":"INFO","msg":"running postgres migrations..."}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:38.378395396Z","level":"INFO","msg":"postgres migrations completed successfully"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:38.385198664Z","level":"INFO","msg":"connected to mongodb successfully","database":"perso_raw"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:38.388827967Z","level":"INFO","msg":"connected to redis successfully","addr":"redis:6379"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:38.39235279Z","level":"INFO","msg":"using mock llm provider (llm disabled by default for privacy compliance)"}
+perso-release-audit-20261114-backend-api | {"time":"2026-11-13T23:47:38.392468372Z","level":"ERROR","msg":"fatal collector init error","error":"init session storage: create session directory: mkdir ./sessions: permission denied"}

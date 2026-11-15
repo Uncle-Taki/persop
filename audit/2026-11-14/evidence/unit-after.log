@@ -1,0 +1,184 @@
+?   	github.com/perso/perso-mind/cmd/perso	[no test files]
+=== RUN   TestPriceComparisonsStructures
+--- PASS: TestPriceComparisonsStructures (0.00s)
+=== RUN   TestScoreOffer
+--- PASS: TestScoreOffer (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/analytics	0.011s
+=== RUN   TestHealthEndpoints
+2026/11/14 03:18:55 INFO http request method=GET path=/health remote_addr=192.0.2.1:1234 duration=175.26µs
+2026/11/14 03:18:55 INFO http request method=GET path=/openapi.yaml remote_addr=192.0.2.1:1234 duration=29.47µs
+--- PASS: TestHealthEndpoints (0.00s)
+=== RUN   TestResolveSourceEndpoint
+2026/11/14 03:18:55 INFO http request method=POST path=/api/v1/sources/resolve remote_addr=192.0.2.1:1234 duration=173.292µs
+--- PASS: TestResolveSourceEndpoint (0.00s)
+=== RUN   TestAPIRejectsAnonymousAndSpoofedIdentityByDefault
+2026/11/14 03:18:55 INFO http request method=POST path=/api/v1/sources/resolve remote_addr=192.0.2.1:1234 duration=30.216µs
+2026/11/14 03:18:55 INFO http request method=POST path=/api/v1/sources/resolve remote_addr=192.0.2.1:1234 duration=7.697µs
+--- PASS: TestAPIRejectsAnonymousAndSpoofedIdentityByDefault (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/api	0.016s
+=== RUN   TestSourceCreationRejectsUnverifiedMetadata
+=== RUN   TestSourceCreationRejectsUnverifiedMetadata/peer_metadata_without_address
+=== RUN   TestSourceCreationRejectsUnverifiedMetadata/detected_type_mismatch
+=== RUN   TestSourceCreationRejectsUnverifiedMetadata/invalid_expected_type
+--- PASS: TestSourceCreationRejectsUnverifiedMetadata (0.00s)
+    --- PASS: TestSourceCreationRejectsUnverifiedMetadata/peer_metadata_without_address (0.00s)
+    --- PASS: TestSourceCreationRejectsUnverifiedMetadata/detected_type_mismatch (0.00s)
+    --- PASS: TestSourceCreationRejectsUnverifiedMetadata/invalid_expected_type (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/api/handlers	0.014s
+?   	github.com/perso/perso-mind/internal/api/httputil	[no test files]
+=== RUN   TestUnsafeModesFailClosed
+=== RUN   TestUnsafeModesFailClosed/demo_authentication_in_production
+=== RUN   TestUnsafeModesFailClosed/LLM_without_credentials
+=== RUN   TestUnsafeModesFailClosed/unsupported_LLM_provider
+=== RUN   TestUnsafeModesFailClosed/real_Telegram_with_default_session_key
+--- PASS: TestUnsafeModesFailClosed (0.00s)
+    --- PASS: TestUnsafeModesFailClosed/demo_authentication_in_production (0.00s)
+    --- PASS: TestUnsafeModesFailClosed/LLM_without_credentials (0.00s)
+    --- PASS: TestUnsafeModesFailClosed/unsupported_LLM_provider (0.00s)
+    --- PASS: TestUnsafeModesFailClosed/real_Telegram_with_default_session_key (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/config	0.010s
+=== RUN   TestStateMachineTransitions
+=== RUN   TestStateMachineTransitions/NEW_to_AWAITING_APPROVAL
+=== RUN   TestStateMachineTransitions/AWAITING_APPROVAL_to_ACTIVE
+=== RUN   TestStateMachineTransitions/ACTIVE_to_WAITING_FOR_REPLY
+=== RUN   TestStateMachineTransitions/WAITING_FOR_REPLY_to_COMPLETED
+=== RUN   TestStateMachineTransitions/ACTIVE_to_OPTED_OUT
+=== RUN   TestStateMachineTransitions/COMPLETED_to_ACTIVE_(Illegal_transition)
+=== RUN   TestStateMachineTransitions/OPTED_OUT_to_ACTIVE_(Illegal_transition)
+--- PASS: TestStateMachineTransitions (0.00s)
+    --- PASS: TestStateMachineTransitions/NEW_to_AWAITING_APPROVAL (0.00s)
+    --- PASS: TestStateMachineTransitions/AWAITING_APPROVAL_to_ACTIVE (0.00s)
+    --- PASS: TestStateMachineTransitions/ACTIVE_to_WAITING_FOR_REPLY (0.00s)
+    --- PASS: TestStateMachineTransitions/WAITING_FOR_REPLY_to_COMPLETED (0.00s)
+    --- PASS: TestStateMachineTransitions/ACTIVE_to_OPTED_OUT (0.00s)
+    --- PASS: TestStateMachineTransitions/COMPLETED_to_ACTIVE_(Illegal_transition) (0.00s)
+    --- PASS: TestStateMachineTransitions/OPTED_OUT_to_ACTIVE_(Illegal_transition) (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/conversation	0.012s
+?   	github.com/perso/perso-mind/internal/domain	[no test files]
+=== RUN   TestClassifyMessage
+=== RUN   TestClassifyMessage/Seller_advertisement
+=== RUN   TestClassifyMessage/Buyer_request
+=== RUN   TestClassifyMessage/Spam_or_group_rules_(neither)
+=== RUN   TestClassifyMessage/Uncertain_text
+--- PASS: TestClassifyMessage (0.00s)
+    --- PASS: TestClassifyMessage/Seller_advertisement (0.00s)
+    --- PASS: TestClassifyMessage/Buyer_request (0.00s)
+    --- PASS: TestClassifyMessage/Spam_or_group_rules_(neither) (0.00s)
+    --- PASS: TestClassifyMessage/Uncertain_text (0.00s)
+=== RUN   TestExtractFromMessage
+--- PASS: TestExtractFromMessage (0.00s)
+=== RUN   TestExtractMultipleProducts
+--- PASS: TestExtractMultipleProducts (0.00s)
+=== RUN   TestEnglishAndMixedBuyerRequestsAreNotSellerAds
+--- PASS: TestEnglishAndMixedBuyerRequestsAreNotSellerAds (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/extraction	0.013s
+=== RUN   TestGeminiCredentialsAndRetryCancellation
+2026/11/14 03:18:55 WARN gemini rate limit or server error, retrying status=429 attempt=1
+--- PASS: TestGeminiCredentialsAndRetryCancellation (0.00s)
+=== RUN   TestRefusalOverridesAffirmativeConsent
+--- PASS: TestRefusalOverridesAffirmativeConsent (0.00s)
+=== RUN   TestEvidenceMustExistInOriginalMessage
+--- PASS: TestEvidenceMustExistInOriginalMessage (0.00s)
+=== RUN   TestInvalidLLMAttributesAreRejected
+=== RUN   TestInvalidLLMAttributesAreRejected/invalid_currency
+=== RUN   TestInvalidLLMAttributesAreRejected/negative_price
+=== RUN   TestInvalidLLMAttributesAreRejected/invalid_condition
+=== RUN   TestInvalidLLMAttributesAreRejected/invalid_confidence
+--- PASS: TestInvalidLLMAttributesAreRejected (0.00s)
+    --- PASS: TestInvalidLLMAttributesAreRejected/invalid_currency (0.00s)
+    --- PASS: TestInvalidLLMAttributesAreRejected/negative_price (0.00s)
+    --- PASS: TestInvalidLLMAttributesAreRejected/invalid_condition (0.00s)
+    --- PASS: TestInvalidLLMAttributesAreRejected/invalid_confidence (0.00s)
+=== RUN   TestPromptInjectionDefense
+--- PASS: TestPromptInjectionDefense (0.00s)
+=== RUN   TestMergeDeterministicAndLLM
+--- PASS: TestMergeDeterministicAndLLM (0.00s)
+=== RUN   TestMockProvider
+--- PASS: TestMockProvider (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/llm	0.010s
+=== RUN   TestMatcher
+=== RUN   TestMatcher/Match_via_Persian_Alias
+=== RUN   TestMatcher/Match_via_Brand_and_Model
+=== RUN   TestMatcher/Unmatched_unknown_product
+--- PASS: TestMatcher (0.00s)
+    --- PASS: TestMatcher/Match_via_Persian_Alias (0.00s)
+    --- PASS: TestMatcher/Match_via_Brand_and_Model (0.00s)
+    --- PASS: TestMatcher/Unmatched_unknown_product (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/matching	0.016s
+=== RUN   TestEnglishRialUnitIsPreserved
+--- PASS: TestEnglishRialUnitIsPreserved (0.00s)
+=== RUN   TestNormalize
+=== RUN   TestNormalize/Arabic_Yeh_and_Kaf_conversion
+=== RUN   TestNormalize/Persian_and_Arabic_digits_to_English
+=== RUN   TestNormalize/Punctuation_normalization_and_quotes
+=== RUN   TestNormalize/Excessive_whitespace_and_newlines
+=== RUN   TestNormalize/ZWNJ_with_surrounding_whitespace_cleaned
+--- PASS: TestNormalize (0.00s)
+    --- PASS: TestNormalize/Arabic_Yeh_and_Kaf_conversion (0.00s)
+    --- PASS: TestNormalize/Persian_and_Arabic_digits_to_English (0.00s)
+    --- PASS: TestNormalize/Punctuation_normalization_and_quotes (0.00s)
+    --- PASS: TestNormalize/Excessive_whitespace_and_newlines (0.00s)
+    --- PASS: TestNormalize/ZWNJ_with_surrounding_whitespace_cleaned (0.00s)
+=== RUN   TestPersianAndArabicDigitsToEnglish
+--- PASS: TestPersianAndArabicDigitsToEnglish (0.00s)
+=== RUN   TestCleanSearchKey
+--- PASS: TestCleanSearchKey (0.00s)
+=== RUN   TestParsePrices
+=== RUN   TestParsePrices/Million_Toman_explicit
+=== RUN   TestParsePrices/Shorthand_million_(م_ت)
+=== RUN   TestParsePrices/Full_number_with_separators
+=== RUN   TestParsePrices/Compound_million_and_thousand
+=== RUN   TestParsePrices/Negotiable_price
+=== RUN   TestParsePrices/Explicit_Rial_currency
+=== RUN   TestParsePrices/Ignore_storage_number_(not_a_price)
+--- PASS: TestParsePrices (0.00s)
+    --- PASS: TestParsePrices/Million_Toman_explicit (0.00s)
+    --- PASS: TestParsePrices/Shorthand_million_(م_ت) (0.00s)
+    --- PASS: TestParsePrices/Full_number_with_separators (0.00s)
+    --- PASS: TestParsePrices/Compound_million_and_thousand (0.00s)
+    --- PASS: TestParsePrices/Negotiable_price (0.00s)
+    --- PASS: TestParsePrices/Explicit_Rial_currency (0.00s)
+    --- PASS: TestParsePrices/Ignore_storage_number_(not_a_price) (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/nlp	0.011s
+?   	github.com/perso/perso-mind/internal/queue	[no test files]
+?   	github.com/perso/perso-mind/internal/storage/mongodb	[no test files]
+?   	github.com/perso/perso-mind/internal/storage/postgres	[no test files]
+=== RUN   TestForumAdapterPreservesTopicID
+--- PASS: TestForumAdapterPreservesTopicID (0.00s)
+=== RUN   TestBroadcastChannelAdapterDoesNotFabricateSenderMetadata
+--- PASS: TestBroadcastChannelAdapterDoesNotFabricateSenderMetadata (0.00s)
+=== RUN   TestLinkedDiscussionAdapterAssociatesPostID
+--- PASS: TestLinkedDiscussionAdapterAssociatesPostID (0.00s)
+=== RUN   TestMissingTelegramCredentialsDoNotEnableMock
+--- PASS: TestMissingTelegramCredentialsDoNotEnableMock (0.00s)
+=== RUN   TestResolverUnavailableClientFailsClosed
+--- PASS: TestResolverUnavailableClientFailsClosed (0.00s)
+=== RUN   TestResolverNumericPeerCannotFallBackToMock
+--- PASS: TestResolverNumericPeerCannotFallBackToMock (0.00s)
+=== RUN   TestMockExpectedTypeDoesNotControlDetection
+--- PASS: TestMockExpectedTypeDoesNotControlDetection (0.00s)
+=== RUN   TestNormalizeAddress
+--- PASS: TestNormalizeAddress (0.00s)
+=== RUN   TestResolveSourceClassification
+--- PASS: TestResolveSourceClassification (0.00s)
+=== RUN   TestEncryptedSessionStorage
+--- PASS: TestEncryptedSessionStorage (0.00s)
+=== RUN   TestMockTelegramClient
+2026/11/14 03:18:55 INFO mock telegram client started
+2026/11/14 03:18:55 INFO mock telegram message sent peer_id=12345 text=سلام
+--- PASS: TestMockTelegramClient (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/telegram	0.021s
+=== RUN   TestPipelineExtractionAndMatching
+--- PASS: TestPipelineExtractionAndMatching (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/worker	0.018s

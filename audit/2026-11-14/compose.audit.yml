@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  postgres-seed-baseline:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: perso_audit
+    tmpfs:
+      - /var/lib/postgresql/data
+    volumes:
+      - ../../perso-mind/scripts/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: perso_audit
+    ports:
+      - '127.0.0.1:55439:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '127.0.0.1:56389:6379'
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - '127.0.0.1:57039:27017'
+    tmpfs:
+      - /data/db

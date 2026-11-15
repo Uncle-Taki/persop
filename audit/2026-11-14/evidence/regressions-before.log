@@ -1,0 +1,44 @@
+2026/11/14 02:59:30 INFO http request method=GET path=/health remote_addr=192.0.2.1:1234 duration=102.023µs
+2026/11/14 02:59:30 INFO http request method=GET path=/openapi.yaml remote_addr=192.0.2.1:1234 duration=23.174µs
+2026/11/14 02:59:30 INFO http request method=POST path=/api/v1/sources/resolve remote_addr=192.0.2.1:1234 duration=120.806µs
+2026/11/14 02:59:30 INFO http request method=POST path=/api/v1/sources/resolve remote_addr=192.0.2.1:1234 duration=29.146µs
+2026/11/14 02:59:30 INFO http request method=POST path=/api/v1/sources/resolve remote_addr=192.0.2.1:1234 duration=10.946µs
+--- FAIL: TestAPIRejectsAnonymousAndSpoofedIdentityByDefault (0.00s)
+    auth_audit_test.go:27: untrusted identity "" accepted: status=200
+    auth_audit_test.go:27: untrusted identity "22222222-2222-2222-2222-222222222222" accepted: status=200
+FAIL
+FAIL	github.com/perso/perso-mind/internal/api	0.009s
+--- FAIL: TestSourceCreationRejectsUnverifiedMetadata (0.00s)
+    --- FAIL: TestSourceCreationRejectsUnverifiedMetadata/peer_metadata_without_address (0.00s)
+        source_audit_test.go:19: unverified request reached persistence (panic): runtime error: invalid memory address or nil pointer dereference
+    --- FAIL: TestSourceCreationRejectsUnverifiedMetadata/detected_type_mismatch (0.00s)
+        source_audit_test.go:19: unverified request reached persistence (panic): runtime error: invalid memory address or nil pointer dereference
+    --- FAIL: TestSourceCreationRejectsUnverifiedMetadata/invalid_expected_type (0.00s)
+        source_audit_test.go:19: unverified request reached persistence (panic): runtime error: invalid memory address or nil pointer dereference
+FAIL
+FAIL	github.com/perso/perso-mind/internal/api/handlers	0.013s
+?   	github.com/perso/perso-mind/internal/api/httputil	[no test files]
+--- FAIL: TestResolverUnavailableClientFailsClosed (0.00s)
+    audit_regression_test.go:15: "@unverified_channel": unavailable real client returned verified metadata: &{Address:@unverified_channel PeerID:-1001234567890 AccessHash:1234567890123456789 Username:unverified_channel Title:بازار موبایل و لپتاپ پایتخت DetectedType:broadcast_channel AccessType:public ExpectedType: TypeMismatch:false LinkedDiscussionPeerID:0x324a12c02578 Capabilities:{CanReadHistory:true HasTopics:false HasDiscussion:true SenderMetadataAvailable:false} AccountHasAccess:true CanIngest:true}
+    audit_regression_test.go:15: "-1001234567890": unavailable real client returned verified metadata: &{Address:-1001234567890 PeerID:-1001234567890 AccessHash:1234567890123456789 Username:-1001234567890 Title:بازار موبایل و لپتاپ پایتخت DetectedType:broadcast_channel AccessType:public ExpectedType: TypeMismatch:false LinkedDiscussionPeerID:0x324a12c025a8 Capabilities:{CanReadHistory:true HasTopics:false HasDiscussion:true SenderMetadataAvailable:false} AccountHasAccess:true CanIngest:true}
+    audit_regression_test.go:15: "https://t.me/+private_fixture": unavailable real client returned verified metadata: &{Address:https://t.me/+private_fixture PeerID:-1001234567890 AccessHash:1234567890123456789 Username:private_fixture Title:بازار موبایل و لپتاپ پایتخت DetectedType:broadcast_channel AccessType:private ExpectedType: TypeMismatch:false LinkedDiscussionPeerID:0x324a12c025d0 Capabilities:{CanReadHistory:true HasTopics:false HasDiscussion:true SenderMetadataAvailable:false} AccountHasAccess:true CanIngest:true}
+--- FAIL: TestResolverNumericPeerCannotFallBackToMock (0.00s)
+    audit_regression_test.go:23: numeric peer silently returned synthetic metadata: &{Address:-1001234567890 PeerID:-1001234567890 AccessHash:1234567890123456789 Username:-1001234567890 Title:بازار موبایل و لپتاپ پایتخت DetectedType:broadcast_channel AccessType:public ExpectedType: TypeMismatch:false LinkedDiscussionPeerID:0x324a12c02618 Capabilities:{CanReadHistory:true HasTopics:false HasDiscussion:true SenderMetadataAvailable:false} AccountHasAccess:true CanIngest:true}
+--- FAIL: TestMockExpectedTypeDoesNotControlDetection (0.00s)
+    audit_regression_test.go:32: expected type controlled detected entity: &{Address:@ordinary_channel PeerID:-1001987654321 AccessHash:1234567890123456789 Username:ordinary_channel Title:انجمن گفتگوی بازار و تجهیزات DetectedType:forum AccessType:public ExpectedType:forum TypeMismatch:false LinkedDiscussionPeerID:<nil> Capabilities:{CanReadHistory:true HasTopics:true HasDiscussion:false SenderMetadataAvailable:true} AccountHasAccess:true CanIngest:true}
+2026/11/14 02:59:30 INFO mock telegram client started
+2026/11/14 02:59:30 INFO mock telegram message sent peer_id=12345 text=سلام
+FAIL
+FAIL	github.com/perso/perso-mind/internal/telegram	0.010s
+--- FAIL: TestInvalidLLMAttributesAreRejected (0.00s)
+    --- FAIL: TestInvalidLLMAttributesAreRejected/invalid_currency (0.00s)
+        audit_regression_test.go:16: invalid attributes silently accepted: {Classification:seller Confidence:0.8 Products:[] Prices:[{Amount:98 Currency:IRR_TOMAN Raw: Negotiable:false Confidence:0.8 EvidenceSpan:}] Location:<nil> MissingFields:[] RawAnalysis: TokenUsage:{PromptTokens:0 CompletionTokens:0 TotalTokens:0}}
+    --- FAIL: TestInvalidLLMAttributesAreRejected/negative_price (0.00s)
+        audit_regression_test.go:16: invalid attributes silently accepted: {Classification:seller Confidence:0.8 Products:[] Prices:[{Amount:0 Currency:IRR_TOMAN Raw: Negotiable:false Confidence:0.8 EvidenceSpan:}] Location:<nil> MissingFields:[] RawAnalysis: TokenUsage:{PromptTokens:0 CompletionTokens:0 TotalTokens:0}}
+    --- FAIL: TestInvalidLLMAttributesAreRejected/invalid_condition (0.00s)
+        audit_regression_test.go:16: invalid attributes silently accepted: {Classification:seller Confidence:0.8 Products:[{Name:iPhone Brand: Manufacturer: Model: Variant: Condition:verified Quantity:1 Confidence:0.8 EvidenceSpan:}] Prices:[] Location:<nil> MissingFields:[] RawAnalysis: TokenUsage:{PromptTokens:0 CompletionTokens:0 TotalTokens:0}}
+    --- FAIL: TestInvalidLLMAttributesAreRejected/invalid_confidence (0.00s)
+        audit_regression_test.go:16: invalid attributes silently accepted: {Classification:seller Confidence:8 Products:[] Prices:[] Location:<nil> MissingFields:[] RawAnalysis: TokenUsage:{PromptTokens:0 CompletionTokens:0 TotalTokens:0}}
+FAIL
+FAIL	github.com/perso/perso-mind/internal/llm	0.005s
+FAIL

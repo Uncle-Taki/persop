@@ -1,0 +1,17 @@
+?   	github.com/perso/perso-mind/cmd/perso	[no test files]
+ok  	github.com/perso/perso-mind/internal/analytics	1.027s
+ok  	github.com/perso/perso-mind/internal/api	1.052s
+ok  	github.com/perso/perso-mind/internal/api/handlers	1.043s
+?   	github.com/perso/perso-mind/internal/api/httputil	[no test files]
+ok  	github.com/perso/perso-mind/internal/config	1.034s
+ok  	github.com/perso/perso-mind/internal/conversation	1.056s
+?   	github.com/perso/perso-mind/internal/domain	[no test files]
+ok  	github.com/perso/perso-mind/internal/extraction	1.093s
+ok  	github.com/perso/perso-mind/internal/llm	1.032s
+ok  	github.com/perso/perso-mind/internal/matching	1.049s
+ok  	github.com/perso/perso-mind/internal/nlp	1.048s
+?   	github.com/perso/perso-mind/internal/queue	[no test files]
+?   	github.com/perso/perso-mind/internal/storage/mongodb	[no test files]
+?   	github.com/perso/perso-mind/internal/storage/postgres	[no test files]
+ok  	github.com/perso/perso-mind/internal/telegram	1.057s
+ok  	github.com/perso/perso-mind/internal/worker	1.070s

@@ -1,0 +1,31 @@
+=== RUN   TestNormalizedSourceIngestionAndPause
+2026/11/14 03:11:01 INFO running postgres migrations...
+2026/11/14 03:11:01 INFO postgres migrations completed successfully
+2026/11/14 03:11:01 INFO connected to mongodb successfully database=audit_d5cdc4194df54e04bf46d5c278ca6632
+2026/11/14 03:11:01 INFO connected to redis successfully addr=127.0.0.1:56389
+2026/11/14 03:11:01 INFO ingested telegram message successfully chat_id=-1000000000123 msg_id=8 stream_id=1794613261497-0
+--- PASS: TestNormalizedSourceIngestionAndPause (0.25s)
+=== RUN   TestForumAdapterPreservesTopicID
+--- PASS: TestForumAdapterPreservesTopicID (0.00s)
+=== RUN   TestBroadcastChannelAdapterDoesNotFabricateSenderMetadata
+--- PASS: TestBroadcastChannelAdapterDoesNotFabricateSenderMetadata (0.00s)
+=== RUN   TestLinkedDiscussionAdapterAssociatesPostID
+--- PASS: TestLinkedDiscussionAdapterAssociatesPostID (0.00s)
+=== RUN   TestResolverUnavailableClientFailsClosed
+--- PASS: TestResolverUnavailableClientFailsClosed (0.00s)
+=== RUN   TestResolverNumericPeerCannotFallBackToMock
+--- PASS: TestResolverNumericPeerCannotFallBackToMock (0.00s)
+=== RUN   TestMockExpectedTypeDoesNotControlDetection
+--- PASS: TestMockExpectedTypeDoesNotControlDetection (0.00s)
+=== RUN   TestNormalizeAddress
+--- PASS: TestNormalizeAddress (0.00s)
+=== RUN   TestResolveSourceClassification
+--- PASS: TestResolveSourceClassification (0.00s)
+=== RUN   TestEncryptedSessionStorage
+--- PASS: TestEncryptedSessionStorage (0.00s)
+=== RUN   TestMockTelegramClient
+2026/11/14 03:11:01 INFO mock telegram client started
+2026/11/14 03:11:01 INFO mock telegram message sent peer_id=12345 text=سلام
+--- PASS: TestMockTelegramClient (0.00s)
+PASS
+ok  	github.com/perso/perso-mind/internal/telegram	0.259s
