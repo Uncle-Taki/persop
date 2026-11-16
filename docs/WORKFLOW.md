@@ -1,8 +1,8 @@
 # Perso healthcare app — implementation workflow
 
-Version: 1.4 — demo build and startup fixes prepared
+Version: 1.5 — demo fix push retry prepared
 Updated: 2026-11-17, Asia/Tehran
-Status: Step 8 is published on backend `main` at `a174988aa66a4c0df1576f0749ac87d0e56ea1e4`. A follow-up demo fix is committed locally as backend `main` `9fcb69c`: configurable Alpine and Go mirrors, complete post-migration demo seeding, and the corrected shared-source conflict target. `make demo` now builds and starts the full stack when `FRONTEND_PORT=3001` avoids an existing host binding on port 3000. Backend push and parent pin update are pending. Frontend and parent improvement branches were reviewed and contain no commits ahead of their published `main` branches.
+Status: Step 8 is published on backend `main` at `a174988aa66a4c0df1576f0749ac87d0e56ea1e4`. A follow-up demo fix is committed locally as backend `main` `9fcb69c`: configurable Alpine and Go mirrors, complete post-migration demo seeding, and the corrected shared-source conflict target. `make demo` now builds and starts the full stack when `FRONTEND_PORT=3001` avoids an existing host binding on port 3000. The first demo-fix push attempt failed before contacting GitHub because DNS could not resolve `github.com`; retry is prepared. Frontend and parent improvement branches were reviewed and contain no commits ahead of their published `main` branches.
 Feature branches `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5` are preserved as merge ancestry in the child `main` candidates.
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -277,7 +277,7 @@ Final integration validation: backend candidate `5c8c7ca3463d0918b88e16e6a4009b6
 
 | BRANCH-REVIEW | 2026-11-17, Asia/Tehran | parent/frontend improvement and prior step branches | Published main ancestry | Reviewed all local and remote `codex/*` branches. Parent and frontend `codex/perso-improvements-wip` branches have no commits ahead of their published `main`; backend `codex/perso-step-7` equals backend `main`; prior 3A/3B/4/5 branches are preserved as ancestry. | Branch ancestry and three-way diffs inspected; no additional final branch delta identified. | No merge required |
 
-| DEMO-FIX | 2026-11-17, Asia/Tehran | persob / main | `9fcb69c` | Make `make demo` work in environments where the default Alpine CDN and Go proxy return TLS/403 errors; run demo seeding after the canonical migration service; update the source fixture for the shared-source uniqueness constraint. | All six images built. Migrations, demo seed, backend, worker, gateway, mock, databases and frontend started successfully. `FRONTEND_PORT=3001 make demo` completed with frontend HTTP 200; default port 3000 is occupied by an existing `jamshid-frontend` container. | Local backend commit prepared; workflow checkpoint precedes push |
+| DEMO-FIX | 2026-11-17, Asia/Tehran | persob / main | `9fcb69c` | Make `make demo` work in environments where the default Alpine CDN and Go proxy return TLS/403 errors; run demo seeding after the canonical migration service; update the source fixture for the shared-source uniqueness constraint. | All six images built. Migrations, demo seed, backend, worker, gateway, mock, databases and frontend started successfully. `FRONTEND_PORT=3001 make demo` completed with frontend HTTP 200; default port 3000 is occupied by an existing `jamshid-frontend` container. | Local backend commit prepared; first push failed on DNS before contacting GitHub; retry follows this workflow update |
 
 For every future entry, include observed errors, CI evidence, outstanding limitations, and the next step. Keep previous entries as history; do not replace failures with an unexplained success label.
 
