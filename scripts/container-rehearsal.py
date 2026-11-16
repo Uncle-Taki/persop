@@ -160,6 +160,18 @@ def main():
                     for value in deployment.values.values():
                         if len(value) >= 16:
                             diagnostics = diagnostics.replace(value, '[redacted]')
+            # Include service output (for example one-shot seed errors), not
+            # only Compose's summary. Every stack here is synthetic/disposable.
+            for deployment in (source, target, demo):
+                if deployment:
+                    try:
+                        logs = deployment.run('logs', '--no-color', '--tail', '60', stdout=subprocess.PIPE).stdout.decode(errors='replace')
+                        for value in deployment.values.values():
+                            if len(value) >= 16:
+                                logs = logs.replace(value, '[redacted]')
+                        diagnostics += '\n' + logs
+                    except subprocess.CalledProcessError:
+                        pass
             (ARTIFACTS / 'container-diagnostics.txt').write_text(diagnostics)
             print(diagnostics)
         summary['result'] = 'failed; inspect the failed check and private Docker diagnostics'
