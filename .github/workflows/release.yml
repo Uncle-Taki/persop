@@ -58,6 +58,7 @@ jobs:
         run: |
           docker build -t perso-backend:scan persob
           docker build -t perso-frontend:scan persof
+          docker build -t perso-llm-mock:scan -f persob/Dockerfile.llm-mock persob
       - name: Scan backend runtime image
         if: always()
         uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
@@ -78,6 +79,16 @@ jobs:
           severity: HIGH,CRITICAL
           ignore-unfixed: false
           exit-code: "1"
+      - name: Scan mock runtime image
+        if: always()
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0
+        with:
+          image-ref: perso-llm-mock:scan
+          format: json
+          output: artifacts/mock-image-scan.json
+          severity: HIGH,CRITICAL
+          ignore-unfixed: false
+          exit-code: "1"
       - name: Print image findings for review
         if: always()
         run: |
@@ -94,3 +105,4 @@ jobs:
             artifacts/container-diagnostics.txt
             artifacts/backend-image-scan.json
             artifacts/frontend-image-scan.json
+            artifacts/mock-image-scan.json

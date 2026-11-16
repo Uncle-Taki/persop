@@ -4,7 +4,7 @@ Step 8 integrates and verifies the implemented Steps 1–5. It does not complete
 
 ## Revisions and evidence
 
-Starting parent: `5008b0c332ee1eb6567a978966e73b7ec25d9dbb`; backend: `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend: `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Work is published on `codex/perso-step-8`; final child pins and CI results are recorded after verification.
+Starting parent: `5008b0c332ee1eb6567a978966e73b7ec25d9dbb`; backend: `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend: `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Work is published on `codex/perso-step-8`. Current child pins: backend `5a60321b9484f70b011d8bfef7f489418d719631`; frontend `bc3b7e3133a4a57aeafe760cdf22a564b6b2f61c`. Final parent CI results follow verification.
 
 Local: exact Go 1.26.11; Node 24.22.1. Frontend API generation, typecheck and production build passed; Python checks and canonical/embedded API check passed. Provider/config/extraction race checks passed. Browser startup is restricted by the local Unix-socket policy. GitHub CI must validate the exact pinned stack, database acceptance, all live browser tests and the Docker rehearsal. Image scan findings are release gates, never disabled to manufacture a pass.
 
@@ -27,3 +27,5 @@ For rollback, use an isolated restore with the matching code/images and encrypti
 ## Remaining product boundaries
 
 The default UI is the existing server-backed mint workspace; the full healthcare prototype remains explicit at `?mode=demo`. The session catalog label is still electronics even though healthcare catalog fields/CRUD are implemented. Healthcare unit/specification/expiry compatibility needs additional product work; this handoff does not certify clinical product equivalence. The new buyer inquiry workflow remains Step 7. Existing supervised operator outreach stays disabled during verification. Public hosting, real Telegram authorization/reconnect and production provider checks require a separate operator-controlled pilot.
+
+Runtime refresh uses Alpine 3.24.4 and Nginx 1.30.6-alpine3.24, checked against the [official Alpine release list](https://www.alpinelinux.org/releases/) and [official Nginx image](https://hub.docker.com/_/nginx). Backend, frontend and mock scans retain HIGH/CRITICAL failure gates.
