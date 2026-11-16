@@ -4,16 +4,31 @@ services:
     environment:
       ENVIRONMENT: development
   postgres:
+    # The migration service owns the canonical ordered migration ledger.
+  demo-seed:
+    image: postgres:16-alpine
+    restart: "no"
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
     volumes:
-      - ./persob/internal/storage/postgres/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
-      - ./persob/internal/storage/postgres/migrations/002_telegram_sources_and_marketplace.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
-      - ./persob/scripts/seed.sql:/docker-entrypoint-initdb.d/02-demo.sql:ro
-      - ./docker/demo-source.sql:/docker-entrypoint-initdb.d/03-demo-source.sql:ro
+      - ./persob/scripts/seed.sql:/seed.sql:ro
+      - ./docker/demo-source.sql:/demo-source.sql:ro
+    entrypoint: [sh, -c]
+    command:
+      - >-
+        psql -h postgres -U perso -d perso_db -v ON_ERROR_STOP=1 -f /seed.sql &&
+        psql -h postgres -U perso -d perso_db -v ON_ERROR_STOP=1 -f /demo-source.sql
   telegram-gateway:
     environment:
       TELEGRAM_MOCK_MODE: "true"
       ENVIRONMENT: development
   backend-api:
+    depends_on:
+      demo-seed:
+        condition: service_completed_successfully
     environment:
       LLM_ENABLED: "true"
       LLM_PROVIDER: openai_compatible
@@ -21,6 +36,9 @@ services:
       LLM_MODEL: perso-healthcare-mock
       LLM_API_KEY: ${LLM_MOCK_TOKEN:-}
   message-worker:
+    depends_on:
+      demo-seed:
+        condition: service_completed_successfully
     environment:
       LLM_ENABLED: "true"
       LLM_PROVIDER: openai_compatible
