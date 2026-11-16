@@ -1,8 +1,8 @@
 # Perso healthcare app — implementation workflow
 
-Version: 0.9 — child mains confirmed; parent publication next
-Updated: 2026-11-16, Asia/Tehran
-Status: Steps 3A, 3B, 4 and 5 are published on both child `main` branches: backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Both remote heads are confirmed. The parent candidate pins these exact commits and adds the demo Compose wiring and eight-step README flow; parent publication and final re-judgement are pending.
+Version: 1.0 — final Step 8 merge prepared
+Updated: 2026-11-17, Asia/Tehran
+Status: Step 8 was reviewed and merged into backend `main` as `a174988aa66a4c0df1576f0749ac87d0e56ea1e4`. The parent still pins backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; the backend push and parent pin update are pending. Frontend and parent improvement branches were reviewed and contain no commits ahead of their published `main` branches.
 Feature branches `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5` are preserved as merge ancestry in the child `main` candidates.
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -226,11 +226,11 @@ Every user-facing step summary should state what changed, relevant tests and lim
 
 ## 10. Progress and push ledger
 
-Current checkpoint: both child `main` branches are published and confirmed at backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. The parent candidate incorporates these pins, the local OpenAI-compatible demo service, and the eight-step user workflow. This parent change is prepared for publication; final re-judgement follows parent remote confirmation. Existing runtime-image scan findings remain open.
+Current checkpoint: final Step 8 hardening is merged locally into backend `main` at `a174988aa66a4c0df1576f0749ac87d0e56ea1e4`. It adds healthcare mock fixture coverage and safety validation, isolates the demo healthcare Telegram fixture, refreshes Alpine runtime layers, and upgrades Go dependencies including `x/net`. The backend full test suite is blocked in this environment because the configured module proxy returns 403 for `gotd/td` and `klauspost/compress`; static review and whitespace checks passed. The backend push must precede the parent pin update. Existing runtime-image scan findings remain open.
 Previous confirmed remote heads before this publication: parent `04fb8719e210e862b3a6480abeb36504c9a7a194`, backend `ab40de2c76f6287dc7fabc279b1d3bf430a6a2cc`, frontend `aebb18fdda3db74cc6c3ec603f6d97e727117d5d`.
 Final child candidates: backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Parent base is `04fb8719e210e862b3a6480abeb36504c9a7a194`; parent pins will be advanced after both child refs are confirmed.
 Integration preserves merge ancestry for `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5`; prior published identity history remains intact.
-Next step: publish parent `main`, confirm its remote head and exact child pins, then run the final re-judgement last.
+Next step: commit this workflow checkpoint, push backend `main`, confirm `a174988aa66a4c0df1576f0749ac87d0e56ea1e4`, update the parent gitlink, then push parent `main` and confirm both refs.
 Step 2 implementation, checks and limitations: [STEP_2_IDENTITY.md](STEP_2_IDENTITY.md).
 
 Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). Field/control/ownership map: [CONTRACT_MAP.md](CONTRACT_MAP.md).
@@ -272,6 +272,10 @@ Final integration validation: backend candidate `5c8c7ca3463d0918b88e16e6a4009b6
 | FINAL-F | 2026-11-16, Asia/Tehran | persof / main | `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` | Integrate 3A, 3B and 4 UI with synchronized product/interest contract types. | `git diff --check` passed; npm dependency installation timed out, leaving typecheck/build/browser/generated-contract checks unrun. | Confirmed remote `main` at `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` |
 
 | FINAL-P | 2026-11-16, Asia/Tehran | persop / main | Parent base `04fb8719e210e862b3a6480abeb36504c9a7a194`; resulting candidate SHA is reported after commit | Pin backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`, publish Step 5 mock wiring, and record the eight-step README workflow. | Child remote heads confirmed; Compose validation and `git diff --check` passed; final re-judgement follows parent remote confirmation. | Parent candidate prepared; commit and push are next |
+
+| STEP8-REVIEW | 2026-11-17, Asia/Tehran | persob / `codex/perso-step-8` → `main` | `a174988aa66a4c0df1576f0749ac87d0e56ea1e4` | Review and merge the final backend branch: synchronize identity/healthcare mock fixtures, add HTTP mock authentication coverage, gate synthetic healthcare Telegram input to development/test mock mode, refresh Alpine runtime images, and upgrade Go dependency versions. | `git diff --check` passed. Full `go test ./...` was attempted from a temporary copy with Go 1.26.8 and temporary caches; dependency downloads for `github.com/gotd/td` and `github.com/klauspost/compress` were blocked by HTTP 403 from the configured proxy. | Merged locally into backend `main`; push prepared after this parent workflow checkpoint |
+
+| BRANCH-REVIEW | 2026-11-17, Asia/Tehran | parent/frontend improvement and prior step branches | Published main ancestry | Reviewed all local and remote `codex/*` branches. Parent and frontend `codex/perso-improvements-wip` branches have no commits ahead of their published `main`; backend `codex/perso-step-7` equals backend `main`; prior 3A/3B/4/5 branches are preserved as ancestry. | Branch ancestry and three-way diffs inspected; no additional final branch delta identified. | No merge required |
 
 For every future entry, include observed errors, CI evidence, outstanding limitations, and the next step. Keep previous entries as history; do not replace failures with an unexplained success label.
 
