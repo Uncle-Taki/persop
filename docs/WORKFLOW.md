@@ -1,9 +1,9 @@
 # Perso healthcare app — implementation workflow
 
-Version: 0.4 — step 3 split into 3A and 3B
+Version: 0.7 — final 3A, 3B, 4 and 5 main publication
 Updated: 2026-11-16, Asia/Tehran
-Status: STEP 2 IMPLEMENTED AND PUBLISHED; final integrated verification recorded below. Individual password accounts, sessions, roles, customization and minimal account UI are included. Steps 3A (shared ingestion/source assignments) and 3B (buyer access/data isolation) are planned below; implementation has not started.
-Feature branch in all three repositories: `codex/perso-healthcare-rbac`
+Status: Steps 3A, 3B, 4 and 5 are integrated into local child `main` candidates. Parent pins and publication are pending. Final re-judgement will follow the three main pushes. Buyer reads are scoped by live source assignments; healthcare catalog and interest filters, plus the OpenAI-compatible demo provider/mock, are included.
+Feature branches `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5` are preserved as merge ancestry in the child `main` candidates.
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
 ## 1. Requested outcome
@@ -12,7 +12,7 @@ Build the final Perso app around the existing healthcare prototype, with synchro
 
 The healthcare prototype is the product and visual reference for the final application, not merely an optional sample hidden behind an electronics application. Its Persian-first layout, Vazirmatn font, pastel Clinical Mint palette, responsive desktop layout, and five-tab mobile bottom navigation should carry into the server-backed app.
 
-Keep the existing supervised outreach workflow: explicit configuration, human approval, seller consent, opt-out handling, and durable delivery tracking. This plan does not authorize deployment, merging to main, or sending messages to real sellers.
+Keep the existing supervised outreach workflow: explicit configuration, human approval, seller consent, opt-out handling, and durable delivery tracking. The user has explicitly authorized merging and pushing steps 3A, 3B, 4 and 5 to the three `main` branches. This does not authorize deployment or sending messages to real sellers.
 
 ## 2. Reviewed baseline
 
@@ -147,10 +147,10 @@ Each checkpoint is a vertical slice where practical: contract, migration/backend
 | 0 | This workflow and proposed decisions | Standalone planning document | Requirements, roles, phases, and push rules are reviewable; no implementation | Complete |
 | 1 | Branch setup, fresh baseline, contract/field/ownership map | All three | Read applicable `AGENTS.md`; record actual base SHAs and pins; baseline checks and existing failures distinguished; map prototype controls and endpoints; commit workflow before feature work | Complete; parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae confirmed |
 | 2 | User identity, sessions, exact roles, personal settings, minimal account UI | Backend + frontend; parent pins | Login/logout, profile/preferences persistence, role enforcement, admin/buyer management, forbidden actions, session revocation, safe legacy-user migration | Complete; all three repositories published; verification below |
-| 3A | Shared ingestion, ownership migration and source assignments | Backend + frontend admin assignment UI; parent pins | Fresh/populated migration preserves history; replay stores one shared source/message/listing; grant changes are atomic and admin-only; buyer marketplace routes remain blocked | Not started |
-| 3B | Buyer authorization, scoped matching and marketplace UI access | Backend + frontend buyer integration; parent pins | Two-buyer endpoint/job/browser tests prove source/offer/match/statistics/conversation isolation, correct scoped totals and immediate revocation before buyer access is enabled | Not started; depends on 3A |
-| 4 | Healthcare catalog, attributes, extraction, matching, and compatible price analytics | Backend + frontend catalog/interests | Catalog CRUD, Persian/English aliases, per-item price association, units/specs/expiry, filter persistence, healthcare defaults; existing data retained | Not started |
-| 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Not started |
+| 3A | Shared ingestion, ownership migration and source assignments | Backend + frontend admin assignment UI; parent pins | Fresh/populated migration preserves history; replay stores one shared source/message/listing; grant changes are atomic and admin-only; buyer marketplace routes remain blocked | Integrated into local child `main`; publication pending |
+| 3B | Buyer authorization, scoped matching and marketplace UI access | Backend + frontend buyer integration; parent pins | Two-buyer endpoint/job/browser tests prove source/offer/match/statistics/conversation isolation, correct scoped totals and immediate revocation before buyer access is enabled | Integrated into local child `main`; publication pending |
+| 4 | Healthcare catalog, attributes, extraction, matching, and compatible price analytics | Backend + frontend catalog/interests | Catalog CRUD, Persian/English aliases, per-item price association, units/specs/expiry, filter persistence, healthcare defaults; existing data retained | Integrated into local child `main`; publication pending |
+| 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Integrated into backend `main` and parent Compose candidate; publication pending |
 | 6 | Healthcare prototype promoted into the main server-backed UI | Frontend + backend contract adjustments | Main entry shows healthcare UI; all selected prototype screens use APIs; responsive RTL/LTR; roles, loading/error/empty states and preferences work; no hidden sample fallback | Not started |
 | 7 | Buyer-scoped, supervised conversations through the same provider/queue path | Backend + frontend + demo fixtures | Match → draft/request → admin approval → simulated seller consent → missing-field intake → persisted offer update; opt-out, permission revocation, dedupe and failed delivery visible | Not started |
 | 8 | Full-stack synchronization and release-ready handoff | All three | Exact pinned stack passes applicable checks; isolated demo boots; docs/config/backup paths updated for users and provider; branch changes summarized; deployment remains a separate action | Not started |
@@ -203,7 +203,7 @@ Use the existing Go, database acceptance, Playwright, generated-contract, depend
 
 ## 9. Branch and publication procedure
 
-Once implementation is requested, create `codex/perso-healthcare-rbac` from the verified baseline in each affected repository. Do not change `main`, merge, or deploy as part of these feature pushes. Check for an existing branch before choosing the name and preserve unrelated work.
+Implementation was developed on the reviewable step branches listed above. For this release the user explicitly authorized integrating 3A, 3B, 4 and 5 into each child `main`, then updating and pushing the parent `main`. This authorization covers source publication only; deployment and real seller communication remain separate decisions.
 
 The canonical workflow belongs in the parent repository at `docs/WORKFLOW.md`. The initial downloadable draft is the planning artifact; this repository copy is the implementation ledger. Link `IMPLEMENTATION.md` and `REMAINING_WORK.md` to it and reconcile overlapping status rather than leaving conflicting claims.
 
@@ -226,10 +226,11 @@ Every user-facing step summary should state what changed, relevant tests and lim
 
 ## 10. Progress and push ledger
 
-Current checkpoint: step 2 — accounts, roles and customization implemented and published in all three repositories. Backend/frontend CI and the final container rehearsal passed; final pinned-stack integration result is recorded below. Runtime-image scan findings remain open.
-Confirmed starting branch heads: parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; backend 33aac438d760d0d293e907cf8892775bbaeca222; frontend 9cb867d5cffbd529aaff12ea6485a28da693bc21.
-Feature branch: `codex/perso-healthcare-rbac` in all three repositories.
-Next step: 3A, shared ingestion/ownership migration and admin source assignments. Step 3B then enables buyer access with complete data isolation. Both are unimplemented; steps 4–8 retain their numbering.
+Current checkpoint: final integration of steps 3A, 3B, 4 and 5. Backend and frontend candidates are merged into their local `main` branches, and the parent contains the matching Compose/README updates and gitlinks. The backend push is prepared; frontend and parent publication follow. Run the combined final re-judgement only after all three remote `main` heads and parent pins are confirmed. Existing runtime-image scan findings remain open.
+Previous confirmed remote heads before this publication: parent `04fb8719e210e862b3a6480abeb36504c9a7a194`, backend `ab40de2c76f6287dc7fabc279b1d3bf430a6a2cc`, frontend `aebb18fdda3db74cc6c3ec603f6d97e727117d5d`.
+Final child candidates: backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Parent base is `04fb8719e210e862b3a6480abeb36504c9a7a194`; parent pins will be advanced after both child refs are confirmed.
+Integration preserves merge ancestry for `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5`; prior published identity history remains intact.
+Next step: publish backend `main`, then frontend `main`, then the parent `main`; confirm each remote head and run the final re-judgement last.
 Step 2 implementation, checks and limitations: [STEP_2_IDENTITY.md](STEP_2_IDENTITY.md).
 
 Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). Field/control/ownership map: [CONTRACT_MAP.md](CONTRACT_MAP.md).
@@ -250,6 +251,28 @@ Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). F
 
 | STEP2-P | 2026-11-15, Asia/Tehran | persop / codex/perso-healthcare-rbac | Documentation/configuration tree based on a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae; pins backend 14ebe3cde6fcb4e6cb2713a8481b07a997ff29a3 and frontend d1a413bfbafb3dfbbb3bf2b27f9f9aeecc59a242 | Publish compatible step 2 pins, workflow/evidence, private bootstrap configuration, session-aware monitoring/rehearsal and integration CI | Full backend unit/race, vet/build, DB acceptance, frontend typecheck/build, ten full-stack browser tests, seven Python tests, contract/YAML/link/whitespace checks passed locally; Docker/PG16 reference remains CI | Confirmed parent ref e5a39e5b88371b6b2a77069114ae37e28565652b; both submodule refs confirmed |
 
+| STEP3A-B | 2026-11-16, Asia/Tehran | persob / codex/perso-step-3a | ab40de2c76f6287dc7fabc279b1d3bf430a6a2cc | Shared workspace migration 005, exact source provenance, atomic versioned buyer grants, admin-only source registry and worker ownership changes. Child head is a merge of 4224198. | A temporary copy with only the Go toolchain directive lowered to the installed 1.26.8 ran `internal/identity` and `internal/storage/postgres` successfully; this is supporting evidence, not a checkout-verification result. Direct checkout execution is blocked by the declared `go 1.26.11` requirement and the environment's read-only Go cache. | Child head available for parent pin integration; remote publication was already observed in the child repository |
+
+| STEP3A-F | 2026-11-16, Asia/Tehran | persof / codex/perso-step-3a | 2726c8dff56542875501434aed89c52f5bc891b3 | Administrator source-assignment controls: load current grants, select active buyers, submit optimistic-version replacements, and preserve CSRF/session behavior through the shared API client. | `git diff --check` passed. Typecheck/build and generated API verification are pending because frontend dependencies and `openapi-typescript` are unavailable in this workspace. | Local child commit prepared; parent pin integration pending |
+
+| STEP3B-B | 2026-11-16, Asia/Tehran | persob / codex/perso-step-3b | 041f8d2 (child includes 10ed2be, f14cfa9 and c2016e1) | Enable buyer marketplace reads and matching fan-out through live source grants for sources, offers, matches, statistics and conversations; protect direct IDs, revoke access immediately, keep assignment/ingestion/admin approval restricted. | Temporary copy compiled `internal/api/handlers` and `internal/analytics`; identity/storage packages passed. Database-backed isolation tests require disposable PostgreSQL and the declared Go 1.26.11 toolchain. | Local child commit prepared; parent pin integration pending |
+
+| STEP4-B | 2026-11-16, Asia/Tehran | persob / codex/perso-step-4-clean | 168e461 | Add migration 006 healthcare metadata and persisted interest filters; admin-only product CRUD; healthcare extraction metadata; price, quantity and city filter enforcement during matching; synchronized OpenAPI source. | Focused Go tests for domain, extraction, matching, PostgreSQL, API handlers and worker passed in a temporary copy with the Go directive lowered to installed 1.26.8; the canonical checkout requires Go 1.26.11, so this is supporting evidence only. Healthcare extraction regression passed. | Isolated child commit prepared; parent pin integration pending |
+
+| STEP4-F | 2026-11-16, Asia/Tehran | persof / codex/perso-step-4-clean | 75b8f78 | Add healthcare catalog creation for administrators and persistent max-price, minimum-quantity and city controls for saved interests. | `git diff --check` passed. Typecheck/build and generated API verification remain pending because npm dependencies and `openapi-typescript` are unavailable in this workspace. | Isolated child commit prepared; parent pin integration pending |
+
+| STEP3B-F | 2026-11-16, Asia/Tehran | persof / codex/perso-step-3b | a669084 | Enable buyer marketplace UI after login, expose assigned sources and scoped offers, hide administrator controls from buyers, update browser expectations and assignment contract types. | `git diff --check` passed; typecheck/build and generated API verification remain pending because frontend dependencies are unavailable. | Local child commit prepared; parent pin integration pending |
+
+| STEP5-B | 2026-11-16, Asia/Tehran | persob / codex/perso-step-5 | 35aed6a | OpenAI-compatible provider adapter, local mock service, deterministic fixture responses, bounded retries, response/evidence validation, configuration and mock Docker image. | Compile-only package checks passed in a temporary copy with Go 1.26.8; runtime HTTP tests are blocked by sandbox socket restrictions. Full checkout verification still requires Go 1.26.11 and network-capable test services. | Child commit prepared in separate worktree; parent composition integration pending |
+
+Final integration validation: backend candidate `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` was tested from a temporary copy of the final source with only the Go directive adjusted from 1.26.11 to installed Go 1.26.8. `go test ./...`, `go test -race ./...`, `go vet ./...`, `go build ./cmd/perso ./cmd/llm-mock`, audit-tag acceptance tests, LLM HTTP tests, contract synchronization, and Compose validation passed. This is strong source-level evidence, not execution from the canonical checkout; build emitted a read-only module-cache warning despite exit 0. Frontend `npm ci` timed out, so typecheck, build, generated-type verification and browser tests remain unrun. Frontend schema/client types were manually aligned with the backend contract. `git diff --check` passed.
+
+| FINAL-B | 2026-11-16, Asia/Tehran | persob / main | `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` | Integrate 3A, 3B, 4 and 5 with preserved merge ancestry and resolve their test/contract integration issues. | Full backend unit and race suites, vet/build, audit-tag tests, LLM HTTP tests, contract sync and Compose config passed on the temporary final-source copy; checkout/toolchain and read-only module-cache limitations are recorded above. | Prepared; workflow checkpoint committed before push |
+
+| FINAL-F | 2026-11-16, Asia/Tehran | persof / main | `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` | Integrate 3A, 3B and 4 UI with synchronized product/interest contract types. | `git diff --check` passed; npm dependency installation timed out, leaving typecheck/build/browser/generated-contract checks unrun. | Candidate prepared; publish after backend remote confirmation |
+
+| FINAL-P | 2026-11-16, Asia/Tehran | persop / main | Candidate to be recorded after child refs are confirmed | Pin the published child commits and include the Step 5 mock provider in parent demo composition, README's eight-step workflow, and final publication ledger. | Compose config and `git diff --check` passed; final re-judgement follows confirmed remote refs. | Prepared locally; publish after both child remote confirmations |
+
 For every future entry, include observed errors, CI evidence, outstanding limitations, and the next step. Keep previous entries as history; do not replace failures with an unexplained success label.
 
 ## 11. Final definition of done
@@ -261,7 +284,16 @@ For every future entry, include observed errors, CI evidence, outstanding limita
 - The frontend, backend, generated types, embedded contract, seeds, configuration, and pinned parent deployment agree.
 - Supervised outreach behavior remains enforced, and demo execution sends no real seller messages.
 - Required checks pass for the final pinned revisions, or any material unresolved limitation is stated explicitly rather than presented as complete.
-- All implementation work is on the new branches, and every push has a prior workflow update and an honest publication record.
+- The step feature branches remain available as review history, the requested changes are integrated into the three `main` branches, and every push has a prior workflow update and an honest publication record.
+
+## 11A. Final publication and re-judgement
+
+Steps 3A, 3B, 4 and 5 are being published as one integrated checkpoint across the two child repositories and this parent. Do not deploy or send real seller messages as part of publication. The workflow update and commit must precede each individual push.
+
+1. Push backend `main` at `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and confirm the remote head.
+2. Record the backend confirmation in a new parent workflow checkpoint before pushing frontend `main` at `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`; confirm that remote head.
+3. Record both child confirmations, advance the parent gitlinks to those exact SHAs, commit the parent workflow/README/Compose integration, then push parent `main` and confirm the remote head.
+4. **Final re-judgement:** after all three remote refs are confirmed, inspect the final parent pins and review the step 3A/3B/4/5 acceptance boundaries against the validation evidence. State passed, failed and unrun checks separately; keep the frontend dependency timeout, backend temporary-copy/toolchain qualification, and runtime-image scan finding visible. This re-judgement is the final action; make no edits or further pushes afterward.
 
 ## 12. Initial change record
 
@@ -309,6 +341,8 @@ The initial failed config-isolation and readiness checks are retained above with
 ## 15. Step 3 planning revision
 
 - 0.4 (2026-11-16, Asia/Tehran): user requested two parts for phase 3. Replaced its single roadmap row with 3A/3B, defined deliverables, acceptance gates and the safe intermediate state. No runtime files, migrations, dependencies or submodule pins change. The existing image-scan limitation remains as recorded above.
+
+- 0.5 (2026-11-16, Asia/Tehran): implemented 3B on separate child branches. Buyer marketplace reads now use live source grants for sources, offers, matches, statistics and conversations; direct IDs fail closed after revocation, buyer administration/ingestion/approval remains restricted, and the final re-judgement gate is prepared for the parent integration.
 
 | Entry | Timestamp | Repository/branch | Candidate | Purpose and validation | Push status |
 | --- | --- | --- | --- | --- | --- |
