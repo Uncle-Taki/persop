@@ -1,8 +1,8 @@
 # Perso healthcare app — implementation workflow
 
-Version: 0.8 — backend main confirmed; frontend publication next
+Version: 0.9 — child mains confirmed; parent publication next
 Updated: 2026-11-16, Asia/Tehran
-Status: Steps 3A, 3B, 4 and 5 are integrated into local child `main` candidates. Backend `main` is published and confirmed at `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend and parent publication are pending. Final re-judgement will follow all three main pushes. Buyer reads are scoped by live source assignments; healthcare catalog and interest filters, plus the OpenAI-compatible demo provider/mock, are included.
+Status: Steps 3A, 3B, 4 and 5 are published on both child `main` branches: backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Both remote heads are confirmed. The parent candidate pins these exact commits and adds the demo Compose wiring and eight-step README flow; parent publication and final re-judgement are pending.
 Feature branches `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5` are preserved as merge ancestry in the child `main` candidates.
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -226,11 +226,11 @@ Every user-facing step summary should state what changed, relevant tests and lim
 
 ## 10. Progress and push ledger
 
-Current checkpoint: final integration of steps 3A, 3B, 4 and 5. Backend candidate `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` is published and the remote `main` head is confirmed. Frontend candidate `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` and the parent Compose/README/gitlink update are next. Run the combined final re-judgement only after all three remote `main` heads and parent pins are confirmed. Existing runtime-image scan findings remain open.
+Current checkpoint: both child `main` branches are published and confirmed at backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. The parent candidate incorporates these pins, the local OpenAI-compatible demo service, and the eight-step user workflow. This parent change is prepared for publication; final re-judgement follows parent remote confirmation. Existing runtime-image scan findings remain open.
 Previous confirmed remote heads before this publication: parent `04fb8719e210e862b3a6480abeb36504c9a7a194`, backend `ab40de2c76f6287dc7fabc279b1d3bf430a6a2cc`, frontend `aebb18fdda3db74cc6c3ec603f6d97e727117d5d`.
 Final child candidates: backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Parent base is `04fb8719e210e862b3a6480abeb36504c9a7a194`; parent pins will be advanced after both child refs are confirmed.
 Integration preserves merge ancestry for `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5`; prior published identity history remains intact.
-Next step: publish frontend `main`, then the parent `main`; confirm each remote head and run the final re-judgement last.
+Next step: publish parent `main`, confirm its remote head and exact child pins, then run the final re-judgement last.
 Step 2 implementation, checks and limitations: [STEP_2_IDENTITY.md](STEP_2_IDENTITY.md).
 
 Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). Field/control/ownership map: [CONTRACT_MAP.md](CONTRACT_MAP.md).
@@ -269,9 +269,9 @@ Final integration validation: backend candidate `5c8c7ca3463d0918b88e16e6a4009b6
 
 | FINAL-B | 2026-11-16, Asia/Tehran | persob / main | `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` | Integrate 3A, 3B, 4 and 5 with preserved merge ancestry and resolve their test/contract integration issues. | Full backend unit and race suites, vet/build, audit-tag tests, LLM HTTP tests, contract sync and Compose config passed on the temporary final-source copy; checkout/toolchain and read-only module-cache limitations are recorded above. | Confirmed remote `main` at `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` |
 
-| FINAL-F | 2026-11-16, Asia/Tehran | persof / main | `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` | Integrate 3A, 3B and 4 UI with synchronized product/interest contract types. | `git diff --check` passed; npm dependency installation timed out, leaving typecheck/build/browser/generated-contract checks unrun. | Candidate prepared; publish after backend remote confirmation |
+| FINAL-F | 2026-11-16, Asia/Tehran | persof / main | `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` | Integrate 3A, 3B and 4 UI with synchronized product/interest contract types. | `git diff --check` passed; npm dependency installation timed out, leaving typecheck/build/browser/generated-contract checks unrun. | Confirmed remote `main` at `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` |
 
-| FINAL-P | 2026-11-16, Asia/Tehran | persop / main | Candidate to be recorded after child refs are confirmed | Pin the published child commits and include the Step 5 mock provider in parent demo composition, README's eight-step workflow, and final publication ledger. | Compose config and `git diff --check` passed; final re-judgement follows confirmed remote refs. | Prepared locally; publish after both child remote confirmations |
+| FINAL-P | 2026-11-16, Asia/Tehran | persop / main | Parent base `04fb8719e210e862b3a6480abeb36504c9a7a194`; resulting candidate SHA is reported after commit | Pin backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`, publish Step 5 mock wiring, and record the eight-step README workflow. | Child remote heads confirmed; Compose validation and `git diff --check` passed; final re-judgement follows parent remote confirmation. | Parent candidate prepared; commit and push are next |
 
 For every future entry, include observed errors, CI evidence, outstanding limitations, and the next step. Keep previous entries as history; do not replace failures with an unexplained success label.
 

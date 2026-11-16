@@ -1,5 +1,8 @@
 # Explicit sample-only initialization. Never combine with an existing production volume.
 services:
+  llm-mock:
+    environment:
+      ENVIRONMENT: development
   postgres:
     volumes:
       - ./persob/internal/storage/postgres/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
@@ -10,3 +13,17 @@ services:
     environment:
       TELEGRAM_MOCK_MODE: "true"
       ENVIRONMENT: development
+  backend-api:
+    environment:
+      LLM_ENABLED: "true"
+      LLM_PROVIDER: openai_compatible
+      LLM_BASE_URL: http://llm-mock:8091/v1
+      LLM_MODEL: perso-healthcare-mock
+      LLM_API_KEY: ${LLM_MOCK_TOKEN:-}
+  message-worker:
+    environment:
+      LLM_ENABLED: "true"
+      LLM_PROVIDER: openai_compatible
+      LLM_BASE_URL: http://llm-mock:8091/v1
+      LLM_MODEL: perso-healthcare-mock
+      LLM_API_KEY: ${LLM_MOCK_TOKEN:-}

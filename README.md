@@ -37,14 +37,16 @@ The frontend binds to loopback. Put an HTTPS reverse proxy in front of it for re
 
 ## Workflow
 
-1. Select catalog products under **Interests**.
-2. Resolve and save an accessible Telegram source. Peer type and access are determined by the account-owning gateway.
-3. The collector preserves messages in MongoDB, dispatches immutable revisions through Redis, and reconciles undispatched messages.
-4. Workers produce per-item offers and deduplicated matches/history in PostgreSQL. Prices without a clear item association remain unknown.
-5. React reads server data. Source status and interests survive reload. Offer ranking precedes pagination; comparison prices use integer Toman (Rial remainders truncate toward zero).
-6. Matching identifiable sellers with missing fields can produce a review draft. `OUTREACH_ENABLED=false` by default. Enabling it requires the separate approval in the UI; consent is application-owned, and delivery status comes from the durable outbox.
+1. **Sign in and configure the account.** Use an individual password session, then set language, location, display, and buying preferences.
+2. **Choose interests.** Select catalog products and define the filters that determine which offers can match.
+3. **Register an accessible source.** Resolve and save a Telegram source; peer type and access are determined by the account-owning gateway.
+4. **Collect and preserve messages.** The collector stores raw messages and source revisions in MongoDB so replay and recovery remain possible.
+5. **Dispatch reliable work.** Immutable revisions move through Redis, while reconciliation finds messages that were not dispatched successfully.
+6. **Extract, match, and persist results.** Workers produce per-item offers and deduplicated matches/history in PostgreSQL. Prices without a clear item association remain unknown.
+7. **Review the authorized marketplace.** React loads persisted interests, source status, offers, rankings, and comparisons; ranking happens before pagination and comparison prices use integer Toman.
+8. **Run supervised outreach.** A matching seller can produce a review draft. `OUTREACH_ENABLED=false` by default; approval, seller consent, and durable outbox delivery tracking are required before a message is sent.
 
-A successful Telegram send means API acceptance, not a read receipt. Existing source revisions may require re-extraction to recover items collapsed by the old schema. Shared/private source isolation beyond the configured operator is not supported by this release.
+A successful Telegram send means API acceptance, not a read receipt. Existing source revisions may require re-extraction to recover items collapsed by the old schema. Marketplace reads and matches are scoped to each buyer's current source assignments; administrators manage shared ingestion, and revoking an assignment blocks subsequent buyer reads.
 
 ## Development and checks
 
