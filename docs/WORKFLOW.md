@@ -1,8 +1,8 @@
 # Perso healthcare app — implementation workflow
 
-Version: 0.7 — final 3A, 3B, 4 and 5 main publication
+Version: 0.8 — backend main confirmed; frontend publication next
 Updated: 2026-11-16, Asia/Tehran
-Status: Steps 3A, 3B, 4 and 5 are integrated into local child `main` candidates. Parent pins and publication are pending. Final re-judgement will follow the three main pushes. Buyer reads are scoped by live source assignments; healthcare catalog and interest filters, plus the OpenAI-compatible demo provider/mock, are included.
+Status: Steps 3A, 3B, 4 and 5 are integrated into local child `main` candidates. Backend `main` is published and confirmed at `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend and parent publication are pending. Final re-judgement will follow all three main pushes. Buyer reads are scoped by live source assignments; healthcare catalog and interest filters, plus the OpenAI-compatible demo provider/mock, are included.
 Feature branches `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5` are preserved as merge ancestry in the child `main` candidates.
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -226,11 +226,11 @@ Every user-facing step summary should state what changed, relevant tests and lim
 
 ## 10. Progress and push ledger
 
-Current checkpoint: final integration of steps 3A, 3B, 4 and 5. Backend and frontend candidates are merged into their local `main` branches, and the parent contains the matching Compose/README updates and gitlinks. The backend push is prepared; frontend and parent publication follow. Run the combined final re-judgement only after all three remote `main` heads and parent pins are confirmed. Existing runtime-image scan findings remain open.
+Current checkpoint: final integration of steps 3A, 3B, 4 and 5. Backend candidate `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` is published and the remote `main` head is confirmed. Frontend candidate `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` and the parent Compose/README/gitlink update are next. Run the combined final re-judgement only after all three remote `main` heads and parent pins are confirmed. Existing runtime-image scan findings remain open.
 Previous confirmed remote heads before this publication: parent `04fb8719e210e862b3a6480abeb36504c9a7a194`, backend `ab40de2c76f6287dc7fabc279b1d3bf430a6a2cc`, frontend `aebb18fdda3db74cc6c3ec603f6d97e727117d5d`.
 Final child candidates: backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Parent base is `04fb8719e210e862b3a6480abeb36504c9a7a194`; parent pins will be advanced after both child refs are confirmed.
 Integration preserves merge ancestry for `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5`; prior published identity history remains intact.
-Next step: publish backend `main`, then frontend `main`, then the parent `main`; confirm each remote head and run the final re-judgement last.
+Next step: publish frontend `main`, then the parent `main`; confirm each remote head and run the final re-judgement last.
 Step 2 implementation, checks and limitations: [STEP_2_IDENTITY.md](STEP_2_IDENTITY.md).
 
 Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). Field/control/ownership map: [CONTRACT_MAP.md](CONTRACT_MAP.md).
@@ -267,7 +267,7 @@ Baseline evidence and open findings: [STEP_1_BASELINE.md](STEP_1_BASELINE.md). F
 
 Final integration validation: backend candidate `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` was tested from a temporary copy of the final source with only the Go directive adjusted from 1.26.11 to installed Go 1.26.8. `go test ./...`, `go test -race ./...`, `go vet ./...`, `go build ./cmd/perso ./cmd/llm-mock`, audit-tag acceptance tests, LLM HTTP tests, contract synchronization, and Compose validation passed. This is strong source-level evidence, not execution from the canonical checkout; build emitted a read-only module-cache warning despite exit 0. Frontend `npm ci` timed out, so typecheck, build, generated-type verification and browser tests remain unrun. Frontend schema/client types were manually aligned with the backend contract. `git diff --check` passed.
 
-| FINAL-B | 2026-11-16, Asia/Tehran | persob / main | `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` | Integrate 3A, 3B, 4 and 5 with preserved merge ancestry and resolve their test/contract integration issues. | Full backend unit and race suites, vet/build, audit-tag tests, LLM HTTP tests, contract sync and Compose config passed on the temporary final-source copy; checkout/toolchain and read-only module-cache limitations are recorded above. | Prepared; workflow checkpoint committed before push |
+| FINAL-B | 2026-11-16, Asia/Tehran | persob / main | `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` | Integrate 3A, 3B, 4 and 5 with preserved merge ancestry and resolve their test/contract integration issues. | Full backend unit and race suites, vet/build, audit-tag tests, LLM HTTP tests, contract sync and Compose config passed on the temporary final-source copy; checkout/toolchain and read-only module-cache limitations are recorded above. | Confirmed remote `main` at `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` |
 
 | FINAL-F | 2026-11-16, Asia/Tehran | persof / main | `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f` | Integrate 3A, 3B and 4 UI with synchronized product/interest contract types. | `git diff --check` passed; npm dependency installation timed out, leaving typecheck/build/browser/generated-contract checks unrun. | Candidate prepared; publish after backend remote confirmation |
 
