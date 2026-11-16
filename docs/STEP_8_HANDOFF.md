@@ -4,7 +4,7 @@ Step 8 integrates and verifies the implemented Steps 1–5. It does not complete
 
 ## Revisions and evidence
 
-Starting parent: `5008b0c332ee1eb6567a978966e73b7ec25d9dbb`; backend: `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend: `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Work is published on `codex/perso-step-8`. Current child pins: backend `23540db46451794a38a105c19662a00a35361d63`; frontend `bc3b7e3133a4a57aeafe760cdf22a564b6b2f61c`. Final parent CI results follow verification.
+Starting parent: `5008b0c332ee1eb6567a978966e73b7ec25d9dbb`; backend: `5c8c7ca3463d0918b88e16e6a4009b6644ba2783`; frontend: `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Work is published on `codex/perso-step-8`. Current child pins: backend `23540db46451794a38a105c19662a00a35361d63`; frontend `bc3b7e3133a4a57aeafe760cdf22a564b6b2f61c`. The exact runtime parent `e790cdfb50fea9312c4bcbc8161619de1c194c0d` passed all reference CI gates. The final documentation-only child retains identical runtime files and pins.
 
 Local: exact Go 1.26.11; Node 24.22.1. Frontend API generation, typecheck and production build passed; Python checks and canonical/embedded API check passed. Provider/config/extraction race checks passed. Browser startup is restricted by the local Unix-socket policy. GitHub CI must validate the exact pinned stack, database acceptance, all live browser tests and the Docker rehearsal. Image scan findings are release gates, never disabled to manufacture a pass.
 
@@ -32,4 +32,18 @@ Runtime refresh uses Alpine 3.24.4 and Nginx 1.30.6-alpine3.24, checked against 
 
 Native verification follow-up: the full race suite passed with disposable identity PostgreSQL and Redis. Repository PostgreSQL race tests were then run with the correct local DSN and passed without fixture skips. A separate fresh PostgreSQL 17/MongoDB 7.0.26/Redis 8 native demo produced the matched 25000 Toman healthcare offer through the actual HTTP mock and left zero outbound records. This supports, but does not replace, the Docker reference rehearsal.
 
-Parent integration [43882205901](https://github.com/Uncle-Taki/persop/actions/runs/43882205901) passed all 12 browser tests plus backend race/vet/build, database acceptance and generated contracts before the dependency-only update. Release [43882205871](https://github.com/Uncle-Taki/persop/actions/runs/43882205871) passed frontend/mock scans, found CVE-2026-78661 in backend x/net v0.60.0, and exposed a seed NOT NULL error. The dependency is upgraded to v0.62.0; the seed now supplies the required model and a catalog alias for the deterministic extracted name. Exact-final-pin CI remains the release gate.
+Parent integration [43882205901](https://github.com/Uncle-Taki/persop/actions/runs/43882205901) passed all 12 browser tests plus backend race/vet/build, database acceptance and generated contracts before the dependency-only update. Release [43882205871](https://github.com/Uncle-Taki/persop/actions/runs/43882205871) passed frontend/mock scans, found CVE-2026-78661 in backend x/net v0.60.0, and exposed a seed NOT NULL error. The dependency is upgraded to v0.62.0; the seed now supplies the required model and a catalog alias for the deterministic extracted name. The subsequent exact-final-pin results are recorded below.
+
+## Verified release checkpoint
+
+| Gate | Observed result | Evidence |
+| --- | --- | --- |
+| Backend formatting, race, vet/build, API sync and DB acceptance | Passed | [43926935795](https://github.com/Uncle-Taki/persob/actions/runs/43926935795) |
+| Frontend typecheck/build and standalone preview | Passed | [43882066776](https://github.com/Uncle-Taki/persof/actions/runs/43882066776) |
+| Exact pinned stack, canonical/generated API, reference DB acceptance and all 12 live browser tests | Passed | [43927081439](https://github.com/Uncle-Taki/persop/actions/runs/43927081439) |
+| Ten Python checks, dependency audits and all three runtime scans | Passed | [43927080585](https://github.com/Uncle-Taki/persop/actions/runs/43927080585) |
+| Container fresh install, credential rotation, persistence, isolated restore, healthcare HTTP ingestion, no outbound messages and gateway backup/resume | Passed | [43927080585](https://github.com/Uncle-Taki/persop/actions/runs/43927080585) |
+
+These results apply to runtime parent `e790cdfb50fea9312c4bcbc8161619de1c194c0d` with the exact child pins above. The final evidence-only publication changes documentation only. General product completion still requires Steps 6 and 7; real Telegram authorization/recovery and a production pilot were not exercised. No real seller messages were sent.
+
+Review the [parent PR](https://github.com/Uncle-Taki/persop/pull/4) and its linked [backend](https://github.com/Uncle-Taki/persob/pull/4) and [frontend](https://github.com/Uncle-Taki/persof/pull/3) changes. Keep the child commits available before consuming the parent pins. No main branch has been moved by this Step 8 work.
