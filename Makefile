@@ -1,7 +1,7 @@
 .PHONY: check up down demo logs
 check:
-	cd persob && go test ./... && go vet ./... && go build ./cmd/perso
-	cd persof && npm ci && npm run typecheck && npm run build
+	cd persob && go test ./... && go vet ./... && go build ./cmd/perso ./cmd/llm-mock
+	cd persof && npm ci && npm run check:api && npm run typecheck && npm run build
 	python3 scripts/check-contract.py
 up:
 	docker compose up -d --build

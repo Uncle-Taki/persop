@@ -39,3 +39,13 @@ class ConfigurationTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class DemoConfigurationTest(unittest.TestCase):
+    def test_demo_mock_credential_is_private_and_independent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'demo'
+            setup.create_environment(path, demo=True)
+            values = preflight.read_environment(path)
+            self.assertEqual(64, len(values['LLM_MOCK_TOKEN']))
+            self.assertNotEqual(values['API_TOKEN'], values['LLM_MOCK_TOKEN'])
+            self.assertEqual('false', values['OUTREACH_ENABLED'])

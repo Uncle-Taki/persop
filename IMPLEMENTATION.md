@@ -1,5 +1,7 @@
 # Implementation checkpoint
 
+> Current integration status: [Step 8 handoff](docs/STEP_8_HANDOFF.md). Older checkpoint statements below are historical.
+
 > Step 2 identity work is now implemented on codex/perso-healthcare-rbac: see [implementation and verification](docs/STEP_2_IDENTITY.md) and the [current workflow](docs/WORKFLOW.md). Password accounts replace browser API-token login. Buyer shared-source access remains blocked until step 3. Historical checkpoint descriptions below do not describe these new account capabilities.
 
 > Current healthcare/RBAC work is tracked in [docs/WORKFLOW.md](docs/WORKFLOW.md), with the [contract map](docs/CONTRACT_MAP.md) and [verified step 1 baseline](docs/STEP_1_BASELINE.md). The electronics/single-operator scope and older pending-test statements below describe the historical checkpoint. Exact-baseline parent integration now passed eight browser tests and the container rehearsal; standalone backend fixture and runtime-image scan failures remain documented. Healthcare, roles, and mock HTTP LLM are planned and are not implemented by this documentation change.

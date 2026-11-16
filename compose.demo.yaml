@@ -1,29 +1,48 @@
-# Explicit sample-only initialization. Never combine with an existing production volume.
+# Synthetic fixtures only. Use a separate Compose project and empty volumes.
 services:
   llm-mock:
+    build:
+      context: ./persob
+      dockerfile: Dockerfile.llm-mock
+    restart: unless-stopped
     environment:
       ENVIRONMENT: development
-  postgres:
+      LLM_MOCK_ADDR: 0.0.0.0:8091
+      LLM_MOCK_TOKEN: ${LLM_MOCK_TOKEN:?Regenerate a demo environment with setup-env.py}
+    healthcheck:
+      test: [CMD, wget, -qO-, http://127.0.0.1:8091/health]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  demo-seed:
+    image: postgres:16-alpine
+    restart: "no"
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
     volumes:
-      - ./persob/internal/storage/postgres/migrations/001_initial_schema.sql:/docker-entrypoint-initdb.d/00-schema.sql:ro
-      - ./persob/internal/storage/postgres/migrations/002_telegram_sources_and_marketplace.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
-      - ./persob/scripts/seed.sql:/docker-entrypoint-initdb.d/02-demo.sql:ro
-      - ./docker/demo-source.sql:/docker-entrypoint-initdb.d/03-demo-source.sql:ro
+      - ./docker/demo-healthcare.sql:/fixtures/demo.sql:ro
+    command: [psql, -h, postgres, -U, perso, -d, perso_db, -v, ON_ERROR_STOP=1, -f, /fixtures/demo.sql]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  backend-api:
+    depends_on:
+      demo-seed:
+        condition: service_completed_successfully
   telegram-gateway:
     environment:
       TELEGRAM_MOCK_MODE: "true"
+      TELEGRAM_MOCK_HEALTHCARE: "true"
       ENVIRONMENT: development
-  backend-api:
-    environment:
-      LLM_ENABLED: "true"
-      LLM_PROVIDER: openai_compatible
-      LLM_BASE_URL: http://llm-mock:8091/v1
-      LLM_MODEL: perso-healthcare-mock
-      LLM_API_KEY: ${LLM_MOCK_TOKEN:-}
+      OUTREACH_ENABLED: "false"
   message-worker:
     environment:
       LLM_ENABLED: "true"
       LLM_PROVIDER: openai_compatible
       LLM_BASE_URL: http://llm-mock:8091/v1
       LLM_MODEL: perso-healthcare-mock
-      LLM_API_KEY: ${LLM_MOCK_TOKEN:-}
+      LLM_API_KEY: ${LLM_MOCK_TOKEN:?Set LLM_MOCK_TOKEN}
+      OUTREACH_ENABLED: "false"
+    depends_on:
+      llm-mock:
+        condition: service_healthy

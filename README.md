@@ -1,6 +1,8 @@
 # Perso
 
-A Persian-first Telegram marketplace monitor. The live app uses the electronics catalog; the healthcare sample UI is an isolated preview at `?mode=demo`. Step 2 adds password accounts with **super_admin, admin and buyer** roles in one workspace with one Telegram account. Buyer access to shared marketplace data remains blocked until step 3 source assignments; accounts, settings and personal interests are available now.
+A Persian-first Telegram marketplace monitor with password accounts, **super_admin**, **admin** and **buyer** roles, shared ingestion, explicit buyer source assignments, healthcare catalog fields and personal interest filters. The server-backed app supports the implemented catalog and marketplace workflows; the full healthcare prototype remains an explicit `?mode=demo` visual preview pending Step 6. Buyer-scoped supervised inquiries remain Step 7.
+
+See [Step 8 handoff](docs/STEP_8_HANDOFF.md) for the current validation evidence, exact revisions, demo, upgrade and remaining release gates.
 
 The parent pins compatible revisions of [persob](https://github.com/Uncle-Taki/persob) (Go) and [persof](https://github.com/Uncle-Taki/persof) (React). Clone with:
 
@@ -18,7 +20,7 @@ python3 scripts/setup-env.py --demo
 make demo
 ```
 
-Open http://localhost:3000. Sign in using `BOOTSTRAP_ADMIN_USERNAME` and `BOOTSTRAP_ADMIN_PASSWORD` from your private `.env`. The header says **Mock connection**; prices come only from synthetic messages. Never use the demo initialization override with valuable or production volumes. The preview at `?mode=demo` uses independent browser fixtures and never acts as an API failure fallback.
+Open http://localhost:3000. Sign in using `BOOTSTRAP_ADMIN_USERNAME` and `BOOTSTRAP_ADMIN_PASSWORD` from your private `.env`. The header says **Mock connection**; the healthcare offer comes from a synthetic Telegram message processed by the worker through the local OpenAI-compatible HTTP mock. The mock is included only in the demo Compose override. Migrations finish before the one-shot `demo-seed` service loads fixtures. Never use the demo override with valuable or production volumes. Existing demo environment files need a new independent `LLM_MOCK_TOKEN`; setup-env.py never overwrites them. The preview at `?mode=demo` uses independent browser fixtures and never acts as an API failure fallback.
 
 ## Real account
 

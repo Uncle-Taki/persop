@@ -78,6 +78,12 @@ jobs:
           severity: HIGH,CRITICAL
           ignore-unfixed: false
           exit-code: "1"
+      - name: Print image findings for review
+        if: always()
+        run: |
+          for report in artifacts/*-image-scan.json; do
+            if [ -f "$report" ]; then trivy convert --format table "$report"; fi
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:

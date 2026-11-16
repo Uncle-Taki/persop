@@ -89,20 +89,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
-  llm-mock:
-    build:
-      context: ./persob
-      dockerfile: Dockerfile.llm-mock
-    restart: unless-stopped
-    environment:
-      ENVIRONMENT: ${ENVIRONMENT:-production}
-      LLM_MOCK_ADDR: 0.0.0.0:8091
-      LLM_MOCK_TOKEN: ${LLM_MOCK_TOKEN:-}
-    healthcheck:
-      test: [CMD, wget, -qO-, http://127.0.0.1:8091/health]
-      interval: 5s
-      timeout: 5s
-      retries: 10
   migrate:
     build: ./persob
     restart: "no"
@@ -124,8 +110,6 @@ services:
       mongodb:
         condition: service_healthy
       redis:
-        condition: service_healthy
-      llm-mock:
         condition: service_healthy
     healthcheck:
       test: [CMD, wget, -qO-, http://127.0.0.1:8080/ready]
@@ -149,8 +133,6 @@ services:
       - telegram_sessions:/data/sessions
     depends_on:
       backend-api:
-        condition: service_healthy
-      llm-mock:
         condition: service_healthy
   message-worker:
     <<: *backend

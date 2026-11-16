@@ -21,6 +21,7 @@ def create_environment(path: Path, demo: bool = False) -> None:
         'TELEGRAM_MOCK_MODE': 'true' if demo else 'false',
         'LLM_ENABLED': 'false', 'OUTREACH_ENABLED': 'false',
         'RETENTION_DAYS': '0', 'FRONTEND_PORT': '3000',
+        **({'LLM_MOCK_TOKEN': secrets.token_hex(32)} if demo else {}),
     }
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(fd, 'w') as output:

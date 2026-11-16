@@ -1,9 +1,8 @@
 # Perso healthcare app — implementation workflow
 
-Version: 0.9 — child mains confirmed; parent publication next
+Version: 1.0 — Step 8 integration verification in progress
 Updated: 2026-11-16, Asia/Tehran
-Status: Steps 3A, 3B, 4 and 5 are published on both child `main` branches: backend `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`. Both remote heads are confirmed. The parent candidate pins these exact commits and adds the demo Compose wiring and eight-step README flow; parent publication and final re-judgement are pending.
-Feature branches `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5` are preserved as merge ancestry in the child `main` candidates.
+Status: Steps 1–5 are published in parent main 5008b0c332ee1eb6567a978966e73b7ec25d9dbb, backend main 5c8c7ca3463d0918b88e16e6a4009b6644ba2783 and frontend main 8c8a0bc3c3fcded46a52feaeff80f04aaf69330f. Step 8 is authorized and in progress on codex/perso-step-8 in all repositories. Steps 6 and 7 remain separate, unfinished product scope; Step 8 does not silently mark them complete. Publication uses review branches; no deployment or real seller messages.
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
 ## 1. Requested outcome
@@ -147,13 +146,13 @@ Each checkpoint is a vertical slice where practical: contract, migration/backend
 | 0 | This workflow and proposed decisions | Standalone planning document | Requirements, roles, phases, and push rules are reviewable; no implementation | Complete |
 | 1 | Branch setup, fresh baseline, contract/field/ownership map | All three | Read applicable `AGENTS.md`; record actual base SHAs and pins; baseline checks and existing failures distinguished; map prototype controls and endpoints; commit workflow before feature work | Complete; parent a4ec4d8f23404f8bddb4f3d56f13dcbc1567f8ae confirmed |
 | 2 | User identity, sessions, exact roles, personal settings, minimal account UI | Backend + frontend; parent pins | Login/logout, profile/preferences persistence, role enforcement, admin/buyer management, forbidden actions, session revocation, safe legacy-user migration | Complete; all three repositories published; verification below |
-| 3A | Shared ingestion, ownership migration and source assignments | Backend + frontend admin assignment UI; parent pins | Fresh/populated migration preserves history; replay stores one shared source/message/listing; grant changes are atomic and admin-only; buyer marketplace routes remain blocked | Integrated into local child `main`; publication pending |
-| 3B | Buyer authorization, scoped matching and marketplace UI access | Backend + frontend buyer integration; parent pins | Two-buyer endpoint/job/browser tests prove source/offer/match/statistics/conversation isolation, correct scoped totals and immediate revocation before buyer access is enabled | Integrated into local child `main`; publication pending |
-| 4 | Healthcare catalog, attributes, extraction, matching, and compatible price analytics | Backend + frontend catalog/interests | Catalog CRUD, Persian/English aliases, per-item price association, units/specs/expiry, filter persistence, healthcare defaults; existing data retained | Integrated into local child `main`; publication pending |
-| 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Integrated into backend `main` and parent Compose candidate; publication pending |
+| 3A | Shared ingestion, ownership migration and source assignments | Backend + frontend admin assignment UI; parent pins | Fresh/populated migration preserves history; replay stores one shared source/message/listing; grant changes are atomic and admin-only; buyer marketplace routes remain blocked | Published in child/parent main; Step 8 re-verification in progress |
+| 3B | Buyer authorization, scoped matching and marketplace UI access | Backend + frontend buyer integration; parent pins | Two-buyer endpoint/job/browser tests prove source/offer/match/statistics/conversation isolation, correct scoped totals and immediate revocation before buyer access is enabled | Published in child/parent main; Step 8 re-verification in progress |
+| 4 | Healthcare catalog, attributes, extraction, matching, and compatible price analytics | Backend + frontend catalog/interests | Catalog CRUD, Persian/English aliases, per-item price association, units/specs/expiry, filter persistence, healthcare defaults; existing data retained | Published in child/parent main; Step 8 re-verification in progress |
+| 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Published; Step 8 repairs and verifies demo integration |
 | 6 | Healthcare prototype promoted into the main server-backed UI | Frontend + backend contract adjustments | Main entry shows healthcare UI; all selected prototype screens use APIs; responsive RTL/LTR; roles, loading/error/empty states and preferences work; no hidden sample fallback | Not started |
 | 7 | Buyer-scoped, supervised conversations through the same provider/queue path | Backend + frontend + demo fixtures | Match → draft/request → admin approval → simulated seller consent → missing-field intake → persisted offer update; opt-out, permission revocation, dedupe and failed delivery visible | Not started |
-| 8 | Full-stack synchronization and release-ready handoff | All three | Exact pinned stack passes applicable checks; isolated demo boots; docs/config/backup paths updated for users and provider; branch changes summarized; deployment remains a separate action | Not started |
+| 8 | Full-stack synchronization and release-ready handoff | All three | Exact pinned stack passes applicable checks; isolated demo boots; docs/config/backup paths updated for users and provider; branch changes summarized; deployment remains a separate action | In progress; see STEP_8_HANDOFF.md |
 
 Dependencies: finish step 2 before 3A; finish 3A before 3B; finish 3B before exposing shared marketplace data to buyers; establish healthcare contracts before completing the mock fixture schema; integrate existing prototype pages progressively rather than maintaining a second disconnected live implementation. Maintain a working integrated checkpoint after each push.
 
@@ -347,3 +346,21 @@ The initial failed config-isolation and readiness checks are retained above with
 | Entry | Timestamp | Repository/branch | Candidate | Purpose and validation | Push status |
 | --- | --- | --- | --- | --- | --- |
 | PLAN-3-SPLIT | 2026-11-16, Asia/Tehran | persop / codex/perso-healthcare-rbac | Documentation-only child of 9511ea9df798fa41c0fbe953f86b59eec530fc39; unchanged backend/frontend pins | Split step 3 into independently reviewable 3A/3B; check scope coverage, sequencing, document references and whitespace; no application tests needed for this planning-only change | Prepared before parent documentation ref update |
+
+## 16. Step 8 integration and handoff
+
+User requested Step 8 after confirming Steps 1–5 complete. Fresh remote heads/pins are recorded above. The latest baseline CI found identity-only fixture status mismatches (parent integration), a formatting failure (backend unit), and demo initdb failure (container rehearsal); frontend standalone checks passed. Generated frontend types also drifted from canonical OpenAPI when regenerated locally.
+
+Scope: fix those integration failures; seed demo only after canonical migrations; isolate mock service to demo Compose; exercise a synthetic healthcare message through the real worker/HTTP adapter; check source grants/revocation and persisted filters in the browser; keep source-level provider permission, outreach-disabled defaults, backup/restore checks and image-scan gates. Update current installation/upgrade/provider documentation and distinguish historical evidence.
+
+Local environment uses exact Go 1.26.11 and Node 24.22.1. Frontend generation/typecheck/build and Python checks pass. Focused provider/config/extraction race tests pass. Native database/browser execution has local process/socket restrictions; GitHub CI is the reference for exact pinned container and browser checks. Full-suite results are not inferred from compile-only or skipped tests. Runtime image findings remain open until reviewed from fresh scanner output.
+
+Before each branch publication, append a checkpoint below and commit it locally. Publish child branches first, then use their confirmed immutable SHAs in the parent. Final read-only remote pin/CI review follows the last documentation publication. See [handoff](STEP_8_HANDOFF.md).
+
+| Entry | Date | Target | Purpose/evidence | Publication |
+| --- | --- | --- | --- | --- |
+| STEP8-B1 | 2026-11-16 Asia/Tehran | persob/codex/perso-step-8 | Identity fixture corrections, gofmt, explicitly local healthcare collector fixture and HTTP mock integration test; focused race tests pass; full CI pending | Prepared before publication |
+
+| STEP8-F1 | 2026-11-16 Asia/Tehran | persof/codex/perso-step-8 | Backend branch confirmed at 4ab33d320ff6742ba9624c68d92feb41d406f280. Regenerated API types, accessible catalog/filter labels, browser grant/revocation and filter checks; typecheck/build passed; live browser checks await CI | Prepared before publication |
+
+| STEP8-P1 | 2026-11-16 Asia/Tehran | persop/codex/perso-step-8 | Child branches confirmed: backend 4ab33d320ff6742ba9624c68d92feb41d406f280, frontend d56b04bc7064c6e27d0ee00dccde84477171d2df. Publish exact pins, post-migration healthcare demo seed, demo-only HTTP mock, release evidence and runbook. Native full race suite passed (identity DB/Redis exercised; repository PG fixture skipped for missing postgres role); vet/build and focused HTTP mock/config/extraction race checks passed. Frontend generation/typecheck/build, Python 10 tests and contract check pass. Reference containers/live browsers await CI. | Prepared before publication |

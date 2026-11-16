@@ -47,7 +47,8 @@ jobs:
           cache: npm
           cache-dependency-path: persof/package-lock.json
       - run: docker compose -f compose.test.yaml up -d --wait
-      - run: cd persob && go test -race ./... && go vet ./... && go build -o ../artifacts/perso ./cmd/perso
+      - run: mkdir -p artifacts
+      - run: cd persob && go test -race ./... && go vet ./... && go build -o ../artifacts/perso ./cmd/perso && go build -o ../artifacts/llm-mock ./cmd/llm-mock
       - run: cd persob && go test -tags=audit -count=1 -race -v ./internal/audit ./internal/telegram
         env:
           PERSO_AUDIT_DATABASE_URL: postgres://postgres@127.0.0.1:55439/perso_audit?sslmode=disable
@@ -60,6 +61,7 @@ jobs:
         run: |
           artifacts/perso migrate
           docker compose -f compose.test.yaml exec -T postgres psql -U postgres -d perso_audit < persob/scripts/seed.sql
+          docker compose -f compose.test.yaml exec -T postgres psql -v ON_ERROR_STOP=1 -U postgres -d perso_audit < docker/demo-source.sql
           artifacts/perso bootstrap-admin
           docker compose -f compose.test.yaml exec -T postgres psql -U postgres -d perso_audit -c "UPDATE users SET preferences=preferences || '{\"language\":\"en\"}'::jsonb WHERE username='owner'"
           artifacts/perso all > artifacts/backend.log 2>&1 &

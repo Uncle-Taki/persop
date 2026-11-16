@@ -136,11 +136,16 @@ def main():
         wait_api(31882, demo.values['API_TOKEN'])
         demo_session = login(31882, demo.values)
         assert request(31882, '/api/v1/session', demo_session)[0] == 200
-        assert int(demo.sql('SELECT count(*) FROM products')) >= 5
+        assert int(demo.sql("SELECT count(*) FROM products WHERE category='healthcare'")) == 1
         deadline = time.monotonic() + 90
         while int(demo.sql('SELECT count(*) FROM offers')) == 0 and time.monotonic() < deadline:
             time.sleep(2)
-        assert int(demo.sql('SELECT count(*) FROM offers')) > 0
+        assert int(demo.sql("SELECT count(*) FROM offers WHERE product_id='22222222-2222-2222-2222-222222222226' AND price_amount=25000")) > 0
+        # An offer alone could come from deterministic fallback. Require persisted
+        # evidence that the worker actually called the local HTTP provider.
+        assert int(demo.mongo("db.getSiblingDB('perso_raw').llm_extractions.countDocuments({model_name:'openai-compatible (perso-healthcare-mock)'})")) > 0
+        assert demo.sql('SELECT count(*) FROM outbound_messages') == b'0'
+        summary['checks']['healthcare_worker_http_mock_and_no_outreach'] = 'passed'
         backup(demo, ARTIFACTS / 'private-demo-backup')
         assert demo.running('telegram-gateway')
         summary['checks']['separate_demo_ingestion_and_gateway_backup_resume'] = 'passed'
