@@ -18,7 +18,7 @@ python3 scripts/setup-env.py --demo
 make demo
 ```
 
-Open http://localhost:3000. Sign in using `BOOTSTRAP_ADMIN_USERNAME` and `BOOTSTRAP_ADMIN_PASSWORD` from your private `.env`. The demo is explicitly synthetic: the mock Telegram gateway and healthcare seed fixture are labeled as sample data in the workspace. Never use the demo initialization override with valuable or production volumes. The preview at `?mode=demo` uses independent browser fixtures and never acts as an API failure fallback.
+Open http://localhost:3000. Sign in using `BOOTSTRAP_ADMIN_USERNAME` and `BOOTSTRAP_ADMIN_PASSWORD` from your private `.env`. If port 3000 is occupied by another local service on the host, run `FRONTEND_PORT=3001 make demo` and open http://localhost:3001. The demo is explicitly synthetic: the mock Telegram gateway and healthcare seed fixture are labeled as sample data in the workspace. Never use the demo initialization override with valuable or production volumes. The preview at `?mode=demo` uses independent browser fixtures and never acts as an API failure fallback.
 
 ## Real account
 

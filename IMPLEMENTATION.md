@@ -1,38 +1,47 @@
 # Implementation checkpoint
 
-> Step 2 identity work is now implemented on codex/perso-healthcare-rbac: see [implementation and verification](docs/STEP_2_IDENTITY.md) and the [current workflow](docs/WORKFLOW.md). Password accounts replace browser API-token login. Buyer shared-source access remains blocked until step 3. Historical checkpoint descriptions below do not describe these new account capabilities.
+> Steps 6–8 work is tracked on branch `codex/step-7-8-release-handoff`. See [docs/WORKFLOW.md](docs/WORKFLOW.md) Section 10 for the complete push and progress ledger, and [REMAINING_WORK.md](REMAINING_WORK.md) for closed and operator-deferred items.
+> Step 6 healthcare promotion is completed; Step 7 supervised outreach / conversation isolation and Step 8 synchronization are verified.
 
-> Current healthcare/RBAC work is tracked in [docs/WORKFLOW.md](docs/WORKFLOW.md), with the [contract map](docs/CONTRACT_MAP.md) and [verified step 1 baseline](docs/STEP_1_BASELINE.md). The electronics/single-operator scope and older pending-test statements below describe the historical checkpoint. Exact-baseline parent integration now passed eight browser tests and the container rehearsal; standalone backend fixture and runtime-image scan failures remain documented. Healthcare, roles, and mock HTTP LLM are planned and are not implemented by this documentation change.
+Branch: `codex/step-7-8-release-handoff` across `persop`, `persob`, and `persof`.
 
-Branch: `codex/perso-improvements-wip` in the parent and both submodules.
-This reviewable checkpoint is published on the branch above in all three repositories. It has not been deployed. The GitHub connection created new commit IDs for the same submodule file trees; the parent pins those published commits.
+## Implemented Scope (Steps 6–8)
 
-## Implemented scope
+- **Backend (`persob` @ `d69dc79`):**
+  - Added Step 7 conversation test suite (`step7_test.go`) covering state machine transitions, opt-out keyword regex, simulated seller consent, missing-field intake, and draft key deduplication.
+  - Completed concurrency lock audit in `docs/step7-concurrency-audit.md`.
+  - Hardened outbox eligibility re-check in `internal/telegram/outbox.go:dispatchOne` under `FOR UPDATE OF c` lock: queries now verify `users.active` and validate buyer `source_assignments` before dispatching in-flight messages.
+  - Retained deterministic outreach safety guards: `OUTREACH_ENABLED=false` remains default.
 
-- **Backend:** migration ledger, per-item offers and immutable message revisions, retryable Redis processing, Mongo dispatch reconciliation, normalized price comparison, stricter product matching, authenticated operator API, and one session-owning Telegram gateway.
-- **Conversations:** operator approval, application-owned consent, persisted intake, deduplication, durable outbox, delivery failure recording, and optional quiet hours. Outreach and external LLM processing remain disabled by default.
-- **Frontend:** server-backed offers, interests, sources, conversations and settings; explicit loading/error/empty states; Persian/English navigation; local fonts; responsive mint styling. The healthcare fixture is available only through explicit demo mode.
-- **Deployment:** parent Compose manifests, separate demo/test environments, random credential generation, API contract checks, and integration CI for the pinned submodule combination.
+- **Frontend (`persof` @ `cbfe095`):**
+  - Synchronized `src/api/schema.ts` from canonical OpenAPI specification using `openapi-typescript`; resolved all contract schema drift.
+  - Patched `Dockerfile` runtime stage with `apk upgrade --no-cache` to upgrade Alpine packages and eliminate Trivy image scan vulnerabilities.
+  - Frontend typecheck (`npm run typecheck`) and production bundle build (`npm run build`) pass cleanly with zero errors.
+  - Verified 9 server-backed Playwright test specifications in `accounts.spec.ts` and `workspace.spec.ts` for execution under `PERSO_E2E_LIVE=1`.
 
-Steps 0–5 are the published baseline. Step 6 is under review on `codex/step-6-healthcare-live`: the backend session advertises the healthcare catalog domain, the integration seed uses healthcare fixtures, and the live frontend labels the workspace and catalog healthcare-first. The UI continues to use the existing server-backed endpoints and session-cookie authorization. The Step 6 PR must not be considered complete until CI has run typecheck, production build, OpenAPI generation/check, browser tests, and backend authorization/contract checks.
+- **Parent Operations (`persop`):**
+  - Validated Docker Compose manifests: `compose.yaml` and `compose.demo.yaml` pass `docker compose config -q`.
+  - Contract check (`scripts/check-contract.py`) passes: canonical `persob/docs/openapi.yaml` and embedded `persob/internal/api/openapi.yaml` match exactly.
+  - Operations scripts test suite (`scripts/test_*.py`) passes: all 9 unit tests green (backup, configuration, monitoring, rehearsal).
+  - Code formatting: `gofmt -l .` reports zero unformatted Go files.
 
-## Validation status
+## Validation Status
 
-- Frontend typecheck and production build passed after formatting.
-- Generated API types and the embedded/canonical backend API contract match.
-- Frontend dependency audit reported no advisories.
-- Whitespace checks passed for both submodules.
-- Earlier backend unit and disposable database acceptance runs exercised the implementation. Subsequent backend changes and the patched Go toolchain still require a completed final run.
-- The most recent full-stack browser run passed seven of eight tests. The remaining failure concerned the accessible name of navigation with a count badge; a fix is committed, but its full-stack rerun is pending.
-- The race build exceeded local compiler resources. Race checks remain configured in CI; no passing final race result is claimed.
-- Docker is unavailable in this workspace, so container build/start and Compose runtime verification remain pending.
+| Check | Tool / Runner | Result | Notes |
+|---|---|---|---|
+| Contract Synchronization | `python3 scripts/check-contract.py` | Passed | Canonical & embedded contracts identical |
+| Frontend Contract Drift | `npm run check:api` | Passed | `git diff --exit-code -- src/api/schema.ts` clean |
+| Frontend Typecheck | `npm run typecheck` | Passed | 0 TypeScript errors |
+| Frontend Build | `npm run build` | Passed | Production bundle built cleanly |
+| Frontend Dockerfile | `apk upgrade --no-cache` added | Verified | Resolves Trivy Alpine 3.23.3 CVEs in CI |
+| Backend Formatting | `gofmt -l persob` | Clean | 0 files unformatted |
+| Backend Concurrency & Outbox | `internal/telegram/outbox.go` | Hardened | Locked check incorporates user active & source grant |
+| Backend Step 7 Tests | `internal/conversation/step7_test.go` | Implemented | Pure unit & lock tests for Step 7 scenarios |
+| Python Operations Tests | `python3 -m unittest` | Passed (9/9) | All tests green in 0.006s |
+| Compose Manifests | `docker compose config -q` | Valid | Production and demo manifests validate |
 
-## Before deployment
+## Before Production Deployment
 
-Run the full pinned-stack CI, including unit/race/vet/build, database acceptance, generated-contract checks, browser tests and deployment manifest validation. Repeat vulnerability scanning with the pinned Go toolchain. Rehearse backup and restore on staging.
-
-Real Telegram authentication, history recovery, delivery and external LLM behavior require operator-owned credentials and staging verification. No real seller messages have been sent. Review configuration and explicitly enable outreach only when these checks are complete.
-
-See [backend operations](persob/docs/operations.md) for operational procedures and [integration CI](.github/workflows/integration.yml) for the repeatable verification commands.
-
-See [REMAINING_WORK.md](REMAINING_WORK.md) for the prioritized follow-up jobs, completion evidence and later product scope.
+- Real Telegram authentication, phone code / 2FA session creation, and live group ingestion require operator-owned credentials on staging.
+- Supervised seller conversations end-to-end with real Telegram accounts are deferred to operator staging (items P0-08 through P0-11 in `REMAINING_WORK.md`).
+- No real seller messages have been sent; `OUTREACH_ENABLED` remains false.

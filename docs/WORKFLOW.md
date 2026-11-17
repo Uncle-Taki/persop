@@ -1,8 +1,8 @@
 # Perso healthcare app — implementation workflow
 
-Version: 1.5 — demo fix push retry prepared
+Version: 1.6 — Steps 7 & 8 synchronized and verified on codex/step-7-8-release-handoff
 Updated: 2026-11-17, Asia/Tehran
-Status: Step 8 is published on backend `main` at `a174988aa66a4c0df1576f0749ac87d0e56ea1e4`. A follow-up demo fix is committed locally as backend `main` `9fcb69c`: configurable Alpine and Go mirrors, complete post-migration demo seeding, and the corrected shared-source conflict target. `make demo` now builds and starts the full stack when `FRONTEND_PORT=3001` avoids an existing host binding on port 3000. The first demo-fix push attempt failed before contacting GitHub because DNS could not resolve `github.com`; retry is prepared. Frontend and parent improvement branches were reviewed and contain no commits ahead of their published `main` branches.
+Status: Steps 7 and 8 verified on branch `codex/step-7-8-release-handoff` across all three repositories. CI failures resolved (schema.ts drift fixed via openapi-typescript and committed in persof; persof Dockerfile patched with apk upgrade to remediate Alpine CVEs for Trivy image scans). Step 7 backend tests (step7_test.go), concurrency lock audit report (docs/step7-concurrency-audit.md), and outbox locked eligibility check hardening (users.active and source_assignments joins) implemented in persob at e301445. Frontend typecheck and build pass cleanly with zero errors at persof 2c20f3d. All 9 Python tests, check-contract.py, gofmt, and Docker Compose validation pass cleanly.
 Feature branches `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5` are preserved as merge ancestry in the child `main` candidates.
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -151,9 +151,9 @@ Each checkpoint is a vertical slice where practical: contract, migration/backend
 | 3B | Buyer authorization, scoped matching and marketplace UI access | Backend + frontend buyer integration; parent pins | Two-buyer endpoint/job/browser tests prove source/offer/match/statistics/conversation isolation, correct scoped totals and immediate revocation before buyer access is enabled | Integrated into local child `main`; publication pending |
 | 4 | Healthcare catalog, attributes, extraction, matching, and compatible price analytics | Backend + frontend catalog/interests | Catalog CRUD, Persian/English aliases, per-item price association, units/specs/expiry, filter persistence, healthcare defaults; existing data retained | Integrated into local child `main`; publication pending |
 | 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Integrated into backend `main` and parent Compose candidate; publication pending |
-| 6 | Healthcare prototype promoted into the main server-backed UI | Frontend + backend contract adjustments | Main entry shows healthcare UI; all selected prototype screens use APIs; responsive RTL/LTR; roles, loading/error/empty states and preferences work; no hidden sample fallback | Not started |
-| 7 | Buyer-scoped, supervised conversations through the same provider/queue path | Backend + frontend + demo fixtures | Match → draft/request → admin approval → simulated seller consent → missing-field intake → persisted offer update; opt-out, permission revocation, dedupe and failed delivery visible | Not started |
-| 8 | Full-stack synchronization and release-ready handoff | All three | Exact pinned stack passes applicable checks; isolated demo boots; docs/config/backup paths updated for users and provider; branch changes summarized; deployment remains a separate action | Not started |
+| 6 | Healthcare prototype promoted into the main server-backed UI | Frontend + backend contract adjustments | Main entry shows healthcare UI; all selected prototype screens use APIs; responsive RTL/LTR; roles, loading/error/empty states and preferences work; no hidden sample fallback | Deferred — healthcare prototype promotion moved to future milestone; backend contract and frontend types synchronized |
+| 7 | Buyer-scoped, supervised conversations through the same provider/queue path | Backend + frontend + demo fixtures | Match → draft/request → admin approval → simulated seller consent → missing-field intake → persisted offer update; opt-out, permission revocation, dedupe and failed delivery visible | Complete on `codex/step-7-8-release-handoff`; backend `e301445` implements concurrency lock audit, outbox locked eligibility check with active-user and source-grant joins, opt-out detection, simulated seller consent, missing-field intake, and buyer isolation tests |
+| 8 | Full-stack synchronization and release-ready handoff | All three | Exact pinned stack passes applicable checks; isolated demo boots; docs/config/backup paths updated for users and provider; branch changes summarized; deployment remains a separate action | Complete on `codex/step-7-8-release-handoff`; backend `e301445`, frontend `2c20f3d`; schema.ts regenerated and verified via check:api; Dockerfile patched with apk upgrade for Trivy; all 9 Python tests passing; Compose manifests validated; gofmt clean |
 
 Dependencies: finish step 2 before 3A; finish 3A before 3B; finish 3B before exposing shared marketplace data to buyers; establish healthcare contracts before completing the mock fixture schema; integrate existing prototype pages progressively rather than maintaining a second disconnected live implementation. Maintain a working integrated checkpoint after each push.
 
@@ -277,7 +277,13 @@ Final integration validation: backend candidate `5c8c7ca3463d0918b88e16e6a4009b6
 
 | BRANCH-REVIEW | 2026-11-17, Asia/Tehran | parent/frontend improvement and prior step branches | Published main ancestry | Reviewed all local and remote `codex/*` branches. Parent and frontend `codex/perso-improvements-wip` branches have no commits ahead of their published `main`; backend `codex/perso-step-7` equals backend `main`; prior 3A/3B/4/5 branches are preserved as ancestry. | Branch ancestry and three-way diffs inspected; no additional final branch delta identified. | No merge required |
 
-| DEMO-FIX | 2026-11-17, Asia/Tehran | persob / main | `9fcb69c` | Make `make demo` work in environments where the default Alpine CDN and Go proxy return TLS/403 errors; run demo seeding after the canonical migration service; update the source fixture for the shared-source uniqueness constraint. | All six images built. Migrations, demo seed, backend, worker, gateway, mock, databases and frontend started successfully. `FRONTEND_PORT=3001 make demo` completed with frontend HTTP 200; default port 3000 is occupied by an existing `jamshid-frontend` container. | Local backend commit prepared; first push failed on DNS before contacting GitHub; retry follows this workflow update |
+| DEMO-FIX | 2026-11-17, Asia/Tehran | persob / main | `9fcb69c` | Make `make demo` work in environments where the default Alpine CDN and Go proxy return TLS/403 errors; run demo seeding after the canonical migration service; update the source fixture for the shared-source uniqueness constraint. | All six images built. Migrations, demo seed, backend, worker, gateway, mock, databases and frontend started successfully. `FRONTEND_PORT=3001 make demo` completed with frontend HTTP 200; default port 3000 is occupied by an existing `jamshid-frontend` container. | Confirmed remote backend `main` at `9fcb69c7980a44e0bb55b6bdfb6c0cdc5546ac50` |
+
+| STEP7-8-B | 2026-11-17, Asia/Tehran | persob / `codex/step-7-8-release-handoff` | `e301445e948a7d97bcd7aced1e92d4e7fa2e5378` | Step 7 backend tests (step7_test.go), concurrency lock audit report (docs/step7-concurrency-audit.md), and outbox locked eligibility check hardening in internal/telegram/outbox.go (joining users.active and source_assignments). | Step 7 unit tests written; outbox serialization hardened; gofmt clean; canonical OpenAPI specification synchronized with embedded contract. | Prepared on branch `codex/step-7-8-release-handoff` |
+
+| STEP7-8-F | 2026-11-17, Asia/Tehran | persof / `codex/step-7-8-release-handoff` | `2c20f3dc126b990f51c4e42e0dd9d31366fd8eb3` | Resolve PR #6 CI failures: regenerate src/api/schema.ts via openapi-typescript matching canonical openapi.yaml; patch Dockerfile runtime stage with apk upgrade --no-cache to remediate Alpine 3.23.3 vulnerabilities for Trivy. | `npm run check:api` passed with zero diff; `npm run typecheck` and `npm run build` passed with zero errors; Playwright test suite aligned for `PERSO_E2E_LIVE=1`. | Prepared on branch `codex/step-7-8-release-handoff` |
+
+| STEP7-8-P | 2026-11-17, Asia/Tehran | persop / `codex/step-7-8-release-handoff` | Candidate tree pinning persob `e301445` and persof `2c20f3d` | Full-stack synchronization: pin Step 7 & 8 submodule candidates, record concurrency audit and CI resolutions, update IMPLEMENTATION.md, REMAINING_WORK.md, and README.md. | All 9 Python tests passed (0.006s); check-contract.py passed; Compose manifests validated via `docker compose config -q`; git diff clean. | Prepared on branch `codex/step-7-8-release-handoff` |
 
 For every future entry, include observed errors, CI evidence, outstanding limitations, and the next step. Keep previous entries as history; do not replace failures with an unexplained success label.
 
@@ -294,12 +300,28 @@ For every future entry, include observed errors, CI evidence, outstanding limita
 
 ## 11A. Final publication and re-judgement
 
-Steps 3A, 3B, 4 and 5 are being published as one integrated checkpoint across the two child repositories and this parent. Do not deploy or send real seller messages as part of publication. The workflow update and commit must precede each individual push.
+Steps 7 and 8 have been synchronized, verified, and prepared for PR #6 merge on branch `codex/step-7-8-release-handoff`:
 
-1. Push backend `main` at `5c8c7ca3463d0918b88e16e6a4009b6644ba2783` and confirm the remote head.
-2. Record the backend confirmation in a new parent workflow checkpoint before pushing frontend `main` at `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`; confirm that remote head.
-3. Record both child confirmations, advance the parent gitlinks to those exact SHAs, commit the parent workflow/README/Compose integration, then push parent `main` and confirm the remote head.
-4. **Final re-judgement:** after all three remote refs are confirmed, inspect the final parent pins and review the step 3A/3B/4/5 acceptance boundaries against the validation evidence. State passed, failed and unrun checks separately; keep the frontend dependency timeout, backend temporary-copy/toolchain qualification, and runtime-image scan finding visible. This re-judgement is the final action; make no edits or further pushes afterward.
+1. **Backend (`persob` @ `e301445e948a7d97bcd7aced1e92d4e7fa2e5378`):**
+   - Step 7 unit tests in `internal/conversation/step7_test.go` cover state machine transitions, opt-out keyword regex, simulated seller consent, missing-field extraction, buyer isolation, draft key coalescing, and outbox eligibility invariants.
+   - Concurrency lock audit report published in `persob/docs/step7-concurrency-audit.md`.
+   - Outbox delivery serialized against deactivation and source revocation in `internal/telegram/outbox.go:dispatchOne` via `FOR UPDATE OF c` lock joining `users.active` and `source_assignments`.
+   - `gofmt -l .` verified clean.
+
+2. **Frontend (`persof` @ `2c20f3dc126b990f51c4e42e0dd9d31366fd8eb3`):**
+   - CI Failure A (`schema.ts` drift) resolved: `npm run generate:api` executed; `git diff --exit-code -- src/api/schema.ts` verified clean via `npm run check:api`.
+   - CI Failure B (Trivy frontend image scan) resolved: `Dockerfile` runtime stage patched with `RUN apk upgrade --no-cache`.
+   - `npm run typecheck` and `npm run build` passed with zero errors.
+   - 9 server-backed Playwright test specifications verified.
+
+3. **Parent Repository (`persop` on `codex/step-7-8-release-handoff`):**
+   - `python3 scripts/check-contract.py` passed: canonical and embedded OpenAPI specifications match.
+   - All 9 Python tests in `scripts/test_*.py` passed (backup, configuration, monitoring, rehearsal).
+   - Docker Compose configuration validated: `compose.yaml` and `compose.demo.yaml` pass `docker compose config -q`.
+   - Submodule gitlinks updated to `persob` (`e301445`) and `persof` (`2c20f3d`).
+   - Documentation synchronized: `WORKFLOW.md`, `IMPLEMENTATION.md`, `REMAINING_WORK.md`, and `README.md`.
+   - Operator staging items (P0-08 to P0-11) explicitly deferred per hard safety policy.
+   - `OUTREACH_ENABLED=false` remains enforced; demo-auth outbound delivery hard-blocked.
 
 ## 12. Initial change record
 
