@@ -388,3 +388,12 @@ The initial failed config-isolation and readiness checks are retained above with
 - Backend candidate `badbe795ad92e893cb4940562e4df5e586fae3c3` triggered [Backend checks run 44009688757](https://github.com/Uncle-Taki/persob/actions/runs/44009688757).
 - Observed: audit acceptance job passed; unit job failed at the first `gofmt -l .` gate. Because formatting failed, race, vet, build and OpenAPI sync steps were skipped. This is a formatting failure, not evidence of functional test failure.
 - Corrective candidate prepared: `1b70bc125cb7c2c3da969560ba5ab04067574233`, formatting the approval helper. It has not yet been pushed or tested. Next push follows this parent ledger update.
+
+
+### Step 7 candidate update — formatting correction published
+
+- Backend branch advanced to `1b70bc125cb7c2c3da969560ba5ab04067574233` after the formatting correction.
+- The previous candidate's audit acceptance job passed; its unit job stopped at `gofmt -l .`, so race/vet/build/contract steps were skipped.
+- New backend run: [44010123998](https://github.com/Uncle-Taki/persob/actions/runs/44010123998). At the time of this ledger update, unit and acceptance jobs were still in progress; no results are claimed.
+- Frontend branch remains unchanged at `c261d3e16e7506dc32d97e806d453474c9a2d65a`; its latest observed frontend CI run [44009193265](https://github.com/Uncle-Taki/persof/actions/runs/44009193265) passed, but this is baseline evidence, not Step 7-specific test coverage.
+- Parent gitlink is advanced to the exact backend candidate. The branch remains draft and non-mergeable pending implementation completeness and tests.
