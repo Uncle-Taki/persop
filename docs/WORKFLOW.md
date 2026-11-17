@@ -408,3 +408,6 @@ The initial failed config-isolation and readiness checks are retained above with
 
 
 - Formatter diagnostics on backend candidate `950f3aa4072b1794b05b7ef459587a0616365f00` identified exactly `internal/conversation/manager.go`. The cause was single-space indentation in the two newly added approval wrapper return statements. Corrective backend commit prepared: `69dc7cf26d7bbdff2363d36b1a8bf53608b41a04`; not yet pushed or tested. The outbox demo fail-closed guard and formatter diagnostic workflow remain in that candidate's ancestry.
+
+
+- Third diagnostic run `44010920796` found the remaining formatting failure in `internal/identity/identity_test.go` (the Step 6 healthcare session assertion used a one-line block). Backend correction prepared: `cf875bc2205c0449ad300aff3778578e641972d8`. This is a formatting-only correction; it has not yet been pushed or tested. Audit acceptance passed on the prior candidate; unit race/vet/build/contract steps remain skipped until the formatter gate passes.
