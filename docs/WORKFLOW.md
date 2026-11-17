@@ -397,3 +397,6 @@ The initial failed config-isolation and readiness checks are retained above with
 - New backend run: [44010123998](https://github.com/Uncle-Taki/persob/actions/runs/44010123998). At the time of this ledger update, unit and acceptance jobs were still in progress; no results are claimed.
 - Frontend branch remains unchanged at `c261d3e16e7506dc32d97e806d453474c9a2d65a`; its latest observed frontend CI run [44009193265](https://github.com/Uncle-Taki/persof/actions/runs/44009193265) passed, but this is baseline evidence, not Step 7-specific test coverage.
 - Parent gitlink is advanced to the exact backend candidate. The branch remains draft and non-mergeable pending implementation completeness and tests.
+
+
+- Follow-up run `44010123998`: unit job again failed at `gofmt -l .`; race/vet/build/contract steps were skipped. Acceptance job was still running at the time of inspection. A second formatting-only correction is prepared in backend commit `114c3dd5247c657a2605a070c643030ae5912531`; this commit has not been pushed or tested yet. Exact formatter output was not exposed by the available GitHub check-run interface, so the specific remaining file is not asserted.
