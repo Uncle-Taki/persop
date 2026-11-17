@@ -415,3 +415,11 @@ The initial failed config-isolation and readiness checks are retained above with
 
 - Frontend Step 7 candidate prepared: `persof/b817a4cf9b27db33b12314c48b0ad15be0131ce0`. The approve-consent action is now rendered only for workspace administrators; the backend remains the authoritative authorization boundary. This commit is not yet pushed or browser-tested.
 - Latest backend candidate `persob/cf875bc2205c0449ad300aff3778578e641972d8` passed the gofmt gate. Its unit race suite and audit acceptance job were still running at the time of this workflow update; no final unit/vet/build/contract result is claimed yet.
+
+
+### Step 7 CI evidence — current published child revisions
+
+- Backend `persob/cf875bc2205c0449ad300aff3778578e641972d8`, run [44011074607](https://github.com/Uncle-Taki/persob/actions/runs/44011074607): **passed** gofmt, `go test -race ./...`, `go vet ./...`, `go build ./cmd/perso`, canonical/embedded OpenAPI sync check, and audit-tagged integration acceptance (`./internal/audit ./internal/telegram`). Both unit and acceptance jobs completed successfully.
+- Frontend `persof/b817a4cf9b27db33b12314c48b0ad15be0131ce0`, run [44011401610](https://github.com/Uncle-Taki/persof/actions/runs/44011401610): **passed** `npm ci`, typecheck, production build, Chromium installation, and Playwright command. Playwright reported **1 passed, 9 skipped**: only the explicit sample-preview test ran; all server-backed tests were skipped because `PERSO_E2E_LIVE` was not enabled. This is not Step 7 browser-flow coverage.
+- Still unverified: buyer isolation/revocation integration tests, duplicate request behavior, approval/consent progression, missing-field intake and persisted offer update, retry/failure/stale queue recovery, and concurrency serialization of account/source revocation against dispatch.
+- No real seller messages, real provider credentials, or deployment actions were used.
