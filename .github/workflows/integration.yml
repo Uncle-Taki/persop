@@ -23,6 +23,7 @@ jobs:
       MONGODB_DATABASE: perso_ui
       REDIS_ADDR: 127.0.0.1:56389
       TELEGRAM_MOCK_MODE: "true"
+      TELEGRAM_MOCK_HEALTHCARE: "true"
       TELEGRAM_GATEWAY_URL: http://127.0.0.1:8090
       TELEGRAM_GATEWAY_ADDR: 127.0.0.1:8090
       TELEGRAM_GATEWAY_TOKEN: perso-test-gateway-token-at-least-32-characters

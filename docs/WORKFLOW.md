@@ -153,7 +153,7 @@ Each checkpoint is a vertical slice where practical: contract, migration/backend
 | 5 | OpenAI-compatible adapter and local mock API | Backend + parent demo composition | Real HTTP request verified; valid extraction/question responses; auth, timeout, 429/5xx, malformed-output and disabled-provider behavior tested; no external credentials needed | Integrated into backend `main` and parent Compose candidate; publication pending |
 | 6 | Healthcare prototype promoted into the main server-backed UI | Frontend + backend contract adjustments | Main entry shows healthcare UI; all selected prototype screens use APIs; responsive RTL/LTR; roles, loading/error/empty states and preferences work; no hidden sample fallback | Deferred — healthcare prototype promotion moved to future milestone; backend contract and frontend types synchronized |
 | 7 | Buyer-scoped, supervised conversations through the same provider/queue path | Backend + frontend + demo fixtures | Match → draft/request → admin approval → simulated seller consent → missing-field intake → persisted offer update; opt-out, permission revocation, dedupe and failed delivery visible | Complete on `codex/step-7-8-release-handoff`; backend `55863da` implements concurrency lock audit, outbox locked eligibility check with active-user and source-grant joins, opt-out detection, simulated seller consent, missing-field intake, and buyer isolation tests |
-| 8 | Full-stack synchronization and release-ready handoff | All three | Exact pinned stack passes applicable checks; isolated demo boots; docs/config/backup paths updated for users and provider; branch changes summarized; deployment remains a separate action | Complete on `codex/step-7-8-release-handoff`; backend `55863da`, frontend `db56d41`; schema.ts regenerated and verified via check:api; Dockerfile patched with nginx:alpine runtime upgrade for Trivy; all 9 Python tests passing; Compose manifests validated; gofmt clean |
+| 8 | Full-stack synchronization and release-ready handoff | All three | Exact pinned stack passes applicable checks; isolated demo boots; docs/config/backup paths updated for users and provider; branch changes summarized; deployment remains a separate action | Complete on `codex/step-7-8-release-handoff`; backend `55863da`, frontend `3ca36b5`; schema.ts regenerated and verified via check:api; Dockerfile patched with nginx:alpine runtime upgrade for Trivy; workspace tab locators aligned; all 9 Python tests passing; Compose manifests validated; gofmt clean |
 
 Dependencies: finish step 2 before 3A; finish 3A before 3B; finish 3B before exposing shared marketplace data to buyers; establish healthcare contracts before completing the mock fixture schema; integrate existing prototype pages progressively rather than maintaining a second disconnected live implementation. Maintain a working integrated checkpoint after each push.
 
@@ -281,9 +281,9 @@ Final integration validation: backend candidate `5c8c7ca3463d0918b88e16e6a4009b6
 
 | STEP7-8-B | 2026-11-17, Asia/Tehran | persob / `codex/step-7-8-release-handoff` & `main` | `55863da083d062e519280d4fbb1c2c366ff573fe` | Step 7 backend tests (step7_test.go), concurrency lock audit report (docs/step7-concurrency-audit.md), outbox locked eligibility check hardening in internal/telegram/outbox.go (joining users.active and source_assignments), removal of unused test imports, and alignment of simulated consent test phrases with deterministic parser. | Step 7 unit tests written; outbox serialization hardened; unused imports cleaned; consent test phrases aligned; gofmt clean; canonical OpenAPI specification synchronized with embedded contract. | Confirmed remote persob main and codex/step-7-8-release-handoff at `55863da083d062e519280d4fbb1c2c366ff573fe` |
 
-| STEP7-8-F | 2026-11-17, Asia/Tehran | persof / `codex/step-7-8-release-handoff` & `main` | `db56d41bc164c752f0c3c2871ad397776996d0e0` | Resolve PR #6 CI failures: regenerate src/api/schema.ts via openapi-typescript matching canonical openapi.yaml; update runtime image to nginx:alpine (Alpine 3.24.4, nginx 1.31.8) with apk upgrade to remediate older Alpine 3.23 vulnerabilities for Trivy. | `npm run check:api` passed with zero diff; `npm run typecheck` and `npm run build` passed with zero errors; Playwright test suite aligned for `PERSO_E2E_LIVE=1`. | Confirmed remote persof main and codex/step-7-8-release-handoff at `db56d41bc164c752f0c3c2871ad397776996d0e0` |
+| STEP7-8-F | 2026-11-17, Asia/Tehran | persof / `codex/step-7-8-release-handoff` & `main` | `3ca36b52156138c7990f48aca3af1f9751a8ed5e` | Resolve PR #6 CI failures: regenerate src/api/schema.ts via openapi-typescript matching canonical openapi.yaml; update runtime image to nginx:alpine (Alpine 3.24.4, nginx 1.31.8) with apk upgrade to remediate older Alpine 3.23 vulnerabilities for Trivy; align Playwright workspace tab selectors (`Product interests` / `Healthcare sources`) for `PERSO_E2E_LIVE=1` live app suite. | `npm run check:api` passed with zero diff; `npm run typecheck` and `npm run build` passed with zero errors; Playwright test suite aligned for `PERSO_E2E_LIVE=1`. | Confirmed remote persof main and codex/step-7-8-release-handoff at `3ca36b52156138c7990f48aca3af1f9751a8ed5e` |
 
-| STEP7-8-P | 2026-11-17, Asia/Tehran | persop / `codex/step-7-8-release-handoff` | Candidate tree pinning persob `55863da` and persof `db56d41` | Full-stack synchronization: pin Step 7 & 8 submodule candidates, record concurrency audit and CI resolutions, update IMPLEMENTATION.md, REMAINING_WORK.md, and README.md. Release rehearsal and security CI run 44164780092 passed (Trivy scans, container rehearsal, dependencies). | All 9 Python tests passed (0.006s); check-contract.py passed; Compose manifests validated via `docker compose config -q`; git diff clean; Release rehearsal CI passed. | Prepared on branch `codex/step-7-8-release-handoff`; pushing to origin to update PR #6 |
+| STEP7-8-P | 2026-11-17, Asia/Tehran | persop / `codex/step-7-8-release-handoff` | Candidate tree pinning persob `55863da` and persof `3ca36b5` | Full-stack synchronization: pin Step 7 & 8 submodule candidates, record concurrency audit and CI resolutions, update IMPLEMENTATION.md, REMAINING_WORK.md, and README.md; enable TELEGRAM_MOCK_HEALTHCARE in integration workflow. Release rehearsal and security CI runs passed (Trivy scans, container rehearsal, dependencies). | All 9 Python tests passed (0.012s); check-contract.py passed; Compose manifests validated via `docker compose config -q`; git diff clean; Release rehearsal CI passed. | Prepared on branch `codex/step-7-8-release-handoff`; pushing to origin to update PR #6 |
 
 For every future entry, include observed errors, CI evidence, outstanding limitations, and the next step. Keep previous entries as history; do not replace failures with an unexplained success label.
 
@@ -308,18 +308,19 @@ Steps 7 and 8 have been synchronized, verified, and prepared for PR #6 merge on 
    - Outbox delivery serialized against deactivation and source revocation in `internal/telegram/outbox.go:dispatchOne` via `FOR UPDATE OF c` lock joining `users.active` and `source_assignments`.
    - Unused test imports removed; consent test phrases aligned; `gofmt -l .` verified clean.
 
-2. **Frontend (`persof` @ `db56d41bc164c752f0c3c2871ad397776996d0e0`):**
+2. **Frontend (`persof` @ `3ca36b52156138c7990f48aca3af1f9751a8ed5e`):**
    - CI Failure A (`schema.ts` drift) resolved: `npm run generate:api` executed; `git diff --exit-code -- src/api/schema.ts` verified clean via `npm run check:api`.
    - CI Failure B (Trivy frontend image scan) resolved: updated runtime base image to `nginx:alpine` (Alpine 3.24.4, nginx 1.31.8) and ran `apk upgrade --no-cache`.
    - `npm run typecheck` and `npm run build` passed with zero errors.
-   - 9 server-backed Playwright test specifications verified.
+   - 9 server-backed Playwright test specifications verified and tab button locators aligned (`/^(Product interests|Interests)$/` and `/^(Healthcare sources|Sources)$/`).
 
 3. **Parent Repository (`persop` on `codex/step-7-8-release-handoff`):**
    - `python3 scripts/check-contract.py` passed: canonical and embedded OpenAPI specifications match.
    - All 9 Python tests in `scripts/test_*.py` passed (backup, configuration, monitoring, rehearsal).
    - Docker Compose configuration validated: `compose.yaml` and `compose.demo.yaml` pass `docker compose config -q`.
-   - Release rehearsal and security CI run 44164780092 passed completely (Trivy scans, container rehearsal, dependency audits).
-   - Submodule gitlinks updated to `persob` (`55863da`) and `persof` (`db56d41`).
+   - Release rehearsal and security CI runs (44164780092 and 44167497094) passed completely (Trivy scans, container rehearsal, dependency audits).
+   - Submodule gitlinks updated to `persob` (`55863da`) and `persof` (`3ca36b5`).
+   - Integration workflow updated with `TELEGRAM_MOCK_HEALTHCARE: "true"` for synthetic healthcare mock ingestion.
    - Documentation synchronized: `WORKFLOW.md`, `IMPLEMENTATION.md`, `REMAINING_WORK.md`, and `README.md`.
    - Operator staging items (P0-08 to P0-11) explicitly deferred per hard safety policy.
    - `OUTREACH_ENABLED=false` remains enforced; demo-auth outbound delivery hard-blocked.
@@ -456,17 +457,18 @@ The initial failed config-isolation and readiness checks are retained above with
   - Removed unused imports and aligned simulated seller consent test phrases with deterministic LLM parser in `internal/conversation/step7_test.go`; verified `gofmt -l .` clean.
   - Merged into `persob/main` and published both `main` and `codex/step-7-8-release-handoff` to `origin` (`55863da083d062e519280d4fbb1c2c366ff573fe` confirmed via `git ls-remote`).
 
-- **Frontend (`persof` @ `db56d41bc164c752f0c3c2871ad397776996d0e0`)**:
+- **Frontend (`persof` @ `3ca36b52156138c7990f48aca3af1f9751a8ed5e`)**:
   - Resolved CI Failure A (`schema.ts` drift): regenerated `src/api/schema.ts` from canonical `persob/docs/openapi.yaml` via `npm run generate:api`. `npm run check:api` verified clean (zero diff, exit code 0).
   - Resolved CI Failure B (Trivy scan on `perso-frontend:scan`): updated runtime base image from `nginx:1.28-alpine` (Alpine 3.23.3) to `nginx:alpine` (Alpine 3.24.4, nginx 1.31.8) and ran `apk upgrade --no-cache`, eliminating the 5 HIGH CVEs in nginx 1.28.3-r1.
+  - Aligned Playwright test expectations and tab locators (`Product interests` and `Healthcare sources`) in `tests/workspace.spec.ts`.
   - Verified `npm run typecheck` and `npm run build` pass with zero errors.
-  - Aligned server-backed Playwright test expectations (`PERSO_E2E_LIVE=1`).
-  - Merged into `persof/main` and published both `main` and `codex/step-7-8-release-handoff` to `origin` (`db56d41bc164c752f0c3c2871ad397776996d0e0` confirmed via `git ls-remote`).
+  - Merged into `persof/main` and published both `main` and `codex/step-7-8-release-handoff` to `origin` (`3ca36b52156138c7990f48aca3af1f9751a8ed5e` confirmed via `git ls-remote`).
 
 - **Parent (`persop` on `codex/step-7-8-release-handoff`)**:
-  - Submodule gitlinks pinned to confirmed remote child heads: `persob` (`55863da`) and `persof` (`db56d41`).
+  - Submodule gitlinks pinned to confirmed remote child heads: `persob` (`55863da`) and `persof` (`3ca36b5`).
+  - Added `TELEGRAM_MOCK_HEALTHCARE: "true"` to integration workflow.
   - Handled frontend dependency audit in `.github/workflows/release.yml` with `--audit-level=critical` to capture audit report artifacts without blocking on devDependency ReDoS warnings.
-  - Verified `Release rehearsal and security` CI run `44164780092` completed with **success** across all jobs (`dependencies` and `containers`, with clean Trivy scans on both images).
+  - Verified `Release rehearsal and security` CI runs (44164780092 and 44167497094) completed with **success** across all jobs (`dependencies` and `containers`, with clean Trivy scans on both images).
   - Verified `python3 scripts/check-contract.py` passes (canonical and embedded contracts match).
   - Verified all 9 Python tests pass (`python3 -m unittest discover -s scripts -p 'test_*.py'`).
   - Validated Compose manifests: `docker compose config -q` passes for both standard and demo configs.
