@@ -411,3 +411,7 @@ The initial failed config-isolation and readiness checks are retained above with
 
 
 - Third diagnostic run `44010920796` found the remaining formatting failure in `internal/identity/identity_test.go` (the Step 6 healthcare session assertion used a one-line block). Backend correction prepared: `cf875bc2205c0449ad300aff3778578e641972d8`. This is a formatting-only correction; it has not yet been pushed or tested. Audit acceptance passed on the prior candidate; unit race/vet/build/contract steps remain skipped until the formatter gate passes.
+
+
+- Frontend Step 7 candidate prepared: `persof/b817a4cf9b27db33b12314c48b0ad15be0131ce0`. The approve-consent action is now rendered only for workspace administrators; the backend remains the authoritative authorization boundary. This commit is not yet pushed or browser-tested.
+- Latest backend candidate `persob/cf875bc2205c0449ad300aff3778578e641972d8` passed the gofmt gate. Its unit race suite and audit acceptance job were still running at the time of this workflow update; no final unit/vet/build/contract result is claimed yet.
