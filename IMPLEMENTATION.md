@@ -1,7 +1,7 @@
 # Implementation checkpoint
 
 > Steps 6–8 work is tracked on branch `codex/step-7-8-release-handoff`. See [docs/WORKFLOW.md](docs/WORKFLOW.md) and [REMAINING_WORK.md](REMAINING_WORK.md) for the current ledger and operator-deferred items.
-> Step 6 healthcare promotion, Step 7 supervised outreach / conversation isolation, and Step 8 synchronization are implemented. The current pins are parent `0c6e6c6`, backend `0c84f58`, frontend `7488e52`.
+> Step 6 healthcare promotion, Step 7 supervised outreach / conversation isolation, and Step 8 synchronization are implemented. The current pins are parent `b2ce846`, backend `32c5451`, frontend `7488e52`.
 
 Branch: `codex/step-7-8-release-handoff` across `persop`, `persob`, and `persof`.
 
