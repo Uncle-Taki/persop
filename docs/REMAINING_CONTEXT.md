@@ -6,11 +6,11 @@ This is the compact handoff for the next implementation or review session. It is
 
 ## Current checkout
 
-- Parent repository: branch `codex/step-7-8-release-handoff`, commit `0c6e6c6`.
-- Backend submodule: `persob/main`, commit `0c84f5844727d4dcf43f83feb578dd10dceb5ff4`.
+- Parent repository: branch `codex/step-7-8-release-handoff`, commit `61663bf`.
+- Backend submodule: `persob/main`, commit `32c54516ca3ad14f6d0dd3302a9004b87e21bab5`.
 - Frontend submodule: `persof/main`, commit `7488e528a57c592a611196528f4b152b3946d6d9`.
 - Parent gitlinks point to backend `0c84f58` and frontend `7488e52`.
-- Parent and frontend worktrees are clean; backend has the two follow-up test/compile corrections being committed with this pass.
+- Parent, backend, and frontend worktrees are clean.
 
 ## What is implemented
 
