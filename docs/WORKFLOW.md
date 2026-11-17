@@ -353,3 +353,17 @@ The initial failed config-isolation and readiness checks are retained above with
 | Entry | Timestamp | Repository/branch | Candidate | Purpose and validation | Push status |
 | --- | --- | --- | --- | --- | --- |
 | PLAN-3-SPLIT | 2026-11-16, Asia/Tehran | persop / codex/perso-healthcare-rbac | Documentation-only child of 9511ea9df798fa41c0fbe953f86b59eec530fc39; unchanged backend/frontend pins | Split step 3 into independently reviewable 3A/3B; check scope coverage, sequencing, document references and whitespace; no application tests needed for this planning-only change | Prepared before parent documentation ref update |
+
+
+## Step 6 — healthcare live workspace review checkpoint
+
+- Branch: `codex/step-6-healthcare-live` in parent, backend and frontend.
+- Baseline pins: parent `3d24dc6547307a99776d59ad8f555c88be05fb1b`, backend `9fcb69c7980a44e0bb55b6bdfb6c0cdc5546ac50`, frontend `8c8a0bc3c3fcded46a52feaeff80f04aaf69330f`.
+- Candidate backend commit: `bf51f82e3100bbb69852eb83fa0fd449b45742c2`.
+- Candidate frontend commit: `c261d3e16e7506dc32d97e806d453474c9a2d65a`.
+- Changes: session catalog domain now reports healthcare; canonical and embedded OpenAPI Session enum now say healthcare; identity test asserts this contract; demo/integration seed replaces the old electronics catalog/source with clearly named synthetic healthcare catalog fixtures; frontend API schema aligns with the healthcare Session enum and API client exposes typed product/offer/source detail getters; live labels and healthcare-first copy updated; workspace E2E expectation now uses the saline fixture.
+- Tests actually run in this implementation session: none. GitHub tree/blob/commit/ref operations succeeded; these are publication operations, not test evidence.
+- Not run: frontend `npm ci`, typecheck, production build, `npm run generate:api`, `npm run check:api`, Playwright; backend Go unit/race/vet/build, database acceptance, mock HTTP tests, authorization tests and contract sync. CI must provide the first execution evidence.
+- Limitations: this candidate is a partial Step 6 slice, not a completed implementation. Product/offer/source detail screens are not yet wired to the new typed getters; full healthcare navigation/catalog taxonomy, conversation flows, and role-based management need review against all acceptance bullets. Backend mock fixture implementation has not yet been changed. Keep real Telegram/provider credentials absent and outreach disabled.
+- Publication sequencing note: the child review refs were created before this parent workflow ledger entry because GitHub branch publication was performed through the connected GitHub integration. This records the observed order rather than retroactively claiming the document preceded those ref updates. Parent gitlinks are updated only after both child candidate commits were created.
+- Next: finish the remaining live screens and backend demo fixture cleanup, run the exact checks, then update this ledger before creating the parent PR.

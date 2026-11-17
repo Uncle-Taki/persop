@@ -1,6 +1,6 @@
 # Perso
 
-A Persian-first Telegram marketplace monitor. The live app uses the electronics catalog; the healthcare sample UI is an isolated preview at `?mode=demo`. Step 2 adds password accounts with **super_admin, admin and buyer** roles in one workspace with one Telegram account. Buyer access to shared marketplace data remains blocked until step 3 source assignments; accounts, settings and personal interests are available now.
+A Persian-first Telegram marketplace monitor. The live app is healthcare-first and uses the shared healthcare catalog, buyer-scoped marketplace APIs, source assignments, and role-aware account settings. The explicit `?mode=demo` route remains a separate synthetic preview; the normal route never falls back to sample fixtures.
 
 The parent pins compatible revisions of [persob](https://github.com/Uncle-Taki/persob) (Go) and [persof](https://github.com/Uncle-Taki/persof) (React). Clone with:
 
@@ -18,7 +18,7 @@ python3 scripts/setup-env.py --demo
 make demo
 ```
 
-Open http://localhost:3000. Sign in using `BOOTSTRAP_ADMIN_USERNAME` and `BOOTSTRAP_ADMIN_PASSWORD` from your private `.env`. The header says **Mock connection**; prices come only from synthetic messages. Never use the demo initialization override with valuable or production volumes. The preview at `?mode=demo` uses independent browser fixtures and never acts as an API failure fallback.
+Open http://localhost:3000. Sign in using `BOOTSTRAP_ADMIN_USERNAME` and `BOOTSTRAP_ADMIN_PASSWORD` from your private `.env`. The demo is explicitly synthetic: the mock Telegram gateway and healthcare seed fixture are labeled as sample data in the workspace. Never use the demo initialization override with valuable or production volumes. The preview at `?mode=demo` uses independent browser fixtures and never acts as an API failure fallback.
 
 ## Real account
 
