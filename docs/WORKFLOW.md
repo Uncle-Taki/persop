@@ -405,3 +405,6 @@ The initial failed config-isolation and readiness checks are retained above with
 - The second `gofmt -l .` failure did not expose its file list in the job log. Added an explicit formatter diagnostic to backend CI so the next run prints the exact offending paths before failing.
 - Backend candidate prepared for the next push: `950f3aa4072b1794b05b7ef459587a0616365f00`. It also adds a fail-closed outbox guard: demo-auth mode never starts outbound delivery, and Telegram mock mode without a mock transport cannot fall through to real MTProto. This is safety-critical and is not yet CI-verified.
 - The next parent update pins this exact backend candidate. No tests are claimed for this new candidate until its CI finishes.
+
+
+- Formatter diagnostics on backend candidate `950f3aa4072b1794b05b7ef459587a0616365f00` identified exactly `internal/conversation/manager.go`. The cause was single-space indentation in the two newly added approval wrapper return statements. Corrective backend commit prepared: `69dc7cf26d7bbdff2363d36b1a8bf53608b41a04`; not yet pushed or tested. The outbox demo fail-closed guard and formatter diagnostic workflow remain in that candidate's ancestry.
