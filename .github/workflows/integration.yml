@@ -23,7 +23,6 @@ jobs:
       MONGODB_DATABASE: perso_ui
       REDIS_ADDR: 127.0.0.1:56389
       TELEGRAM_MOCK_MODE: "true"
-      TELEGRAM_MOCK_HEALTHCARE: "true"
       TELEGRAM_GATEWAY_URL: http://127.0.0.1:8090
       TELEGRAM_GATEWAY_ADDR: 127.0.0.1:8090
       TELEGRAM_GATEWAY_TOKEN: perso-test-gateway-token-at-least-32-characters
@@ -58,6 +57,8 @@ jobs:
       - run: cd persof && npm ci && npm run generate:api && git diff --exit-code -- src/api/schema.ts && npm run typecheck && npm run build
       - run: cd persof && npx playwright install --with-deps chromium
       - name: Server-backed browser checks
+        env:
+          TELEGRAM_MOCK_HEALTHCARE: "true"
         run: |
           artifacts/perso migrate
           docker compose -f compose.test.yaml exec -T postgres psql -U postgres -d perso_audit < persob/scripts/seed.sql
