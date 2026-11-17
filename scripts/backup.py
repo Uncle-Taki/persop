@@ -8,7 +8,7 @@ import subprocess
 import tarfile
 from datetime import datetime, timezone
 from pathlib import Path
-from preflight import read_environment
+from perso_ops import read_environment
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = ('postgres.dump', 'mongodb.archive', 'sessions.tar.gz')
