@@ -1,7 +1,7 @@
 # Implementation checkpoint
 
 > Steps 6–8 work is tracked on branch `codex/step-7-8-release-handoff`. See [docs/WORKFLOW.md](docs/WORKFLOW.md) and [REMAINING_WORK.md](REMAINING_WORK.md) for the current ledger and operator-deferred items.
-> Step 6 healthcare promotion, Step 7 supervised outreach / conversation isolation, and Step 8 synchronization are implemented. The current pins are parent `a368271`, backend `3e895cd`, frontend `3ca36b5`.
+> Step 6 healthcare promotion, Step 7 supervised outreach / conversation isolation, and Step 8 synchronization are implemented. The current pins are parent `0c6e6c6`, backend `0c84f58`, frontend `7488e52`.
 
 Branch: `codex/step-7-8-release-handoff` across `persop`, `persob`, and `persof`.
 
@@ -14,13 +14,13 @@ Branch: `codex/step-7-8-release-handoff` across `persop`, `persob`, and `persof`
 
 ## Implemented Scope (Steps 6–8)
 
-- **Backend (`persob` @ `d69dc79`):**
+- **Backend (`persob` @ `32c5451`):**
   - Added Step 7 conversation test suite (`step7_test.go`) covering state machine transitions, opt-out keyword regex, simulated seller consent, missing-field intake, and draft key deduplication.
   - Completed concurrency lock audit in `docs/step7-concurrency-audit.md`.
   - Hardened outbox eligibility re-check in `internal/telegram/outbox.go:dispatchOne` under `FOR UPDATE OF c` lock: queries now verify `users.active` and validate buyer `source_assignments` before dispatching in-flight messages.
   - Retained deterministic outreach safety guards: `OUTREACH_ENABLED=false` remains default.
 
-- **Frontend (`persof` @ `cbfe095`):**
+- **Frontend (`persof` @ `7488e52`):**
   - Synchronized `src/api/schema.ts` from canonical OpenAPI specification using `openapi-typescript`; resolved all contract schema drift.
   - Patched `Dockerfile` runtime stage with `apk upgrade --no-cache` to upgrade Alpine packages and eliminate Trivy image scan vulnerabilities.
   - Frontend typecheck (`npm run typecheck`) and production bundle build (`npm run build`) pass cleanly with zero errors.

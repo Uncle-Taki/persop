@@ -6,17 +6,17 @@ This is the compact handoff for the next implementation or review session. It is
 
 ## Current checkout
 
-- Parent repository: branch `codex/step-7-8-release-handoff`, commit `a368271`.
-- Backend submodule: `persob/main`, commit `3e895cd4d3fa17f0baa1548d312d33e8ebcc316c`.
-- Frontend submodule: `persof/main`, commit `3ca36b52156138c7990f48aca3af1f9751a8ed5e`.
-- Parent gitlinks point to backend `3e895cd` and frontend `3ca36b5`.
-- Parent, backend, and frontend worktrees are currently clean.
+- Parent repository: branch `codex/step-7-8-release-handoff`, commit `0c6e6c6`.
+- Backend submodule: `persob/main`, commit `0c84f5844727d4dcf43f83feb578dd10dceb5ff4`.
+- Frontend submodule: `persof/main`, commit `7488e528a57c592a611196528f4b152b3946d6d9`.
+- Parent gitlinks point to backend `0c84f58` and frontend `7488e52`.
+- Parent and frontend worktrees are clean; backend has the two follow-up test/compile corrections being committed with this pass.
 
 ## What is implemented
 
 ### Step 6 — healthcare live workspace
 
-The live entrypoint is `persof/src/App.tsx` → `persof/src/live/LiveApp.tsx`. It uses the typed API client for session, products, interests, sources, offers, statistics, gateway status, users, and conversations. The Step 6 child change is in the current frontend ancestry at `c261d3e`; the current `3ca36b5` adds contract, runtime-image, and live-browser selector corrections.
+The live entrypoint is `persof/src/App.tsx` → `persof/src/live/LiveApp.tsx`. It uses the typed API client for session, products, interests, sources, offers, statistics, gateway status, users, and conversations. The Step 6 child change is in the current frontend ancestry at `c261d3e`; the current `7488e52` adds contract, runtime-image, and live-browser selector corrections.
 
 Backend healthcare identity and session contract changes are present in the current backend ancestry. Demo fixtures are healthcare-oriented and the OpenAI-compatible mock is wired through Compose.
 
