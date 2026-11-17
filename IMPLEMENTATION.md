@@ -1,9 +1,16 @@
 # Implementation checkpoint
 
-> Steps 6–8 work is tracked on branch `codex/step-7-8-release-handoff`. See [docs/WORKFLOW.md](docs/WORKFLOW.md) Section 10 for the complete push and progress ledger, and [REMAINING_WORK.md](REMAINING_WORK.md) for closed and operator-deferred items.
-> Step 6 healthcare promotion is completed; Step 7 supervised outreach / conversation isolation and Step 8 synchronization are verified.
+> Steps 6–8 work is tracked on branch `codex/step-7-8-release-handoff`. See [docs/WORKFLOW.md](docs/WORKFLOW.md) and [REMAINING_WORK.md](REMAINING_WORK.md) for the current ledger and operator-deferred items.
+> Step 6 healthcare promotion, Step 7 supervised outreach / conversation isolation, and Step 8 synchronization are implemented. The current pins are parent `a368271`, backend `3e895cd`, frontend `3ca36b5`.
 
 Branch: `codex/step-7-8-release-handoff` across `persop`, `persob`, and `persof`.
+
+## Remaining implementation delivered in this handoff
+
+- Added `persob/cmd/reextract`, an operator-controlled dry-run/replay command for retained raw messages. It uses stable keyset pagination, a private atomic checkpoint, bounded pages, idempotent normal worker publication, and no Telegram or outbound side effects.
+- Added the MongoDB compound cursor index and retention filtering that leaves pending, processing, and dispatch-pending raw messages available for recovery before assigning TTL expiry.
+- Added the repeatable 10,000-offer ranking benchmark used to measure full-population score-before-pagination work.
+- Updated the operator README, operations runbook, workflow ledger and remaining-work register with exact commands and evidence boundaries.
 
 ## Implemented Scope (Steps 6–8)
 

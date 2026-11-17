@@ -4,7 +4,7 @@
 
 > Current healthcare/RBAC work is tracked in [docs/WORKFLOW.md](docs/WORKFLOW.md). Historical electronics/single-operator descriptions below are retained as audit history and do not describe the current Step 6 candidate. Step 6 promotion is in review; do not treat the release gate as complete until the exact candidate CI evidence is recorded.
 
-Status snapshot: **2026-11-15**, after publishing `codex/perso-improvements-wip`.
+Status snapshot: **2026-11-18**, on parent `codex/step-7-8-release-handoff` with backend `0c84f58` and frontend `7488e52` pinned.
 
 Reviewed baseline: parent `20dd036`, backend `5c468df`, frontend `bd4c811`.
 This document records unfinished verification, operational preparation and later scope. It does not claim that those jobs have passed or authorize a production deployment. Check boxes stay open until the completion evidence below is recorded.
@@ -58,13 +58,13 @@ npm audit
 
 | ID | Job | Suggested owner | Completion evidence |
 | --- | --- | --- | --- |
-| P1-01 | Establish operational alerts and a daily health view. | Operations | Alert on queue pending age/count, dead letters, Redis disk use, worker heartbeats, gateway authorization, outbox failures and backup age. Exercise a failure and record the response. |
-| P1-02 | Benchmark offer ranking and statistics at representative volume. | Backend | Agree latency/memory targets, publish measurements and determine the safe dataset size. If needed, replace full-population API ranking with a maintained scoring projection while preserving ranking-before-pagination. |
-| P1-03 | Define and test retention/archive policy. | Operator + operations | Decide raw/history/backup retention and Redis archival boundaries. Verify enabled TTL cleanup on disposable data and prevent trimming unprocessed work. Retention currently defaults to keeping data. |
-| P1-04 | Prepare an operator-controlled historical re-extraction job. | Backend + operator | Dry-run retained raw messages, estimate workload and prove resumability/idempotency before recovering items collapsed by the legacy schema. Report unavailable raw history explicitly. |
-| P1-05 | Rehearse failure and recovery under sustained load. | Backend + operations | Interrupt workers, gateway and dependencies during processing. Verify recovery without lost raw records, duplicate PostgreSQL effects or silently acknowledged persistence errors; document ambiguous outbound-delivery handling. |
+| P1-01 | Establish operational alerts and a daily health view. | Operations | Implemented read-only `scripts/monitor.py` checks and threshold tests. Pilot still needs an operator scheduler and a recorded failure response. |
+| P1-02 | Benchmark offer ranking and statistics at representative volume. | Backend | Added repeatable 10,000-offer `BenchmarkScoreAndRankOffers`; publish measured output, latency/memory targets and safe dataset size during pilot review. |
+| P1-03 | Define and test retention/archive policy. | Operator + operations | Retention now excludes pending/processing/dispatch-pending raw messages from TTL assignment. Unit coverage is added; disposable TTL timing and backup/archive boundaries still require an operator rehearsal. |
+| P1-04 | Prepare an operator-controlled historical re-extraction job. | Backend + operator | Added resumable, 0600-checkpoint `persob/cmd/reextract`; dry-run is default and enqueue requires explicit `--enqueue` plus a checkpoint. Run against retained staging data and record unavailable history. |
+| P1-05 | Rehearse failure and recovery under sustained load. | Backend + operations | Queue reclaim, lease heartbeats, bounded retries and dead-letter behavior are implemented and tested; container rehearsal tooling exists. Sustained-load interruption and outbound ambiguity still require staging evidence. |
 | P1-06 | Complete manual Persian/mobile usability checks. | Frontend + operator | Verify keyboard/focus behavior, screen-reader labels, Persian dates/numbers, long source/product names, slow connections, multiple real offers and small-screen navigation. Record devices and any unresolved issues. Automated accessibility checks alone are insufficient evidence. |
-| P1-07 | Make release evidence easy to reproduce. | Engineering | Add repeatable image build/scan checks and retain test reports, image identifiers and rollback notes. Ensure a green standalone frontend check cannot be mistaken for complete full-stack coverage. |
+| P1-07 | Make release evidence easy to reproduce. | Engineering | Release/security CI, image scans, Compose checks and the handoff ledger are recorded for the named pinned candidates. Repeat the same evidence for any changed candidate and retain image identifiers/rollback notes. |
 
 ## P2 — Later scope requiring a product decision
 

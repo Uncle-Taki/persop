@@ -59,6 +59,16 @@ cd persof && npm run generate:api && npm test
 
 Run the backend on port 8080 and `npm run dev` in `persof`; Vite proxies `/api` to the backend. Follow [persob/docs/operations.md](persob/docs/operations.md) for disposable database acceptance tests, migrations, backups, restore, retention and diagnostics. Follow [IMPLEMENTATION.md](IMPLEMENTATION.md) for scope and verification details.
 
+For a retained-history recovery run, inspect first and then explicitly enqueue through the normal worker path:
+
+```sh
+cd persob
+go run ./cmd/reextract --batch-size 100 --checkpoint ../artifacts/reextract-checkpoint.json
+go run ./cmd/reextract --enqueue --batch-size 100 --checkpoint ../artifacts/reextract-checkpoint.json
+```
+
+The command is resumable by a private keyset checkpoint, publishes no Telegram traffic, and requires `--enqueue` plus a checkpoint before it can mutate Redis. Replayed messages use the existing idempotent extraction and offer keys. Use `--since` or `--max-messages` for a bounded rehearsal.
+
 Normal shutdown (`make down`) preserves volumes. Production configuration contains no demo seeds. Database changes are serialized and recorded with checksums in `schema_migrations`; keep previously applied migration files immutable. The parent deployment runs a dedicated migration step, and application startup also verifies migrations for direct CLI use.
 
 The prioritized verification, pilot preparation and later product backlog is tracked in [REMAINING_WORK.md](REMAINING_WORK.md).
@@ -109,3 +119,12 @@ python3 scripts/monitor.py --project perso --env-file .env --url https://your-ho
 ```
 
 The JSON reports queue pending count/age, dead letters, worker heartbeats, Redis data-disk use, outbox failures/age, gateway authorization, authenticated API availability and backup age. Default thresholds are initial operating defaults, not measured service-level guarantees; adjust them for the pilot. Exit status 1 means an alert and 2 means inspection failed. Without a backup manifest, backup health remains an alert. Snapshot output contains aggregate health only, not message text or credentials. Arrange daily review and periodic checks through your own scheduler; no external alert recipients or schedules are created automatically.
+
+The ranking workload has a repeatable benchmark for the full-population score-before-pagination path:
+
+```sh
+cd persob
+go test ./internal/analytics -run '^$' -bench BenchmarkScoreAndRankOffers -benchmem
+```
+
+Record the output, Go version and representative offer count with the pilot release; the benchmark does not set a production latency target by itself.
