@@ -1,22 +1,22 @@
 # Perso remaining-work context
 
-Updated: 2026-11-17, Asia/Tehran
+Updated: 2026-11-18, Asia/Tehran
 
 This is the compact handoff for the next implementation or review session. It is grounded in the current checked-out branch and source tree; historical workflow entries may describe earlier candidates and must not override the current pins below.
 
 ## Current checkout
 
-- Parent repository: branch `codex/step-7-8-release-handoff`, commit `7785809`.
-- Backend submodule: `persob/main`, commit `bd0093578aa6ddb7beba5bcdf0588e55d4a57af8`.
-- Frontend submodule: `persof/main`, commit `db56d41bc164c752f0c3c2871ad397776996d0e0`.
-- Parent gitlinks point to backend `bd00935` and frontend `db56d41`.
-- The backend worktree has an uncommitted two-line test-fixture edit in `internal/conversation/step7_test.go` (`بله حتماً` and `بپرسید`). The parent reports the backend gitlink as dirty because of that edit. Preserve it and decide explicitly whether to commit or revert it before the next publication.
+- Parent repository: branch `codex/step-7-8-release-handoff`, commit `a368271`.
+- Backend submodule: `persob/main`, commit `3e895cd4d3fa17f0baa1548d312d33e8ebcc316c`.
+- Frontend submodule: `persof/main`, commit `3ca36b52156138c7990f48aca3af1f9751a8ed5e`.
+- Parent gitlinks point to backend `3e895cd` and frontend `3ca36b5`.
+- Parent, backend, and frontend worktrees are currently clean.
 
 ## What is implemented
 
 ### Step 6 — healthcare live workspace
 
-The live entrypoint is `persof/src/App.tsx` → `persof/src/live/LiveApp.tsx`. It uses the typed API client for session, products, interests, sources, offers, statistics, gateway status, users, and conversations. The Step 6 child change is in the current frontend ancestry at `c261d3e`; the current `db56d41` adds the later contract and runtime-image corrections.
+The live entrypoint is `persof/src/App.tsx` → `persof/src/live/LiveApp.tsx`. It uses the typed API client for session, products, interests, sources, offers, statistics, gateway status, users, and conversations. The Step 6 child change is in the current frontend ancestry at `c261d3e`; the current `3ca36b5` adds contract, runtime-image, and live-browser selector corrections.
 
 Backend healthcare identity and session contract changes are present in the current backend ancestry. Demo fixtures are healthcare-oriented and the OpenAI-compatible mock is wired through Compose.
 
@@ -53,6 +53,9 @@ Current evidence recorded in `docs/WORKFLOW.md`, `IMPLEMENTATION.md`, and `REMAI
 - nine Python operations tests;
 - Compose manifest validation;
 - runtime-image and dependency remediation commits.
+- release/security rehearsal CI passing, including Trivy scans and dependency audits;
+- healthcare mock mode scoped to the live browser integration step;
+- aligned live browser tab selectors and consent/config fixture corrections.
 
 Treat CI claims as evidence for the named commit only. Re-run checks when the dirty test fixture or any source changes are included in a new candidate.
 
@@ -65,15 +68,14 @@ These are the actual remaining gates for a controlled pilot. They require operat
 3. **P0-10 — external LLM path:** validate the optional provider with an operator-supplied key, bounded timeout/retry behavior, malformed output handling, and no credential exposure. The local HTTP mock already covers demo mode.
 4. **P0-11 — pilot configuration review:** operator domain/TLS, bootstrap secrets, secure cookies, monitoring token rotation, backup destination, restore procedure, and rollback notes.
 5. **P1-06 — manual Persian/mobile review:** keyboard focus, screen-reader labels, Persian dates/numbers, long names, slow connections, responsive navigation, and real offer density on a small-screen device.
-6. **P1-01/P1-02/P1-03/P1-04/P1-05/P1-07:** unattended-operation alerts, ranking benchmarks, retention policy, resumable historical re-extraction, failure/recovery rehearsal, and reproducible image/security evidence.
+6. **P1-01/P1-02/P1-03/P1-04/P1-05/P1-07:** unattended-operation alerts, ranking benchmarks, retention policy, resumable historical re-extraction, failure/recovery rehearsal, and repeatable release evidence. Release/security rehearsal and image scans are now recorded as passed for the named CI candidates; operational alerting, benchmarks, retention, historical re-extraction, and sustained-failure rehearsal remain open.
 
 ## Next review sequence
 
-1. Reconcile the top-level status and stale historical wording in `docs/WORKFLOW.md`; retain history but mark the current Step 6/7/8 status from the pins above.
-2. Resolve the dirty `step7_test.go` edit deliberately and run `gofmt -l .` plus the focused conversation tests.
-3. Run the exact pinned-stack checks from a clean disposable environment: backend unit/race/vet/build, audit acceptance, frontend `npm run check:api`, typecheck, build, and server-backed Playwright with `PERSO_E2E_LIVE=1`.
-4. Validate demo boot with `docker compose -p perso-demo -f compose.yaml -f compose.demo.yaml up -d --build`; use an alternate `FRONTEND_PORT` only when the host's port 3000 is occupied.
-5. Keep `OUTREACH_ENABLED=false`, avoid real credentials, and report every skipped or blocked operator gate separately.
+1. Reconcile the top-level status and stale historical wording in `docs/WORKFLOW.md`; the current pins and CI ledger now supersede older Step 6/7/8 checkpoint prose.
+2. Re-run the exact pinned-stack checks if source changes are made: backend unit/race/vet/build and audit acceptance, frontend `npm run check:api`, typecheck, build, and server-backed Playwright with `PERSO_E2E_LIVE=1`.
+3. Validate demo boot with `docker compose -p perso-demo -f compose.yaml -f compose.demo.yaml up -d --build`; use an alternate `FRONTEND_PORT` only when the host's port 3000 is occupied.
+4. Keep `OUTREACH_ENABLED=false`, avoid real credentials, and report every skipped or blocked operator gate separately.
 
 ## Do not infer
 
