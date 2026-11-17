@@ -2,7 +2,7 @@
 
 > Step 2 identity work is now implemented on codex/perso-healthcare-rbac: see [implementation and verification](docs/STEP_2_IDENTITY.md) and the [current workflow](docs/WORKFLOW.md). Password accounts replace browser API-token login. Buyer shared-source access remains blocked until step 3. Historical checkpoint descriptions below do not describe these new account capabilities.
 
-> Current healthcare/RBAC work is tracked in [docs/WORKFLOW.md](docs/WORKFLOW.md). Historical electronics/single-operator descriptions below are retained as audit history and do not describe the current Step 6 candidate. Step 6 promotion is in review; do not treat the release gate as complete until the exact candidate CI evidence is recorded.
+> Current healthcare/RBAC work is tracked in [docs/WORKFLOW.md](docs/WORKFLOW.md). Historical electronics/single-operator descriptions below are retained as audit history and do not describe the current published `main` stack. Step 6 promotion and Steps 7–8 synchronization are complete; only the explicitly listed operator-owned gates remain open.
 
 Status snapshot: **2026-11-18**, on parent `main` with backend `a4587eb` and frontend `7488e52` pinned.
 

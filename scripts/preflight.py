@@ -5,20 +5,10 @@ import re
 import stat
 import uuid
 from pathlib import Path
+from perso_ops import read_environment
 
 SECRET_KEYS = ('API_TOKEN', 'POSTGRES_PASSWORD', 'MONGO_ROOT_PASSWORD', 'MONGO_APP_PASSWORD',
                'REDIS_PASSWORD', 'TELEGRAM_GATEWAY_TOKEN', 'TELEGRAM_SESSION_STORAGE_KEY', 'BOOTSTRAP_ADMIN_PASSWORD')
-
-
-def read_environment(path):
-    values = {}
-    for line in path.read_text().splitlines():
-        if line.strip() and not line.lstrip().startswith('#'):
-            key, sep, value = line.partition('=')
-            if not sep or key.strip() in values:
-                raise ValueError('Invalid or duplicate environment assignment')
-            values[key.strip()] = value.strip()
-    return values
 
 
 def validate(values, offline=False, public=False):
