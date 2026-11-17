@@ -14,7 +14,7 @@ This reviewable checkpoint is published on the branch above in all three reposit
 - **Frontend:** server-backed offers, interests, sources, conversations and settings; explicit loading/error/empty states; Persian/English navigation; local fonts; responsive mint styling. The healthcare fixture is available only through explicit demo mode.
 - **Deployment:** parent Compose manifests, separate demo/test environments, random credential generation, API contract checks, and integration CI for the pinned submodule combination.
 
-The live catalog is electronics. The deployment supports one operator workspace and one Telegram account; independent customer accounts are outside this checkpoint.
+Steps 0–5 are the published baseline. Step 6 is under review on `codex/step-6-healthcare-live`: the backend session advertises the healthcare catalog domain, the integration seed uses healthcare fixtures, and the live frontend labels the workspace and catalog healthcare-first. The UI continues to use the existing server-backed endpoints and session-cookie authorization. The Step 6 PR must not be considered complete until CI has run typecheck, production build, OpenAPI generation/check, browser tests, and backend authorization/contract checks.
 
 ## Validation status
 
