@@ -6,7 +6,7 @@ This is the compact handoff for the next implementation or review session. It is
 
 ## Current checkout
 
-- Parent repository: branch `codex/step-7-8-release-handoff` at the commit containing this handoff.
+- Parent repository: branch `main` at the commit containing this handoff.
 - Backend submodule: `persob/main`, commit `a4587eb71cf63e6fa8be75871b95572ee5ecf594`.
 - Frontend submodule: `persof/main`, commit `7488e528a57c592a611196528f4b152b3946d6d9`.
 - Parent gitlinks point to backend `a4587eb` and frontend `7488e52`.

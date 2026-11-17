@@ -4,7 +4,7 @@
 
 > Current healthcare/RBAC work is tracked in [docs/WORKFLOW.md](docs/WORKFLOW.md). Historical electronics/single-operator descriptions below are retained as audit history and do not describe the current Step 6 candidate. Step 6 promotion is in review; do not treat the release gate as complete until the exact candidate CI evidence is recorded.
 
-Status snapshot: **2026-11-18**, on parent `codex/step-7-8-release-handoff` with backend `a4587eb` and frontend `7488e52` pinned.
+Status snapshot: **2026-11-18**, on parent `main` with backend `a4587eb` and frontend `7488e52` pinned.
 
 Reviewed baseline: parent `20dd036`, backend `5c468df`, frontend `bd4c811`.
 This document records unfinished verification, operational preparation and later scope. It does not claim that those jobs have passed or authorize a production deployment. Check boxes stay open until the completion evidence below is recorded.

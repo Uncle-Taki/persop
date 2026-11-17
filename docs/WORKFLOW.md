@@ -2,7 +2,7 @@
 
 Version: 1.7 — Steps 6–8 synchronized; operational follow-up tooling added
 Updated: 2026-11-18, Asia/Tehran
-Status: Steps 6, 7 and 8 are implemented on the pinned handoff branch. The current local candidate uses backend `a4587eb` and frontend `7488e52`; use those refs instead of older checkpoint prose below. CI and local contract/release checks are recorded, and the remaining implementation work is limited to safe operator tooling and documentation. Live Telegram authorization, a consented recipient, external provider credentials and pilot infrastructure remain operator-owned gates.
+Status: Steps 6, 7 and 8 plus the remaining repository-owned tooling are merged into parent `main`. The current local pins are backend `a4587eb` and frontend `7488e52`; use those refs instead of older checkpoint prose below. CI and local contract/release checks are recorded, and live Telegram authorization, a consented recipient, external provider credentials and pilot infrastructure remain operator-owned gates.
 Feature branches `codex/perso-step-3a`, `codex/perso-step-3b`, `codex/perso-step-4-clean` and `codex/perso-step-5` are preserved as merge ancestry in the child `main` candidates.
 Canonical repository path: `persop/docs/WORKFLOW.md`
 
@@ -477,3 +477,9 @@ The initial failed config-isolation and readiness checks are retained above with
   - Verified all 9 Python tests pass (`python3 -m unittest discover -s scripts -p 'test_*.py'`).
   - Validated Compose manifests: `docker compose config -q` passes for both standard and demo configs.
   - Ready to push `codex/step-7-8-release-handoff` to origin to update PR #6 and trigger CI workflows.
+
+### Main branch merge
+
+- Parent `main` now contains the complete `codex/step-7-8-release-handoff` history, including the remaining operator tooling and the final child pins (`persob` `a4587eb`, `persof` `7488e52`).
+- Backend `persob/main` contains the replay and retention safety commits; frontend `persof/main` was already at the pinned candidate.
+- Publishing order is backend `main`, then parent `main`; no deployment or live outreach is part of this merge.
