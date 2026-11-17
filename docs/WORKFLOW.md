@@ -400,3 +400,8 @@ The initial failed config-isolation and readiness checks are retained above with
 
 
 - Follow-up run `44010123998`: unit job again failed at `gofmt -l .`; race/vet/build/contract steps were skipped. Acceptance job was still running at the time of inspection. A second formatting-only correction is prepared in backend commit `114c3dd5247c657a2605a070c643030ae5912531`; this commit has not been pushed or tested yet. Exact formatter output was not exposed by the available GitHub check-run interface, so the specific remaining file is not asserted.
+
+
+- The second `gofmt -l .` failure did not expose its file list in the job log. Added an explicit formatter diagnostic to backend CI so the next run prints the exact offending paths before failing.
+- Backend candidate prepared for the next push: `950f3aa4072b1794b05b7ef459587a0616365f00`. It also adds a fail-closed outbox guard: demo-auth mode never starts outbound delivery, and Telegram mock mode without a mock transport cannot fall through to real MTProto. This is safety-critical and is not yet CI-verified.
+- The next parent update pins this exact backend candidate. No tests are claimed for this new candidate until its CI finishes.
