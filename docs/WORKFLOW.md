@@ -381,3 +381,10 @@ The initial failed config-isolation and readiness checks are retained above with
 - Known remaining Step 7 work before merge: end-to-end tests for buyer isolation, grant revocation, duplicate requests, admin approval/consent, missing-field completion, retry/failure recovery and stale queued work; durable outbox attempt/recovery and seller opt-out behavior need full runtime verification; the existing worker/outbox still requires final audit for race-free revocation/deactivation serialization; ensure mock/demo mode cannot dispatch to a real Telegram client.
 - Publication sequencing: backend child commit was published before this parent ledger update. This is recorded as observed; subsequent parent ref update follows this ledger commit. Frontend child branch remains at the inherited Step 6 commit because no frontend source change was needed for this backend authorization checkpoint.
 - Status: partial implementation checkpoint, not merge-ready. Continue Step 7 and Step 8 on this same review branch; report passed/failed/skipped/blocked separately.
+
+
+### Step 7 CI follow-up
+
+- Backend candidate `badbe795ad92e893cb4940562e4df5e586fae3c3` triggered [Backend checks run 44009688757](https://github.com/Uncle-Taki/persob/actions/runs/44009688757).
+- Observed: audit acceptance job passed; unit job failed at the first `gofmt -l .` gate. Because formatting failed, race, vet, build and OpenAPI sync steps were skipped. This is a formatting failure, not evidence of functional test failure.
+- Corrective candidate prepared: `1b70bc125cb7c2c3da969560ba5ab04067574233`, formatting the approval helper. It has not yet been pushed or tested. Next push follows this parent ledger update.
